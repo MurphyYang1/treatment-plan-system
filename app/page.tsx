@@ -848,6 +848,7 @@ function getDateInputValue(date: Date) {
 
 export default function Home() {
   const signatureRef = useRef<SignatureCanvas | null>(null);
+  const [patientName, setPatientName] = useState("");
   const [dateSigned, setDateSigned] = useState("");
   const [signatureUrl, setSignatureUrl] = useState("#signature");
   const [subsidyTier, setSubsidyTier] = useState<SubsidyTier>("Private");
@@ -1082,6 +1083,8 @@ export default function Home() {
                 <input
                   type="text"
                   placeholder="Patient Name"
+                  value={patientName}
+                  onChange={(event) => setPatientName(event.target.value)}
                   className="w-full rounded-xl border px-4 py-3"
                 />
 
@@ -1551,6 +1554,8 @@ export default function Home() {
                         <input
                           type="text"
                           placeholder="Full Name"
+                          value={patientName}
+                          onChange={(event) => setPatientName(event.target.value)}
                           className="w-full rounded-xl border px-4 py-3"
                         />
                       </div>
