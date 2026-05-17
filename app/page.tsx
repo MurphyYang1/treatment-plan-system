@@ -850,8 +850,20 @@ function formatCurrency(amount: number) {
   return `$${amount.toFixed(2)}`;
 }
 
+function formatDeduction(amount: number) {
+  return amount === 0 ? formatCurrency(0) : `-${formatCurrency(amount)}`;
+}
+
 function compactClass(isFinalized: boolean, editClass: string, finalClass: string) {
   return isFinalized ? finalClass : editClass;
+}
+
+function costLabelClass(isFinalized: boolean) {
+  return compactClass(
+    isFinalized,
+    "flex min-h-10 items-end text-sm font-semibold leading-tight text-gray-700",
+    "flex min-h-8 items-end text-xs font-semibold uppercase leading-tight tracking-wide text-gray-600",
+  );
 }
 
 export default function Home() {
@@ -1510,9 +1522,15 @@ export default function Home() {
                             </th>
                             <th className="w-[12%] px-2 py-2 text-right font-semibold tabular-nums">
                               Subsidy
+                              <span className="block text-[9px] font-normal">
+                                Deduction
+                              </span>
                             </th>
                             <th className="w-[12%] px-2 py-2 text-right font-semibold tabular-nums">
                               Medisave
+                              <span className="block text-[9px] font-normal">
+                                Deduction
+                              </span>
                             </th>
                             <th className="w-[12%] px-2 py-2 text-right font-semibold tabular-nums">
                               Cash Payable
@@ -1557,10 +1575,10 @@ export default function Home() {
                                     {formatCurrency(gst)}
                                   </td>
                                   <td className="px-2 py-2 text-right tabular-nums">
-                                    {formatCurrency(subsidy)}
+                                    {formatDeduction(subsidy)}
                                   </td>
                                   <td className="px-2 py-2 text-right tabular-nums">
-                                    {formatCurrency(procedure.medisaveClaim)}
+                                    {formatDeduction(procedure.medisaveClaim)}
                                   </td>
                                   <td className="px-2 py-2 text-right font-bold tabular-nums">
                                     {formatCurrency(payable)}
@@ -1640,13 +1658,7 @@ export default function Home() {
                             )}
                           >
                             <div>
-                              <label
-                                className={compactClass(
-                                  isFinalized,
-                                  "text-sm font-semibold text-gray-700",
-                                  "text-xs font-semibold uppercase tracking-wide text-gray-600",
-                                )}
-                              >
+                              <label className={costLabelClass(isFinalized)}>
                                 Quantity
                               </label>
                               <input
@@ -1671,13 +1683,7 @@ export default function Home() {
                             </div>
 
                             <div>
-                              <label
-                                className={compactClass(
-                                  isFinalized,
-                                  "text-sm font-semibold text-gray-700",
-                                  "text-xs font-semibold uppercase tracking-wide text-gray-600",
-                                )}
-                              >
+                              <label className={costLabelClass(isFinalized)}>
                                 Subsidy Claim Qty
                               </label>
                               <input
@@ -1702,13 +1708,7 @@ export default function Home() {
                             </div>
 
                             <div>
-                              <label
-                                className={compactClass(
-                                  isFinalized,
-                                  "text-sm font-semibold text-gray-700",
-                                  "text-xs font-semibold uppercase tracking-wide text-gray-600",
-                                )}
-                              >
+                              <label className={costLabelClass(isFinalized)}>
                                 Unit Price
                               </label>
                               {isFinalized ? (
@@ -1733,13 +1733,7 @@ export default function Home() {
                             </div>
 
                             <div>
-                              <label
-                                className={compactClass(
-                                  isFinalized,
-                                  "text-sm font-semibold text-gray-700",
-                                  "text-xs font-semibold uppercase tracking-wide text-gray-600",
-                                )}
-                              >
+                              <label className={costLabelClass(isFinalized)}>
                                 GST (9%)
                               </label>
                               <div
@@ -1754,13 +1748,7 @@ export default function Home() {
                             </div>
 
                             <div>
-                              <label
-                                className={compactClass(
-                                  isFinalized,
-                                  "text-sm font-semibold text-gray-700",
-                                  "text-xs font-semibold uppercase tracking-wide text-gray-600",
-                                )}
-                              >
+                              <label className={costLabelClass(isFinalized)}>
                                 Subsidy Deducted
                               </label>
                               <div
@@ -1775,13 +1763,7 @@ export default function Home() {
                             </div>
 
                             <div>
-                              <label
-                                className={compactClass(
-                                  isFinalized,
-                                  "text-sm font-semibold text-gray-700",
-                                  "text-xs font-semibold uppercase tracking-wide text-gray-600",
-                                )}
-                              >
+                              <label className={costLabelClass(isFinalized)}>
                                 Medisave Deducted
                               </label>
                               {isFinalized ? (
@@ -1806,13 +1788,7 @@ export default function Home() {
                             </div>
 
                             <div>
-                              <label
-                                className={compactClass(
-                                  isFinalized,
-                                  "text-sm font-semibold text-gray-700",
-                                  "text-xs font-semibold uppercase tracking-wide text-gray-600",
-                                )}
-                              >
+                              <label className={costLabelClass(isFinalized)}>
                                 Cash Payable
                               </label>
                               <div
