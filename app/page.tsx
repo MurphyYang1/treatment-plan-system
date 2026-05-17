@@ -1120,6 +1120,32 @@ export default function Home() {
                 </div>
               </div>
             </section>
+
+            <section className="rounded-2xl border bg-white p-6 text-sm leading-relaxed text-gray-700">
+              <h2 className="mb-4 text-2xl font-bold text-black">Disclaimer</h2>
+
+              <div className="space-y-4">
+                <p>All treatment fees stated are inclusive of prevailing 9% GST.</p>
+
+                <p>
+                  Treatment fees discussed and agreed upon shall remain valid
+                  throughout the planned treatment duration unless unforeseen
+                  clinical complications arise.
+                </p>
+
+                <p>
+                  Additional treatment procedures required due to complications,
+                  changes in clinical condition or patient requests may incur
+                  additional treatment charges.
+                </p>
+
+                <p>
+                  CHAS, Merdeka Generation, Pioneer Generation and Medisave
+                  claims remain subject to prevailing MOH regulations and patient
+                  eligibility.
+                </p>
+              </div>
+            </section>
           </aside>
 
           <section className="space-y-6 lg:col-span-2">
@@ -1516,32 +1542,6 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-              </div>
-            </section>
-
-            <section className="rounded-2xl border bg-white p-6 text-sm leading-relaxed text-gray-700">
-              <h2 className="mb-4 text-2xl font-bold text-black">Disclaimer</h2>
-
-              <div className="space-y-4">
-                <p>All treatment fees stated are inclusive of prevailing 9% GST.</p>
-
-                <p>
-                  Treatment fees discussed and agreed upon shall remain valid
-                  throughout the planned treatment duration unless unforeseen
-                  clinical complications arise.
-                </p>
-
-                <p>
-                  Additional treatment procedures required due to complications,
-                  changes in clinical condition or patient requests may incur
-                  additional treatment charges.
-                </p>
-
-                <p>
-                  CHAS, Merdeka Generation, Pioneer Generation and Medisave
-                  claims remain subject to prevailing MOH regulations and patient
-                  eligibility.
-                </p>
               </div>
             </section>
           </section>
