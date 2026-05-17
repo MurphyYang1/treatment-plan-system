@@ -1238,78 +1238,77 @@ export default function Home() {
               </div>
             </section>
 
-            <section
-              className={compactClass(
-                isFinalized,
-                "avoid-break rounded-2xl border bg-gray-50 p-6",
-                "avoid-break rounded-xl border bg-gray-50 p-4 text-sm print:p-3",
-              )}
-            >
-              <h2 className={compactClass(isFinalized, "mb-5 text-2xl font-bold", "mb-3 text-xl font-bold")}>
-                Interest-Free Instalments
-              </h2>
+            {!isFinalized ? (
+              <>
+                <section className="avoid-break rounded-2xl border bg-gray-50 p-6">
+                  <h2 className="mb-5 text-2xl font-bold">
+                    Interest-Free Instalments
+                  </h2>
 
-              <div className={compactClass(isFinalized, "space-y-4 text-sm", "space-y-2 text-xs")}>
-                <div>
-                  <p className="font-semibold">Atome</p>
-                  <p>3 months interest-free</p>
-                </div>
+                  <div className="space-y-4 text-sm">
+                    <div>
+                      <p className="font-semibold">Atome</p>
+                      <p>3 months interest-free</p>
+                    </div>
 
-                <div>
-                  <p className="font-semibold">GrabPay</p>
-                  <p>4 months interest-free</p>
-                </div>
+                    <div>
+                      <p className="font-semibold">GrabPay</p>
+                      <p>4 months interest-free</p>
+                    </div>
 
-                <div>
-                  <p className="font-semibold">UOB / OCBC Credit Card 12 Mths</p>
-                  <p>12 months interest-free instalment</p>
-                </div>
+                    <div>
+                      <p className="font-semibold">
+                        UOB / OCBC Credit Card 12 Mths
+                      </p>
+                      <p>12 months interest-free instalment</p>
+                    </div>
 
-                <div>
-                  <p className="font-semibold">In-House Instalment</p>
-                  <ul className="mt-2 list-disc space-y-1 pl-5">
-                    <li>6/12 months interest-free - depending on treatment</li>
-                    <li>Applicant must be SG / PR</li>
-                    <li>1x guarantor required (SG / PR)</li>
-                    <li>Valid debit card required</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
+                    <div>
+                      <p className="font-semibold">In-House Instalment</p>
+                      <ul className="mt-2 list-disc space-y-1 pl-5">
+                        <li>
+                          6/12 months interest-free - depending on treatment
+                        </li>
+                        <li>Applicant must be SG / PR</li>
+                        <li>1x guarantor required (SG / PR)</li>
+                        <li>Valid debit card required</li>
+                      </ul>
+                    </div>
+                  </div>
+                </section>
 
-            <section
-              className={compactClass(
-                isFinalized,
-                "avoid-break rounded-2xl border bg-white p-6 text-sm leading-relaxed text-gray-700",
-                "avoid-break rounded-xl border bg-white p-4 text-xs leading-relaxed text-gray-700 print:p-3",
-              )}
-            >
-              <h2 className={compactClass(isFinalized, "mb-4 text-2xl font-bold text-black", "mb-3 text-xl font-bold text-black")}>
-                Disclaimer
-              </h2>
+                <section className="avoid-break rounded-2xl border bg-white p-6 text-sm leading-relaxed text-gray-700">
+                  <h2 className="mb-4 text-2xl font-bold text-black">
+                    Disclaimer
+                  </h2>
 
-              <div className={compactClass(isFinalized, "space-y-4", "space-y-2")}>
-                <p>All treatment fees stated are inclusive of prevailing 9% GST.</p>
+                  <div className="space-y-4">
+                    <p>
+                      All treatment fees stated are inclusive of prevailing 9%
+                      GST.
+                    </p>
 
-                <p>
-                  Treatment fees discussed and agreed upon shall remain valid
-                  throughout the planned treatment duration unless unforeseen
-                  clinical complications arise.
-                </p>
+                    <p>
+                      Treatment fees discussed and agreed upon shall remain valid
+                      throughout the planned treatment duration unless unforeseen
+                      clinical complications arise.
+                    </p>
 
-                <p>
-                  Additional treatment procedures required due to complications,
-                  changes in clinical condition or patient requests may incur
-                  additional treatment charges.
-                </p>
+                    <p>
+                      Additional treatment procedures required due to
+                      complications, changes in clinical condition or patient
+                      requests may incur additional treatment charges.
+                    </p>
 
-                <p>
-                  CHAS, Merdeka Generation, Pioneer Generation and Medisave
-                  claims remain subject to prevailing MOH regulations and patient
-                  eligibility.
-                </p>
-              </div>
-            </section>
+                    <p>
+                      CHAS, Merdeka Generation, Pioneer Generation and Medisave
+                      claims remain subject to prevailing MOH regulations and
+                      patient eligibility.
+                    </p>
+                  </div>
+                </section>
+              </>
+            ) : null}
           </aside>
 
           <section
@@ -1898,6 +1897,78 @@ export default function Home() {
                 </div>
               </div>
             </section>
+
+            {isFinalized ? (
+              <div className="grid gap-3 md:grid-cols-2 print:grid-cols-2">
+                <section className="avoid-break rounded-xl border bg-gray-50 p-4 text-xs print:p-3">
+                  <h2 className="mb-3 text-xl font-bold">
+                    Interest-Free Instalments
+                  </h2>
+
+                  <div className="space-y-2">
+                    <div>
+                      <p className="font-semibold">Atome</p>
+                      <p>3 months interest-free</p>
+                    </div>
+
+                    <div>
+                      <p className="font-semibold">GrabPay</p>
+                      <p>4 months interest-free</p>
+                    </div>
+
+                    <div>
+                      <p className="font-semibold">
+                        UOB / OCBC Credit Card 12 Mths
+                      </p>
+                      <p>12 months interest-free instalment</p>
+                    </div>
+
+                    <div>
+                      <p className="font-semibold">In-House Instalment</p>
+                      <ul className="mt-1 list-disc space-y-1 pl-4">
+                        <li>
+                          6/12 months interest-free - depending on treatment
+                        </li>
+                        <li>Applicant must be SG / PR</li>
+                        <li>1x guarantor required (SG / PR)</li>
+                        <li>Valid debit card required</li>
+                      </ul>
+                    </div>
+                  </div>
+                </section>
+
+                <section className="avoid-break rounded-xl border bg-white p-4 text-xs leading-relaxed text-gray-700 print:p-3">
+                  <h2 className="mb-3 text-xl font-bold text-black">
+                    Disclaimer
+                  </h2>
+
+                  <div className="space-y-2">
+                    <p>
+                      All treatment fees stated are inclusive of prevailing 9%
+                      GST.
+                    </p>
+
+                    <p>
+                      Treatment fees discussed and agreed upon shall remain valid
+                      throughout the planned treatment duration unless unforeseen
+                      clinical complications arise.
+                    </p>
+
+                    <p>
+                      Additional treatment procedures required due to
+                      complications, changes in clinical condition or patient
+                      requests may incur additional treatment charges.
+                    </p>
+
+                    <p>
+                      CHAS, Merdeka Generation, Pioneer Generation and Medisave
+                      claims remain subject to prevailing MOH regulations and
+                      patient eligibility.
+                    </p>
+                  </div>
+                </section>
+              </div>
+            ) : null}
 
             <section
               id="signature"
