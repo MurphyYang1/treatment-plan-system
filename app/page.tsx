@@ -1327,6 +1327,22 @@ export default function Home() {
               </div>
             </section>
 
+            <section
+              className={compactClass(
+                isFinalized,
+                "avoid-break rounded-2xl border bg-blue-50 p-5 text-sm text-blue-950",
+                "avoid-break rounded-xl border bg-blue-50 p-3 text-xs text-blue-950 print:p-2",
+              )}
+            >
+              <h3 className="font-bold">How to read each treatment cost</h3>
+              <p className="mt-2 leading-relaxed">
+                Quantity is the number of procedures planned. Claim quantity is
+                the number submitted for CHAS / Merdeka / Pioneer subsidy. Cash
+                payable is calculated as treatment subtotal (unit price x
+                quantity) plus GST, less subsidy and Medisave deductions.
+              </p>
+            </section>
+
             {phases.map((phase, phaseIndex) => {
               const phaseTotal = phase.procedures.reduce(
                 (total, procedure) => {
@@ -1519,7 +1535,15 @@ export default function Home() {
                             )}
                           >
                             <div>
-                              <label className="text-sm">Qty</label>
+                              <label
+                                className={compactClass(
+                                  isFinalized,
+                                  "text-sm font-semibold text-gray-700",
+                                  "text-xs font-semibold uppercase tracking-wide text-gray-600",
+                                )}
+                              >
+                                Quantity
+                              </label>
                               <input
                                 type="number"
                                 min="1"
@@ -1542,7 +1566,15 @@ export default function Home() {
                             </div>
 
                             <div>
-                              <label className="text-sm">Claim Qty</label>
+                              <label
+                                className={compactClass(
+                                  isFinalized,
+                                  "text-sm font-semibold text-gray-700",
+                                  "text-xs font-semibold uppercase tracking-wide text-gray-600",
+                                )}
+                              >
+                                Subsidy Claim Qty
+                              </label>
                               <input
                                 type="number"
                                 min="0"
@@ -1565,29 +1597,46 @@ export default function Home() {
                             </div>
 
                             <div>
-                              <label className="text-sm">PRICE</label>
-                              <input
-                                type="number"
-                                value={procedure.fee}
-                                readOnly={isFinalized}
-                                onChange={(event) =>
-                                  updateProcedure(
-                                    phaseIndex,
-                                    procedureIndex,
-                                    "fee",
-                                    Number(event.target.value),
-                                  )
-                                }
+                              <label
                                 className={compactClass(
                                   isFinalized,
-                                  "mt-2 w-full rounded-xl border px-4 py-3",
-                                  "mt-1 w-full rounded-lg border border-transparent bg-transparent px-0 py-1",
+                                  "text-sm font-semibold text-gray-700",
+                                  "text-xs font-semibold uppercase tracking-wide text-gray-600",
                                 )}
-                              />
+                              >
+                                Unit Price
+                              </label>
+                              {isFinalized ? (
+                                <div className="mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1">
+                                  ${procedure.fee.toFixed(2)}
+                                </div>
+                              ) : (
+                                <input
+                                  type="number"
+                                  value={procedure.fee}
+                                  onChange={(event) =>
+                                    updateProcedure(
+                                      phaseIndex,
+                                      procedureIndex,
+                                      "fee",
+                                      Number(event.target.value),
+                                    )
+                                  }
+                                  className="mt-2 w-full rounded-xl border px-4 py-3"
+                                />
+                              )}
                             </div>
 
                             <div>
-                              <label className="text-sm">GST</label>
+                              <label
+                                className={compactClass(
+                                  isFinalized,
+                                  "text-sm font-semibold text-gray-700",
+                                  "text-xs font-semibold uppercase tracking-wide text-gray-600",
+                                )}
+                              >
+                                GST (9%)
+                              </label>
                               <div
                                 className={compactClass(
                                   isFinalized,
@@ -1600,7 +1649,15 @@ export default function Home() {
                             </div>
 
                             <div>
-                              <label className="text-sm">Subsidy</label>
+                              <label
+                                className={compactClass(
+                                  isFinalized,
+                                  "text-sm font-semibold text-gray-700",
+                                  "text-xs font-semibold uppercase tracking-wide text-gray-600",
+                                )}
+                              >
+                                Subsidy Deducted
+                              </label>
                               <div
                                 className={compactClass(
                                   isFinalized,
@@ -1613,29 +1670,46 @@ export default function Home() {
                             </div>
 
                             <div>
-                              <label className="text-sm">Medisave</label>
-                              <input
-                                type="number"
-                                value={procedure.medisaveClaim}
-                                readOnly={isFinalized}
-                                onChange={(event) =>
-                                  updateProcedure(
-                                    phaseIndex,
-                                    procedureIndex,
-                                    "medisaveClaim",
-                                    Number(event.target.value),
-                                  )
-                                }
+                              <label
                                 className={compactClass(
                                   isFinalized,
-                                  "mt-2 w-full rounded-xl border px-4 py-3",
-                                  "mt-1 w-full rounded-lg border border-transparent bg-transparent px-0 py-1",
+                                  "text-sm font-semibold text-gray-700",
+                                  "text-xs font-semibold uppercase tracking-wide text-gray-600",
                                 )}
-                              />
+                              >
+                                Medisave Deducted
+                              </label>
+                              {isFinalized ? (
+                                <div className="mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1">
+                                  ${procedure.medisaveClaim.toFixed(2)}
+                                </div>
+                              ) : (
+                                <input
+                                  type="number"
+                                  value={procedure.medisaveClaim}
+                                  onChange={(event) =>
+                                    updateProcedure(
+                                      phaseIndex,
+                                      procedureIndex,
+                                      "medisaveClaim",
+                                      Number(event.target.value),
+                                    )
+                                  }
+                                  className="mt-2 w-full rounded-xl border px-4 py-3"
+                                />
+                              )}
                             </div>
 
                             <div>
-                              <label className="text-sm">Payable</label>
+                              <label
+                                className={compactClass(
+                                  isFinalized,
+                                  "text-sm font-semibold text-gray-700",
+                                  "text-xs font-semibold uppercase tracking-wide text-gray-600",
+                                )}
+                              >
+                                Cash Payable
+                              </label>
                               <div
                                 className={compactClass(
                                   isFinalized,
