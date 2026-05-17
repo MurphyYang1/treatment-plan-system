@@ -846,8 +846,13 @@ function getDateInputValue(date: Date) {
   return date.toISOString().slice(0, 10);
 }
 
+function compactClass(isFinalized: boolean, editClass: string, finalClass: string) {
+  return isFinalized ? finalClass : editClass;
+}
+
 export default function Home() {
   const signatureRef = useRef<SignatureCanvas | null>(null);
+  const [isFinalized, setIsFinalized] = useState(false);
   const [patientName, setPatientName] = useState("");
   const [dateSigned, setDateSigned] = useState("");
   const [signatureUrl, setSignatureUrl] = useState("#signature");
@@ -885,6 +890,10 @@ export default function Home() {
   const clearSignature = () => {
     signatureRef.current?.clear();
     setDateSigned("");
+  };
+
+  const printQuotation = () => {
+    window.print();
   };
 
   const addPhase = () => {
@@ -1038,35 +1047,108 @@ export default function Home() {
   }, [phases, subsidyTier]);
 
   return (
-    <main className="min-h-screen bg-gray-100 p-6 text-black">
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-3xl bg-white shadow-xl">
-        <header className="border-b p-8">
-          <div className="flex flex-wrap items-center gap-6">
+    <main
+      className={compactClass(
+        isFinalized,
+        "min-h-screen bg-gray-100 p-6 text-black print:bg-white print:p-0",
+        "min-h-screen bg-gray-100 p-3 text-black print:bg-white print:p-0",
+      )}
+    >
+      <div
+        className={compactClass(
+          isFinalized,
+          "print-page mx-auto max-w-7xl overflow-hidden rounded-3xl bg-white shadow-xl print:max-w-none print:rounded-none print:shadow-none",
+          "print-page mx-auto max-w-7xl overflow-hidden rounded-xl bg-white shadow-md print:max-w-none print:rounded-none print:shadow-none",
+        )}
+      >
+        <header
+          className={compactClass(
+            isFinalized,
+            "border-b p-8 print:p-4",
+            "border-b p-4 print:p-4",
+          )}
+        >
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-4">
             <Image
               src="/nofrills-logo.svg"
               alt="Nofrills Dental"
               width={120}
               height={120}
-              className="rounded-2xl"
+              className={compactClass(
+                isFinalized,
+                "rounded-2xl",
+                "h-20 w-20 rounded-xl print:h-16 print:w-16",
+              )}
               priority
             />
 
             <div>
-              <h1 className="text-4xl font-bold">Nofrills Dental</h1>
-              <p className="mt-2 text-gray-600">
+              <h1
+                className={compactClass(
+                  isFinalized,
+                  "text-4xl font-bold",
+                  "text-3xl font-bold print:text-2xl",
+                )}
+              >
+                Nofrills Dental
+              </h1>
+              <p className={compactClass(isFinalized, "mt-2 text-gray-600", "mt-1 text-sm text-gray-600")}>
                 Dental Treatment Plan & Quotation
               </p>
+            </div>
+            </div>
+
+            <div className="no-print flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => setIsFinalized((current) => !current)}
+                className="rounded-xl bg-black px-5 py-2 text-white"
+              >
+                {isFinalized ? "Edit Quotation" : "Finalize for Print"}
+              </button>
+
+              {isFinalized ? (
+                <button
+                  type="button"
+                  onClick={printQuotation}
+                  className="rounded-xl border px-5 py-2 transition hover:bg-gray-100"
+                >
+                  Print
+                </button>
+              ) : null}
             </div>
           </div>
         </header>
 
-        <div className="grid gap-8 p-8 lg:grid-cols-3">
-          <aside className="space-y-6 lg:col-span-1 lg:col-start-1 lg:row-start-1">
-            <section className="rounded-2xl border p-6">
-              <h2 className="mb-5 text-2xl font-bold">Patient Information</h2>
+        <div
+          className={compactClass(
+            isFinalized,
+            "grid gap-8 p-8 lg:grid-cols-3 print:gap-4 print:p-4",
+            "grid gap-4 p-4 lg:grid-cols-3 print:gap-4 print:p-4",
+          )}
+        >
+          <aside className="space-y-4 lg:col-span-1 lg:col-start-1 lg:row-start-1 print:space-y-3">
+            <section
+              className={compactClass(
+                isFinalized,
+                "avoid-break rounded-2xl border p-6",
+                "avoid-break rounded-xl border p-4 print:p-3",
+              )}
+            >
+              <h2 className={compactClass(isFinalized, "mb-5 text-2xl font-bold", "mb-3 text-xl font-bold")}>
+                Patient Information
+              </h2>
 
-              <div className="space-y-4">
-                <select className="w-full rounded-xl border px-4 py-3">
+              <div className={compactClass(isFinalized, "space-y-4", "space-y-2")}>
+                <select
+                  disabled={isFinalized}
+                  className={compactClass(
+                    isFinalized,
+                    "w-full rounded-xl border px-4 py-3",
+                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm disabled:opacity-100",
+                  )}
+                >
                   <option value="">Select Clinic Branch</option>
                   <option>Nofrills Dental Marina Square</option>
                   <option>Nofrills Dental Suntec</option>
@@ -1077,7 +1159,12 @@ export default function Home() {
                 <input
                   type="text"
                   placeholder="Dentist Name"
-                  className="w-full rounded-xl border px-4 py-3"
+                  readOnly={isFinalized}
+                  className={compactClass(
+                    isFinalized,
+                    "w-full rounded-xl border px-4 py-3",
+                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                  )}
                 />
 
                 <input
@@ -1085,26 +1172,46 @@ export default function Home() {
                   placeholder="Patient Name"
                   value={patientName}
                   onChange={(event) => setPatientName(event.target.value)}
-                  className="w-full rounded-xl border px-4 py-3"
+                  readOnly={isFinalized}
+                  className={compactClass(
+                    isFinalized,
+                    "w-full rounded-xl border px-4 py-3",
+                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                  )}
                 />
 
                 <input
                   type="text"
                   placeholder="Patient ID"
-                  className="w-full rounded-xl border px-4 py-3"
+                  readOnly={isFinalized}
+                  className={compactClass(
+                    isFinalized,
+                    "w-full rounded-xl border px-4 py-3",
+                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                  )}
                 />
 
                 <input
                   type="date"
-                  className="w-full rounded-xl border px-4 py-3"
+                  readOnly={isFinalized}
+                  className={compactClass(
+                    isFinalized,
+                    "w-full rounded-xl border px-4 py-3",
+                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                  )}
                 />
 
                 <select
                   value={subsidyTier}
+                  disabled={isFinalized}
                   onChange={(event) =>
                     setSubsidyTier(event.target.value as SubsidyTier)
                   }
-                  className="w-full rounded-xl border px-4 py-3"
+                  className={compactClass(
+                    isFinalized,
+                    "w-full rounded-xl border px-4 py-3",
+                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm disabled:opacity-100",
+                  )}
                 >
                   <option>Private</option>
                   <option>CHAS Blue</option>
@@ -1115,12 +1222,18 @@ export default function Home() {
               </div>
             </section>
 
-            <section className="rounded-2xl border bg-gray-50 p-6">
-              <h2 className="mb-5 text-2xl font-bold">
+            <section
+              className={compactClass(
+                isFinalized,
+                "avoid-break rounded-2xl border bg-gray-50 p-6",
+                "avoid-break rounded-xl border bg-gray-50 p-4 text-sm print:p-3",
+              )}
+            >
+              <h2 className={compactClass(isFinalized, "mb-5 text-2xl font-bold", "mb-3 text-xl font-bold")}>
                 Interest-Free Instalments
               </h2>
 
-              <div className="space-y-4 text-sm">
+              <div className={compactClass(isFinalized, "space-y-4 text-sm", "space-y-2 text-xs")}>
                 <div>
                   <p className="font-semibold">Atome</p>
                   <p>3 months interest-free</p>
@@ -1148,10 +1261,18 @@ export default function Home() {
               </div>
             </section>
 
-            <section className="rounded-2xl border bg-white p-6 text-sm leading-relaxed text-gray-700">
-              <h2 className="mb-4 text-2xl font-bold text-black">Disclaimer</h2>
+            <section
+              className={compactClass(
+                isFinalized,
+                "avoid-break rounded-2xl border bg-white p-6 text-sm leading-relaxed text-gray-700",
+                "avoid-break rounded-xl border bg-white p-4 text-xs leading-relaxed text-gray-700 print:p-3",
+              )}
+            >
+              <h2 className={compactClass(isFinalized, "mb-4 text-2xl font-bold text-black", "mb-3 text-xl font-bold text-black")}>
+                Disclaimer
+              </h2>
 
-              <div className="space-y-4">
+              <div className={compactClass(isFinalized, "space-y-4", "space-y-2")}>
                 <p>All treatment fees stated are inclusive of prevailing 9% GST.</p>
 
                 <p>
@@ -1175,18 +1296,34 @@ export default function Home() {
             </section>
           </aside>
 
-          <section className="space-y-6 lg:col-span-2 lg:col-start-2 lg:row-start-1">
-            <section className="rounded-2xl border p-6">
+          <section
+            className={compactClass(
+              isFinalized,
+              "space-y-6 lg:col-span-2 lg:col-start-2 lg:row-start-1",
+              "space-y-4 lg:col-span-2 lg:col-start-2 lg:row-start-1 print:space-y-3",
+            )}
+          >
+            <section
+              className={compactClass(
+                isFinalized,
+                "rounded-2xl border p-6",
+                "avoid-break rounded-xl border p-4 print:p-3",
+              )}
+            >
               <div className="flex flex-wrap items-center justify-between gap-4">
-                <h2 className="text-2xl font-bold">Treatment Phases</h2>
+                <h2 className={compactClass(isFinalized, "text-2xl font-bold", "text-xl font-bold")}>
+                  Treatment Phases
+                </h2>
 
-                <button
-                  type="button"
-                  onClick={addPhase}
-                  className="rounded-xl bg-black px-6 py-3 text-white"
-                >
-                  + Add Phase
-                </button>
+                {!isFinalized ? (
+                  <button
+                    type="button"
+                    onClick={addPhase}
+                    className="rounded-xl bg-black px-6 py-3 text-white"
+                  >
+                    + Add Phase
+                  </button>
+                ) : null}
               </div>
             </section>
 
@@ -1213,23 +1350,33 @@ export default function Home() {
               return (
                 <section
                   key={phase.id}
-                  className="rounded-2xl border bg-white p-6"
+                  className={compactClass(
+                    isFinalized,
+                    "avoid-break rounded-2xl border bg-white p-6",
+                    "avoid-break rounded-xl border bg-white p-4 print:p-3",
+                  )}
                 >
                   <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div className="w-full max-w-md space-y-3">
+                    <div className={compactClass(isFinalized, "w-full max-w-md space-y-3", "w-full max-w-md space-y-1")}>
                       <input
                         type="text"
                         value={phase.title}
+                        readOnly={isFinalized}
                         onChange={(event) =>
                           updatePhase(phaseIndex, "title", event.target.value)
                         }
-                        className="w-full rounded-xl border px-4 py-3 text-xl font-bold"
+                        className={compactClass(
+                          isFinalized,
+                          "w-full rounded-xl border px-4 py-3 text-xl font-bold",
+                          "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-lg font-bold",
+                        )}
                       />
 
                       <input
                         type="text"
                         placeholder="Phase Duration"
                         value={phase.duration}
+                        readOnly={isFinalized}
                         onChange={(event) =>
                           updatePhase(
                             phaseIndex,
@@ -1237,83 +1384,91 @@ export default function Home() {
                             event.target.value,
                           )
                         }
-                        className="w-full rounded-xl border px-4 py-3"
+                        className={compactClass(
+                          isFinalized,
+                          "w-full rounded-xl border px-4 py-3",
+                          "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                        )}
                       />
                     </div>
 
                     <div className="text-right">
                       <p className="text-sm text-gray-500">Phase CASH Total</p>
-                      <p className="text-2xl font-bold">
+                      <p className={compactClass(isFinalized, "text-2xl font-bold", "text-xl font-bold")}>
                         ${phaseTotal.toFixed(2)}
                       </p>
                     </div>
                   </div>
 
-                  <div className="mt-6 flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => movePhaseUp(phaseIndex)}
-                      className="rounded-lg border px-3 py-2"
-                    >
-                      Up
-                    </button>
+                  {!isFinalized ? (
+                    <>
+                      <div className="mt-6 flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => movePhaseUp(phaseIndex)}
+                          className="rounded-lg border px-3 py-2"
+                        >
+                          Up
+                        </button>
 
-                    <button
-                      type="button"
-                      onClick={() => movePhaseDown(phaseIndex)}
-                      className="rounded-lg border px-3 py-2"
-                    >
-                      Down
-                    </button>
+                        <button
+                          type="button"
+                          onClick={() => movePhaseDown(phaseIndex)}
+                          className="rounded-lg border px-3 py-2"
+                        >
+                          Down
+                        </button>
 
-                    <button
-                      type="button"
-                      onClick={() => deletePhase(phaseIndex)}
-                      className="rounded-lg border px-3 py-2 text-red-500"
-                    >
-                      Delete
-                    </button>
-                  </div>
+                        <button
+                          type="button"
+                          onClick={() => deletePhase(phaseIndex)}
+                          className="rounded-lg border px-3 py-2 text-red-500"
+                        >
+                          Delete
+                        </button>
+                      </div>
 
-                  <div className="mt-6 grid gap-4 md:grid-cols-3">
-                    <select
-                      value={selectedCategory}
-                      onChange={(event) => {
-                        setSelectedCategory(event.target.value);
-                        setSelectedTreatment("");
-                      }}
-                      className="rounded-xl border px-4 py-3"
-                    >
-                      {treatmentCategories.map((category) => (
-                        <option key={category}>{category}</option>
-                      ))}
-                    </select>
+                      <div className="mt-6 grid gap-4 md:grid-cols-3">
+                        <select
+                          value={selectedCategory}
+                          onChange={(event) => {
+                            setSelectedCategory(event.target.value);
+                            setSelectedTreatment("");
+                          }}
+                          className="rounded-xl border px-4 py-3"
+                        >
+                          {treatmentCategories.map((category) => (
+                            <option key={category}>{category}</option>
+                          ))}
+                        </select>
 
-                    <select
-                      value={selectedTreatment}
-                      onChange={(event) =>
-                        setSelectedTreatment(event.target.value)
-                      }
-                      className="rounded-xl border px-4 py-3"
-                    >
-                      <option value="">Select Procedure</option>
-                      {filteredTreatments.map((item) => (
-                        <option key={item.name} value={item.name}>
-                          {item.name}
-                        </option>
-                      ))}
-                    </select>
+                        <select
+                          value={selectedTreatment}
+                          onChange={(event) =>
+                            setSelectedTreatment(event.target.value)
+                          }
+                          className="rounded-xl border px-4 py-3"
+                        >
+                          <option value="">Select Procedure</option>
+                          {filteredTreatments.map((item) => (
+                            <option key={item.name} value={item.name}>
+                              {item.name}
+                            </option>
+                          ))}
+                        </select>
 
-                    <button
-                      type="button"
-                      onClick={() => addProcedure(phaseIndex)}
-                      className="rounded-xl bg-black px-6 py-3 text-white"
-                    >
-                      Add Procedure
-                    </button>
-                  </div>
+                        <button
+                          type="button"
+                          onClick={() => addProcedure(phaseIndex)}
+                          className="rounded-xl bg-black px-6 py-3 text-white"
+                        >
+                          Add Procedure
+                        </button>
+                      </div>
+                    </>
+                  ) : null}
 
-                  <div className="mt-6 space-y-4">
+                  <div className={compactClass(isFinalized, "mt-6 space-y-4", "mt-3 space-y-3")}>
                     {phase.procedures.map((procedure, procedureIndex) => {
                       const subtotal = procedure.fee * procedure.quantity;
                       const gst = subtotal * GST_RATE;
@@ -1326,36 +1481,49 @@ export default function Home() {
                       return (
                         <article
                           key={`${procedure.name}-${procedureIndex}`}
-                          className="rounded-2xl border bg-gray-50 p-5"
+                          className={compactClass(
+                            isFinalized,
+                            "avoid-break rounded-2xl border bg-gray-50 p-5",
+                            "avoid-break rounded-xl border bg-gray-50 p-3",
+                          )}
                         >
                           <div className="flex flex-wrap items-start justify-between gap-4">
                             <div>
-                              <h3 className="text-xl font-bold">
+                              <h3 className={compactClass(isFinalized, "text-xl font-bold", "text-base font-bold")}>
                                 {procedure.name}
                               </h3>
-                              <p className="mt-1 text-sm">
+                              <p className={compactClass(isFinalized, "mt-1 text-sm", "mt-0.5 text-xs")}>
                                 {procedure.category}
                               </p>
                             </div>
 
-                            <button
-                              type="button"
-                              onClick={() =>
-                                deleteProcedure(phaseIndex, procedureIndex)
-                              }
-                              className="rounded-lg border px-3 py-2 text-red-500"
-                            >
-                              Delete
-                            </button>
+                            {!isFinalized ? (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  deleteProcedure(phaseIndex, procedureIndex)
+                                }
+                                className="rounded-lg border px-3 py-2 text-red-500"
+                              >
+                                Delete
+                              </button>
+                            ) : null}
                           </div>
 
-                          <div className="mt-6 grid gap-4 md:grid-cols-7">
+                          <div
+                            className={compactClass(
+                              isFinalized,
+                              "mt-6 grid gap-4 md:grid-cols-7",
+                              "mt-3 grid gap-2 text-sm md:grid-cols-7",
+                            )}
+                          >
                             <div>
                               <label className="text-sm">Qty</label>
                               <input
                                 type="number"
                                 min="1"
                                 value={procedure.quantity}
+                                readOnly={isFinalized}
                                 onChange={(event) =>
                                   updateProcedure(
                                     phaseIndex,
@@ -1364,7 +1532,11 @@ export default function Home() {
                                     Number(event.target.value),
                                   )
                                 }
-                                className="mt-2 w-full rounded-xl border px-4 py-3"
+                                className={compactClass(
+                                  isFinalized,
+                                  "mt-2 w-full rounded-xl border px-4 py-3",
+                                  "mt-1 w-full rounded-lg border border-transparent bg-transparent px-0 py-1",
+                                )}
                               />
                             </div>
 
@@ -1374,6 +1546,7 @@ export default function Home() {
                                 type="number"
                                 min="0"
                                 value={procedure.subsidyClaimQty}
+                                readOnly={isFinalized}
                                 onChange={(event) =>
                                   updateProcedure(
                                     phaseIndex,
@@ -1382,7 +1555,11 @@ export default function Home() {
                                     Number(event.target.value),
                                   )
                                 }
-                                className="mt-2 w-full rounded-xl border px-4 py-3"
+                                className={compactClass(
+                                  isFinalized,
+                                  "mt-2 w-full rounded-xl border px-4 py-3",
+                                  "mt-1 w-full rounded-lg border border-transparent bg-transparent px-0 py-1",
+                                )}
                               />
                             </div>
 
@@ -1391,6 +1568,7 @@ export default function Home() {
                               <input
                                 type="number"
                                 value={procedure.fee}
+                                readOnly={isFinalized}
                                 onChange={(event) =>
                                   updateProcedure(
                                     phaseIndex,
@@ -1399,20 +1577,36 @@ export default function Home() {
                                     Number(event.target.value),
                                   )
                                 }
-                                className="mt-2 w-full rounded-xl border px-4 py-3"
+                                className={compactClass(
+                                  isFinalized,
+                                  "mt-2 w-full rounded-xl border px-4 py-3",
+                                  "mt-1 w-full rounded-lg border border-transparent bg-transparent px-0 py-1",
+                                )}
                               />
                             </div>
 
                             <div>
                               <label className="text-sm">GST</label>
-                              <div className="mt-2 rounded-xl border bg-white px-4 py-3">
+                              <div
+                                className={compactClass(
+                                  isFinalized,
+                                  "mt-2 rounded-xl border bg-white px-4 py-3",
+                                  "mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1",
+                                )}
+                              >
                                 ${gst.toFixed(2)}
                               </div>
                             </div>
 
                             <div>
                               <label className="text-sm">Subsidy</label>
-                              <div className="mt-2 rounded-xl border bg-white px-4 py-3">
+                              <div
+                                className={compactClass(
+                                  isFinalized,
+                                  "mt-2 rounded-xl border bg-white px-4 py-3",
+                                  "mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1",
+                                )}
+                              >
                                 ${subsidy.toFixed(2)}
                               </div>
                             </div>
@@ -1422,6 +1616,7 @@ export default function Home() {
                               <input
                                 type="number"
                                 value={procedure.medisaveClaim}
+                                readOnly={isFinalized}
                                 onChange={(event) =>
                                   updateProcedure(
                                     phaseIndex,
@@ -1430,22 +1625,39 @@ export default function Home() {
                                     Number(event.target.value),
                                   )
                                 }
-                                className="mt-2 w-full rounded-xl border px-4 py-3"
+                                className={compactClass(
+                                  isFinalized,
+                                  "mt-2 w-full rounded-xl border px-4 py-3",
+                                  "mt-1 w-full rounded-lg border border-transparent bg-transparent px-0 py-1",
+                                )}
                               />
                             </div>
 
                             <div>
                               <label className="text-sm">Payable</label>
-                              <div className="mt-2 rounded-xl border bg-blue-50 px-4 py-3 font-bold">
+                              <div
+                                className={compactClass(
+                                  isFinalized,
+                                  "mt-2 rounded-xl border bg-blue-50 px-4 py-3 font-bold",
+                                  "mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 font-bold",
+                                )}
+                              >
                                 ${payable.toFixed(2)}
                               </div>
                             </div>
 
                             <div className="md:col-span-7">
-                              <div className="rounded-2xl border bg-white p-4">
+                              <div
+                                className={compactClass(
+                                  isFinalized,
+                                  "rounded-2xl border bg-white p-4",
+                                  "rounded-xl border bg-white p-3",
+                                )}
+                              >
                                 <label className="text-sm">Remarks</label>
                                 <textarea
                                   value={procedure.description}
+                                  readOnly={isFinalized}
                                   onChange={(event) =>
                                     updateProcedure(
                                       phaseIndex,
@@ -1456,7 +1668,11 @@ export default function Home() {
                                   }
                                   rows={2}
                                   placeholder="Add clinical notes, tooth number, treatment explanation, risks discussed, patient requests, etc."
-                                  className="mt-2 min-h-[70px] w-full resize-y rounded-lg border border-gray-300 px-3 py-2 text-base leading-normal focus:outline-none focus:ring-1 focus:ring-black"
+                                  className={compactClass(
+                                    isFinalized,
+                                    "mt-2 min-h-[70px] w-full resize-y rounded-lg border border-gray-300 px-3 py-2 text-base leading-normal focus:outline-none focus:ring-1 focus:ring-black",
+                                    "mt-1 min-h-[52px] w-full resize-none rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm leading-normal",
+                                  )}
                                 />
                               </div>
                             </div>
@@ -1469,10 +1685,18 @@ export default function Home() {
               );
             })}
 
-            <section className="rounded-2xl border bg-gray-50 p-6">
-              <h2 className="mb-5 text-2xl font-bold">Financial Summary</h2>
+            <section
+              className={compactClass(
+                isFinalized,
+                "avoid-break rounded-2xl border bg-gray-50 p-6",
+                "avoid-break rounded-xl border bg-gray-50 p-4 print:p-3",
+              )}
+            >
+              <h2 className={compactClass(isFinalized, "mb-5 text-2xl font-bold", "mb-3 text-xl font-bold")}>
+                Financial Summary
+              </h2>
 
-              <div className="space-y-4">
+              <div className={compactClass(isFinalized, "space-y-4", "space-y-2 text-sm")}>
                 <div className="flex justify-between">
                   <span>Treatment Subtotal</span>
                   <span>${totals.subtotal.toFixed(2)}</span>
@@ -1493,60 +1717,95 @@ export default function Home() {
                   <span>${totals.medisave.toFixed(2)}</span>
                 </div>
 
-                <div className="flex justify-between border-t pt-5 text-2xl font-bold">
+                <div
+                  className={compactClass(
+                    isFinalized,
+                    "flex justify-between border-t pt-5 text-2xl font-bold",
+                    "flex justify-between border-t pt-3 text-xl font-bold",
+                  )}
+                >
                   <span>Cash Portion</span>
                   <span>${totals.payable.toFixed(2)}</span>
                 </div>
               </div>
             </section>
 
-            <section id="signature" className="rounded-2xl border bg-white p-8">
-              <h2 className="mb-6 text-2xl font-bold">
+            <section
+              id="signature"
+              className={compactClass(
+                isFinalized,
+                "avoid-break rounded-2xl border bg-white p-8",
+                "avoid-break rounded-xl border bg-white p-4 print:p-3",
+              )}
+            >
+              <h2 className={compactClass(isFinalized, "mb-6 text-2xl font-bold", "mb-3 text-xl font-bold")}>
                 Patient Acknowledgement & Signature
               </h2>
 
-              <div className="grid gap-8 lg:grid-cols-3">
-                <div className="flex flex-col items-center justify-center rounded-2xl border bg-gray-50 p-6 lg:col-span-1">
-                  <QRCode value={signatureUrl} size={180} />
+              <div
+                className={compactClass(
+                  isFinalized,
+                  "grid gap-8 lg:grid-cols-3",
+                  "grid gap-4 lg:grid-cols-3",
+                )}
+              >
+                {!isFinalized ? (
+                  <div className="no-print flex flex-col items-center justify-center rounded-2xl border bg-gray-50 p-6 lg:col-span-1">
+                    <QRCode value={signatureUrl} size={180} />
 
-                  <p className="mt-5 text-center text-sm leading-relaxed text-gray-500">
-                    Scan QR code to review and digitally sign this treatment
-                    quotation on your mobile device.
-                  </p>
-                </div>
+                    <p className="mt-5 text-center text-sm leading-relaxed text-gray-500">
+                      Scan QR code to review and digitally sign this treatment
+                      quotation on your mobile device.
+                    </p>
+                  </div>
+                ) : null}
 
-                <div className="lg:col-span-2">
-                  <div className="rounded-2xl border p-6">
-                    <p className="mb-6 text-sm leading-relaxed text-gray-600">
+                <div className={isFinalized ? "lg:col-span-3" : "lg:col-span-2"}>
+                  <div className={compactClass(isFinalized, "rounded-2xl border p-6", "rounded-xl border p-4")}>
+                    <p
+                      className={compactClass(
+                        isFinalized,
+                        "mb-6 text-sm leading-relaxed text-gray-600",
+                        "mb-3 text-xs leading-relaxed text-gray-600",
+                      )}
+                    >
                       I acknowledge that the proposed treatment, estimated fees,
                       subsidies, Medisave claims, risks and alternative options
                       have been explained clearly to me.
                     </p>
 
-                    <div className="overflow-hidden rounded-2xl border-2 border-dashed bg-white">
+                    <div
+                      className={compactClass(
+                        isFinalized,
+                        "overflow-hidden rounded-2xl border-2 border-dashed bg-white",
+                        "overflow-hidden rounded-xl border border-dashed bg-white",
+                      )}
+                    >
                       <SignatureCanvas
                         ref={signatureRef}
                         penColor="black"
                         onEnd={markSignatureComplete}
                         canvasProps={{
                           width: 900,
-                          height: 220,
+                          height: isFinalized ? 140 : 220,
                           className: "w-full bg-white",
                         }}
                       />
                     </div>
 
-                    <div className="mt-5 flex flex-wrap gap-3">
-                      <button
-                        type="button"
-                        onClick={clearSignature}
-                        className="rounded-xl border px-5 py-2 transition hover:bg-gray-100"
-                      >
-                        Clear Signature
-                      </button>
-                    </div>
+                    {!isFinalized ? (
+                      <div className="mt-5 flex flex-wrap gap-3">
+                        <button
+                          type="button"
+                          onClick={clearSignature}
+                          className="rounded-xl border px-5 py-2 transition hover:bg-gray-100"
+                        >
+                          Clear Signature
+                        </button>
+                      </div>
+                    ) : null}
 
-                    <div className="mt-8 grid gap-4 md:grid-cols-2">
+                    <div className={compactClass(isFinalized, "mt-8 grid gap-4 md:grid-cols-2", "mt-4 grid gap-3 md:grid-cols-2")}>
                       <div>
                         <label className="mb-2 block text-sm text-gray-500">
                           Patient Name
@@ -1555,8 +1814,13 @@ export default function Home() {
                           type="text"
                           placeholder="Full Name"
                           value={patientName}
+                          readOnly={isFinalized}
                           onChange={(event) => setPatientName(event.target.value)}
-                          className="w-full rounded-xl border px-4 py-3"
+                          className={compactClass(
+                            isFinalized,
+                            "w-full rounded-xl border px-4 py-3",
+                            "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                          )}
                         />
                       </div>
 
@@ -1567,8 +1831,13 @@ export default function Home() {
                         <input
                           type="date"
                           value={dateSigned}
+                          readOnly={isFinalized}
                           onChange={(event) => setDateSigned(event.target.value)}
-                          className="w-full rounded-xl border px-4 py-3"
+                          className={compactClass(
+                            isFinalized,
+                            "w-full rounded-xl border px-4 py-3",
+                            "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                          )}
                         />
                       </div>
                     </div>
