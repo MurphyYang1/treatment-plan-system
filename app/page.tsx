@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "react-qr-code";
 import SignatureCanvas from "react-signature-canvas";
 
@@ -846,6 +846,10 @@ function getDateInputValue(date: Date) {
   return date.toISOString().slice(0, 10);
 }
 
+function formatCurrency(amount: number) {
+  return `$${amount.toFixed(2)}`;
+}
+
 function compactClass(isFinalized: boolean, editClass: string, finalClass: string) {
   return isFinalized ? finalClass : editClass;
 }
@@ -1058,7 +1062,7 @@ export default function Home() {
         className={compactClass(
           isFinalized,
           "print-page mx-auto max-w-7xl overflow-hidden rounded-3xl bg-white shadow-xl print:max-w-none print:rounded-none print:shadow-none",
-          "print-page mx-auto max-w-7xl overflow-hidden rounded-xl bg-white shadow-md print:max-w-none print:rounded-none print:shadow-none",
+          "print-page mx-auto max-w-6xl overflow-hidden rounded-xl bg-white shadow-md print:max-w-none print:rounded-none print:shadow-none",
         )}
       >
         <header
@@ -1124,11 +1128,11 @@ export default function Home() {
         <div
           className={compactClass(
             isFinalized,
-            "grid gap-8 p-8 lg:grid-cols-3 print:gap-4 print:p-4",
-            "grid gap-4 p-4 lg:grid-cols-3 print:gap-4 print:p-4",
+            "grid gap-8 p-8 lg:grid-cols-3 print:grid-cols-1 print:gap-4 print:p-4",
+            "grid gap-4 p-4 lg:grid-cols-[18rem_minmax(0,1fr)] print:grid-cols-1 print:gap-3 print:p-3",
           )}
         >
-          <aside className="space-y-4 lg:col-span-1 lg:col-start-1 lg:row-start-1 print:space-y-3">
+          <aside className="space-y-4 lg:col-span-1 lg:col-start-1 lg:row-start-1 print:col-auto print:row-auto print:space-y-3">
             <section
               className={compactClass(
                 isFinalized,
@@ -1299,8 +1303,8 @@ export default function Home() {
           <section
             className={compactClass(
               isFinalized,
-              "space-y-6 lg:col-span-2 lg:col-start-2 lg:row-start-1",
-              "space-y-4 lg:col-span-2 lg:col-start-2 lg:row-start-1 print:space-y-3",
+              "space-y-6 lg:col-span-2 lg:col-start-2 lg:row-start-1 print:col-auto print:row-auto",
+              "space-y-3 lg:col-span-1 lg:col-start-2 lg:row-start-1 print:col-auto print:row-auto print:space-y-3",
             )}
           >
             <section
@@ -1484,7 +1488,108 @@ export default function Home() {
                     </>
                   ) : null}
 
-                  <div className={compactClass(isFinalized, "mt-6 space-y-4", "mt-3 space-y-3")}>
+                  {isFinalized ? (
+                    <div className="mt-3 overflow-x-auto rounded-lg border">
+                      <table className="w-full table-fixed border-collapse text-[11px] leading-tight">
+                        <thead className="bg-gray-100 text-gray-700">
+                          <tr>
+                            <th className="w-[28%] px-2 py-2 text-left font-semibold">
+                              Treatment
+                            </th>
+                            <th className="w-[7%] px-2 py-2 text-right font-semibold tabular-nums">
+                              Qty
+                            </th>
+                            <th className="w-[8%] px-2 py-2 text-right font-semibold tabular-nums">
+                              Claim
+                            </th>
+                            <th className="w-[11%] px-2 py-2 text-right font-semibold tabular-nums">
+                              Unit Price
+                            </th>
+                            <th className="w-[10%] px-2 py-2 text-right font-semibold tabular-nums">
+                              GST
+                            </th>
+                            <th className="w-[12%] px-2 py-2 text-right font-semibold tabular-nums">
+                              Subsidy
+                            </th>
+                            <th className="w-[12%] px-2 py-2 text-right font-semibold tabular-nums">
+                              Medisave
+                            </th>
+                            <th className="w-[12%] px-2 py-2 text-right font-semibold tabular-nums">
+                              Cash Payable
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          {phase.procedures.map((procedure, procedureIndex) => {
+                            const subtotal =
+                              procedure.fee * procedure.quantity;
+                            const gst = subtotal * GST_RATE;
+                            const subsidy =
+                              getSubsidyAmount(procedure, subsidyTier) *
+                              procedure.subsidyClaimQty;
+                            const payable =
+                              subtotal + gst - subsidy - procedure.medisaveClaim;
+                            const hasRemarks =
+                              procedure.description.trim().length > 0;
+
+                            return (
+                              <Fragment key={`${procedure.name}-${procedureIndex}`}>
+                                <tr className="border-t align-top">
+                                  <td className="px-2 py-2">
+                                    <div className="font-semibold">
+                                      {procedure.name}
+                                    </div>
+                                    <div className="text-[10px] text-gray-500">
+                                      {procedure.category}
+                                    </div>
+                                  </td>
+                                  <td className="px-2 py-2 text-right tabular-nums">
+                                    {procedure.quantity}
+                                  </td>
+                                  <td className="px-2 py-2 text-right tabular-nums">
+                                    {procedure.subsidyClaimQty}
+                                  </td>
+                                  <td className="px-2 py-2 text-right tabular-nums">
+                                    {formatCurrency(procedure.fee)}
+                                  </td>
+                                  <td className="px-2 py-2 text-right tabular-nums">
+                                    {formatCurrency(gst)}
+                                  </td>
+                                  <td className="px-2 py-2 text-right tabular-nums">
+                                    {formatCurrency(subsidy)}
+                                  </td>
+                                  <td className="px-2 py-2 text-right tabular-nums">
+                                    {formatCurrency(procedure.medisaveClaim)}
+                                  </td>
+                                  <td className="px-2 py-2 text-right font-bold tabular-nums">
+                                    {formatCurrency(payable)}
+                                  </td>
+                                </tr>
+
+                                {hasRemarks ? (
+                                  <tr className="border-t bg-white">
+                                    <td
+                                      colSpan={8}
+                                      className="px-2 py-1.5 text-[10px] leading-snug text-gray-700"
+                                    >
+                                      <span className="font-semibold">
+                                        Remarks:{" "}
+                                      </span>
+                                      <span className="whitespace-pre-wrap">
+                                        {procedure.description}
+                                      </span>
+                                    </td>
+                                  </tr>
+                                ) : null}
+                              </Fragment>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <div className="mt-6 space-y-4">
                     {phase.procedures.map((procedure, procedureIndex) => {
                       const subtotal = procedure.fee * procedure.quantity;
                       const gst = subtotal * GST_RATE;
@@ -1757,7 +1862,8 @@ export default function Home() {
                         </article>
                       );
                     })}
-                  </div>
+                    </div>
+                  )}
                 </section>
               );
             })}
