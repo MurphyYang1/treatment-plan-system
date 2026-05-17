@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "react-qr-code";
 import SignatureCanvas from "react-signature-canvas";
 
@@ -842,8 +842,14 @@ function createProcedure(treatment: Treatment): Procedure {
   };
 }
 
+function getDateInputValue(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+
 export default function Home() {
   const signatureRef = useRef<SignatureCanvas | null>(null);
+  const [dateSigned, setDateSigned] = useState("");
+  const [signatureUrl, setSignatureUrl] = useState("#signature");
   const [subsidyTier, setSubsidyTier] = useState<SubsidyTier>("Private");
   const [selectedCategory, setSelectedCategory] = useState(
     treatmentCategories[0] ?? "",
@@ -861,6 +867,24 @@ export default function Home() {
   const filteredTreatments = availableTreatments.filter(
     (item) => item.category === selectedCategory,
   );
+
+  useEffect(() => {
+    const nextSignatureUrl = `${window.location.origin}${window.location.pathname}#signature`;
+    const animationFrame = window.requestAnimationFrame(() => {
+      setSignatureUrl(nextSignatureUrl);
+    });
+
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, []);
+
+  const markSignatureComplete = () => {
+    setDateSigned(getDateInputValue(new Date()));
+  };
+
+  const clearSignature = () => {
+    signatureRef.current?.clear();
+    setDateSigned("");
+  };
 
   const addPhase = () => {
     setPhases((currentPhases) => [
@@ -1473,14 +1497,14 @@ export default function Home() {
               </div>
             </section>
 
-            <section className="rounded-2xl border bg-white p-8">
+            <section id="signature" className="rounded-2xl border bg-white p-8">
               <h2 className="mb-6 text-2xl font-bold">
                 Patient Acknowledgement & Signature
               </h2>
 
               <div className="grid gap-8 lg:grid-cols-3">
                 <div className="flex flex-col items-center justify-center rounded-2xl border bg-gray-50 p-6 lg:col-span-1">
-                  <QRCode value="https://example.com/signature" size={180} />
+                  <QRCode value={signatureUrl} size={180} />
 
                   <p className="mt-5 text-center text-sm leading-relaxed text-gray-500">
                     Scan QR code to review and digitally sign this treatment
@@ -1500,6 +1524,7 @@ export default function Home() {
                       <SignatureCanvas
                         ref={signatureRef}
                         penColor="black"
+                        onEnd={markSignatureComplete}
                         canvasProps={{
                           width: 900,
                           height: 220,
@@ -1511,7 +1536,7 @@ export default function Home() {
                     <div className="mt-5 flex flex-wrap gap-3">
                       <button
                         type="button"
-                        onClick={() => signatureRef.current?.clear()}
+                        onClick={clearSignature}
                         className="rounded-xl border px-5 py-2 transition hover:bg-gray-100"
                       >
                         Clear Signature
@@ -1536,6 +1561,8 @@ export default function Home() {
                         </label>
                         <input
                           type="date"
+                          value={dateSigned}
+                          onChange={(event) => setDateSigned(event.target.value)}
                           className="w-full rounded-xl border px-4 py-3"
                         />
                       </div>
