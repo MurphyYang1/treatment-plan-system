@@ -1477,6 +1477,7 @@ export default function Home() {
                         procedure.subsidyClaimQty;
                       const payable =
                         subtotal + gst - subsidy - procedure.medisaveClaim;
+                      const hasRemarks = procedure.description.trim().length > 0;
 
                       return (
                         <article
@@ -1646,36 +1647,38 @@ export default function Home() {
                               </div>
                             </div>
 
-                            <div className="md:col-span-7">
-                              <div
-                                className={compactClass(
-                                  isFinalized,
-                                  "rounded-2xl border bg-white p-4",
-                                  "rounded-xl border bg-white p-3",
+                            {!isFinalized || hasRemarks ? (
+                              <div className="md:col-span-7">
+                                {isFinalized ? (
+                                  <div className="rounded-lg bg-white px-3 py-2 text-xs leading-snug">
+                                    <span className="font-semibold">Remarks: </span>
+                                    <span className="whitespace-pre-wrap">
+                                      {procedure.description}
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <div className="rounded-xl border bg-white p-3">
+                                    <label className="text-xs font-semibold">
+                                      Remarks
+                                    </label>
+                                    <textarea
+                                      value={procedure.description}
+                                      onChange={(event) =>
+                                        updateProcedure(
+                                          phaseIndex,
+                                          procedureIndex,
+                                          "description",
+                                          event.target.value,
+                                        )
+                                      }
+                                      rows={2}
+                                      placeholder="Clinical notes, tooth number, risks discussed, patient requests, etc."
+                                      className="mt-1 min-h-[48px] w-full resize-y rounded-lg border border-gray-300 px-3 py-2 text-sm leading-snug focus:outline-none focus:ring-1 focus:ring-black"
+                                    />
+                                  </div>
                                 )}
-                              >
-                                <label className="text-sm">Remarks</label>
-                                <textarea
-                                  value={procedure.description}
-                                  readOnly={isFinalized}
-                                  onChange={(event) =>
-                                    updateProcedure(
-                                      phaseIndex,
-                                      procedureIndex,
-                                      "description",
-                                      event.target.value,
-                                    )
-                                  }
-                                  rows={2}
-                                  placeholder="Add clinical notes, tooth number, treatment explanation, risks discussed, patient requests, etc."
-                                  className={compactClass(
-                                    isFinalized,
-                                    "mt-2 min-h-[70px] w-full resize-y rounded-lg border border-gray-300 px-3 py-2 text-base leading-normal focus:outline-none focus:ring-1 focus:ring-black",
-                                    "mt-1 min-h-[52px] w-full resize-none rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm leading-normal",
-                                  )}
-                                />
                               </div>
-                            </div>
+                            ) : null}
                           </div>
                         </article>
                       );
@@ -1734,8 +1737,8 @@ export default function Home() {
               id="signature"
               className={compactClass(
                 isFinalized,
-                "avoid-break rounded-2xl border bg-white p-8",
-                "avoid-break rounded-xl border bg-white p-4 print:p-3",
+                "avoid-break print-break-before rounded-2xl border bg-white p-8",
+                "avoid-break print-break-before rounded-xl border bg-white p-4 print:p-3",
               )}
             >
               <h2 className={compactClass(isFinalized, "mb-6 text-2xl font-bold", "mb-3 text-xl font-bold")}>

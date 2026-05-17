@@ -10,6 +10,7 @@ body {
 
 @media print {
   @page {
+    size: A4;
     margin: 0.45in;
   }
 
@@ -29,6 +30,11 @@ body {
   .avoid-break {
     break-inside: avoid;
     page-break-inside: avoid;
+  }
+
+  .print-break-before {
+    break-before: page;
+    page-break-before: always;
   }
 
   input,
