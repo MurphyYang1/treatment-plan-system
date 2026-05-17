@@ -1036,7 +1036,7 @@ export default function Home() {
         </header>
 
         <div className="grid gap-8 p-8 lg:grid-cols-3">
-          <aside className="space-y-6">
+          <aside className="space-y-6 lg:col-span-1 lg:col-start-1 lg:row-start-1">
             <section className="rounded-2xl border p-6">
               <h2 className="mb-5 text-2xl font-bold">Patient Information</h2>
 
@@ -1148,7 +1148,7 @@ export default function Home() {
             </section>
           </aside>
 
-          <section className="space-y-6 lg:col-span-2">
+          <section className="space-y-6 lg:col-span-2 lg:col-start-2 lg:row-start-1">
             <section className="rounded-2xl border p-6">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <h2 className="text-2xl font-bold">Treatment Phases</h2>
