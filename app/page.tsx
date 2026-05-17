@@ -1410,7 +1410,7 @@ export default function Home() {
 
                     <div className="text-right">
                       <p className="text-sm text-gray-500">Phase CASH Total</p>
-                      <p className={compactClass(isFinalized, "text-2xl font-bold", "text-xl font-bold")}>
+                      <p className={compactClass(isFinalized, "text-2xl font-bold tabular-nums", "text-xl font-bold tabular-nums")}>
                         ${phaseTotal.toFixed(2)}
                       </p>
                     </div>
@@ -1559,8 +1559,8 @@ export default function Home() {
                                 }
                                 className={compactClass(
                                   isFinalized,
-                                  "mt-2 w-full rounded-xl border px-4 py-3",
-                                  "mt-1 w-full rounded-lg border border-transparent bg-transparent px-0 py-1",
+                                  "mt-2 w-full rounded-xl border px-4 py-3 text-right tabular-nums",
+                                  "mt-1 w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums",
                                 )}
                               />
                             </div>
@@ -1590,8 +1590,8 @@ export default function Home() {
                                 }
                                 className={compactClass(
                                   isFinalized,
-                                  "mt-2 w-full rounded-xl border px-4 py-3",
-                                  "mt-1 w-full rounded-lg border border-transparent bg-transparent px-0 py-1",
+                                  "mt-2 w-full rounded-xl border px-4 py-3 text-right tabular-nums",
+                                  "mt-1 w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums",
                                 )}
                               />
                             </div>
@@ -1607,7 +1607,7 @@ export default function Home() {
                                 Unit Price
                               </label>
                               {isFinalized ? (
-                                <div className="mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1">
+                                <div className="mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums">
                                   ${procedure.fee.toFixed(2)}
                                 </div>
                               ) : (
@@ -1622,7 +1622,7 @@ export default function Home() {
                                       Number(event.target.value),
                                     )
                                   }
-                                  className="mt-2 w-full rounded-xl border px-4 py-3"
+                                  className="mt-2 w-full rounded-xl border px-4 py-3 text-right tabular-nums"
                                 />
                               )}
                             </div>
@@ -1640,8 +1640,8 @@ export default function Home() {
                               <div
                                 className={compactClass(
                                   isFinalized,
-                                  "mt-2 rounded-xl border bg-white px-4 py-3",
-                                  "mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1",
+                                  "mt-2 rounded-xl border bg-white px-4 py-3 text-right tabular-nums",
+                                  "mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums",
                                 )}
                               >
                                 ${gst.toFixed(2)}
@@ -1661,8 +1661,8 @@ export default function Home() {
                               <div
                                 className={compactClass(
                                   isFinalized,
-                                  "mt-2 rounded-xl border bg-white px-4 py-3",
-                                  "mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1",
+                                  "mt-2 rounded-xl border bg-white px-4 py-3 text-right tabular-nums",
+                                  "mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums",
                                 )}
                               >
                                 ${subsidy.toFixed(2)}
@@ -1680,7 +1680,7 @@ export default function Home() {
                                 Medisave Deducted
                               </label>
                               {isFinalized ? (
-                                <div className="mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1">
+                                <div className="mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums">
                                   ${procedure.medisaveClaim.toFixed(2)}
                                 </div>
                               ) : (
@@ -1695,7 +1695,7 @@ export default function Home() {
                                       Number(event.target.value),
                                     )
                                   }
-                                  className="mt-2 w-full rounded-xl border px-4 py-3"
+                                  className="mt-2 w-full rounded-xl border px-4 py-3 text-right tabular-nums"
                                 />
                               )}
                             </div>
@@ -1713,8 +1713,8 @@ export default function Home() {
                               <div
                                 className={compactClass(
                                   isFinalized,
-                                  "mt-2 rounded-xl border bg-blue-50 px-4 py-3 font-bold",
-                                  "mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 font-bold",
+                                  "mt-2 rounded-xl border bg-blue-50 px-4 py-3 text-right font-bold tabular-nums",
+                                  "mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right font-bold tabular-nums",
                                 )}
                               >
                                 ${payable.toFixed(2)}
@@ -1776,22 +1776,30 @@ export default function Home() {
               <div className={compactClass(isFinalized, "space-y-4", "space-y-2 text-sm")}>
                 <div className="flex justify-between">
                   <span>Treatment Subtotal</span>
-                  <span>${totals.subtotal.toFixed(2)}</span>
+                  <span className="min-w-28 text-right tabular-nums">
+                    ${totals.subtotal.toFixed(2)}
+                  </span>
                 </div>
 
                 <div className="flex justify-between">
                   <span>GST (9%)</span>
-                  <span>${totals.gst.toFixed(2)}</span>
+                  <span className="min-w-28 text-right tabular-nums">
+                    ${totals.gst.toFixed(2)}
+                  </span>
                 </div>
 
                 <div className="flex justify-between">
                   <span>Total Subsidies USED</span>
-                  <span>${totals.subsidy.toFixed(2)}</span>
+                  <span className="min-w-28 text-right tabular-nums">
+                    ${totals.subsidy.toFixed(2)}
+                  </span>
                 </div>
 
                 <div className="flex justify-between">
                   <span>Total Medisave USED</span>
-                  <span>${totals.medisave.toFixed(2)}</span>
+                  <span className="min-w-28 text-right tabular-nums">
+                    ${totals.medisave.toFixed(2)}
+                  </span>
                 </div>
 
                 <div
@@ -1802,7 +1810,9 @@ export default function Home() {
                   )}
                 >
                   <span>Cash Portion</span>
-                  <span>${totals.payable.toFixed(2)}</span>
+                  <span className="min-w-28 text-right tabular-nums">
+                    ${totals.payable.toFixed(2)}
+                  </span>
                 </div>
               </div>
             </section>
