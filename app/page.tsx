@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "react-qr-code";
 import SignatureCanvas from "react-signature-canvas";
 
@@ -44,12 +44,60 @@ type Phase = {
   procedures: Procedure[];
 };
 
+type InstallmentPlanId =
+  | "none"
+  | "atome-3"
+  | "grabpay-4"
+  | "card-12"
+  | "in-house-6"
+  | "in-house-12";
+
+type InstallmentPlan = {
+  id: InstallmentPlanId;
+  label: string;
+  months: number;
+  isInHouse: boolean;
+};
+
 const noSubsidy: Subsidy = {
   chasBlue: 0,
   chasOrange: 0,
   merdeka: 0,
   pioneer: 0,
 };
+
+const installmentPlans: InstallmentPlan[] = [
+  {
+    id: "atome-3",
+    label: "Atome - 3 months interest-free",
+    months: 3,
+    isInHouse: false,
+  },
+  {
+    id: "grabpay-4",
+    label: "GrabPay - 4 months interest-free",
+    months: 4,
+    isInHouse: false,
+  },
+  {
+    id: "card-12",
+    label: "UOB / OCBC Credit Card - 12 months",
+    months: 12,
+    isInHouse: false,
+  },
+  {
+    id: "in-house-6",
+    label: "In-House Instalment - 6 months",
+    months: 6,
+    isInHouse: true,
+  },
+  {
+    id: "in-house-12",
+    label: "In-House Instalment - 12 months",
+    months: 12,
+    isInHouse: true,
+  },
+];
 
 const availableTreatments: Treatment[] = [
   {
@@ -873,6 +921,8 @@ export default function Home() {
   const [dateSigned, setDateSigned] = useState("");
   const [signatureUrl, setSignatureUrl] = useState("#signature");
   const [subsidyTier, setSubsidyTier] = useState<SubsidyTier>("Private");
+  const [selectedInstallmentPlan, setSelectedInstallmentPlan] =
+    useState<InstallmentPlanId>("none");
   const [selectedCategory, setSelectedCategory] = useState(
     treatmentCategories[0] ?? "",
   );
@@ -1061,6 +1111,29 @@ export default function Home() {
       payable: subtotal + gst - subsidy - medisave,
     };
   }, [phases, subsidyTier]);
+
+  const installmentBreakdown = useMemo(() => {
+    const plan = installmentPlans.find(
+      (item) => item.id === selectedInstallmentPlan,
+    );
+
+    if (!plan) {
+      return null;
+    }
+
+    const cashPortion = Math.max(totals.payable, 0);
+    const medisaveGstCash = plan.isInHouse
+      ? Math.min(totals.medisave * GST_RATE, cashPortion)
+      : 0;
+    const installmentAmount = Math.max(cashPortion - medisaveGstCash, 0);
+
+    return {
+      plan,
+      medisaveGstCash,
+      installmentAmount,
+      monthlyAmount: installmentAmount / plan.months,
+    };
+  }, [selectedInstallmentPlan, totals]);
 
   return (
     <main
@@ -1551,8 +1624,10 @@ export default function Home() {
                               procedure.description.trim().length > 0;
 
                             return (
-                              <Fragment key={`${procedure.name}-${procedureIndex}`}>
-                                <tr className="border-t align-top">
+                                <tr
+                                  key={`${procedure.name}-${procedureIndex}`}
+                                  className="border-t align-top"
+                                >
                                   <td className="px-2 py-2">
                                     <div className="font-semibold">
                                       {procedure.name}
@@ -1560,6 +1635,16 @@ export default function Home() {
                                     <div className="text-[10px] text-gray-500">
                                       {procedure.category}
                                     </div>
+                                    {hasRemarks ? (
+                                      <div className="mt-1.5 rounded border-l-2 border-blue-300 bg-blue-50 px-1.5 py-1 text-[10px] leading-snug text-blue-950">
+                                        <span className="font-semibold">
+                                          Remarks:{" "}
+                                        </span>
+                                        <span className="whitespace-pre-wrap">
+                                          {procedure.description}
+                                        </span>
+                                      </div>
+                                    ) : null}
                                   </td>
                                   <td className="px-2 py-2 text-right tabular-nums">
                                     {procedure.quantity}
@@ -1583,23 +1668,6 @@ export default function Home() {
                                     {formatCurrency(payable)}
                                   </td>
                                 </tr>
-
-                                {hasRemarks ? (
-                                  <tr className="border-t bg-white">
-                                    <td
-                                      colSpan={8}
-                                      className="px-2 py-1.5 text-[10px] leading-snug text-gray-700"
-                                    >
-                                      <span className="font-semibold">
-                                        Remarks:{" "}
-                                      </span>
-                                      <span className="whitespace-pre-wrap">
-                                        {procedure.description}
-                                      </span>
-                                    </td>
-                                  </tr>
-                                ) : null}
-                              </Fragment>
                             );
                           })}
                         </tbody>
@@ -1895,6 +1963,88 @@ export default function Home() {
                     ${totals.payable.toFixed(2)}
                   </span>
                 </div>
+
+                {!isFinalized ? (
+                  <div className="border-t pt-4">
+                    <label className="mb-2 block text-sm font-semibold text-gray-700">
+                      Optional Instalment Plan
+                    </label>
+                    <select
+                      value={selectedInstallmentPlan}
+                      onChange={(event) =>
+                        setSelectedInstallmentPlan(
+                          event.target.value as InstallmentPlanId,
+                        )
+                      }
+                      className="w-full rounded-xl border bg-white px-4 py-3"
+                    >
+                      <option value="none">No instalment plan selected</option>
+                      {installmentPlans.map((plan) => (
+                        <option key={plan.id} value={plan.id}>
+                          {plan.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ) : null}
+
+                {installmentBreakdown ? (
+                  <div className="rounded-xl border bg-white p-4 text-sm">
+                    <div className="flex justify-between gap-4 font-semibold">
+                      <span>Selected Instalment Plan</span>
+                      <span className="text-right">
+                        {installmentBreakdown.plan.label}
+                      </span>
+                    </div>
+
+                    {installmentBreakdown.plan.isInHouse ? (
+                      <div className="mt-3 space-y-2">
+                        <div className="flex justify-between gap-4">
+                          <span>
+                            Upfront cash payment (GST on Medisave portion)
+                          </span>
+                          <span className="min-w-28 text-right tabular-nums">
+                            {formatCurrency(
+                              installmentBreakdown.medisaveGstCash,
+                            )}
+                          </span>
+                        </div>
+                        <div className="flex justify-between gap-4">
+                          <span>Amount under in-house instalments</span>
+                          <span className="min-w-28 text-right tabular-nums">
+                            {formatCurrency(
+                              installmentBreakdown.installmentAmount,
+                            )}
+                          </span>
+                        </div>
+                        <p className="text-xs leading-relaxed text-gray-600">
+                          For in-house instalments, the GST amount linked to the
+                          Medisave claim is excluded from the instalment amount
+                          and collected in cash.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="mt-3 flex justify-between gap-4">
+                        <span>Amount under instalments</span>
+                        <span className="min-w-28 text-right tabular-nums">
+                          {formatCurrency(
+                            installmentBreakdown.installmentAmount,
+                          )}
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="mt-3 flex justify-between gap-4 border-t pt-3 font-bold">
+                      <span>
+                        Estimated monthly instalment (
+                        {installmentBreakdown.plan.months} months)
+                      </span>
+                      <span className="min-w-28 text-right tabular-nums">
+                        {formatCurrency(installmentBreakdown.monthlyAmount)}
+                      </span>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             </section>
 
