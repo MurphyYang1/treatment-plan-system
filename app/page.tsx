@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "react-qr-code";
 import SignatureCanvas from "react-signature-canvas";
 
@@ -44,12 +44,60 @@ type Phase = {
   procedures: Procedure[];
 };
 
+type InstallmentPlanId =
+  | "none"
+  | "atome-3"
+  | "grabpay-4"
+  | "card-12"
+  | "in-house-6"
+  | "in-house-12";
+
+type InstallmentPlan = {
+  id: InstallmentPlanId;
+  label: string;
+  months: number;
+  isInHouse: boolean;
+};
+
 const noSubsidy: Subsidy = {
   chasBlue: 0,
   chasOrange: 0,
   merdeka: 0,
   pioneer: 0,
 };
+
+const installmentPlans: InstallmentPlan[] = [
+  {
+    id: "atome-3",
+    label: "Atome - 3 months interest-free",
+    months: 3,
+    isInHouse: false,
+  },
+  {
+    id: "grabpay-4",
+    label: "GrabPay - 4 months interest-free",
+    months: 4,
+    isInHouse: false,
+  },
+  {
+    id: "card-12",
+    label: "UOB / OCBC Credit Card - 12 months",
+    months: 12,
+    isInHouse: false,
+  },
+  {
+    id: "in-house-6",
+    label: "In-House Instalment - 6 months",
+    months: 6,
+    isInHouse: true,
+  },
+  {
+    id: "in-house-12",
+    label: "In-House Instalment - 12 months",
+    months: 12,
+    isInHouse: true,
+  },
+];
 
 const availableTreatments: Treatment[] = [
   {
@@ -842,9 +890,39 @@ function createProcedure(treatment: Treatment): Procedure {
   };
 }
 
+function getDateInputValue(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function formatCurrency(amount: number) {
+  return `$${amount.toFixed(2)}`;
+}
+
+function formatDeduction(amount: number) {
+  return amount === 0 ? formatCurrency(0) : `-${formatCurrency(amount)}`;
+}
+
+function compactClass(isFinalized: boolean, editClass: string, finalClass: string) {
+  return isFinalized ? finalClass : editClass;
+}
+
+function costLabelClass(isFinalized: boolean) {
+  return compactClass(
+    isFinalized,
+    "flex min-h-10 items-end text-sm font-semibold leading-tight text-gray-700",
+    "flex min-h-8 items-end text-xs font-semibold uppercase leading-tight tracking-wide text-gray-600",
+  );
+}
+
 export default function Home() {
   const signatureRef = useRef<SignatureCanvas | null>(null);
+  const [isFinalized, setIsFinalized] = useState(false);
+  const [patientName, setPatientName] = useState("");
+  const [dateSigned, setDateSigned] = useState("");
+  const [signatureUrl, setSignatureUrl] = useState("#signature");
   const [subsidyTier, setSubsidyTier] = useState<SubsidyTier>("Private");
+  const [selectedInstallmentPlan, setSelectedInstallmentPlan] =
+    useState<InstallmentPlanId>("none");
   const [selectedCategory, setSelectedCategory] = useState(
     treatmentCategories[0] ?? "",
   );
@@ -861,6 +939,28 @@ export default function Home() {
   const filteredTreatments = availableTreatments.filter(
     (item) => item.category === selectedCategory,
   );
+
+  useEffect(() => {
+    const nextSignatureUrl = `${window.location.origin}${window.location.pathname}#signature`;
+    const animationFrame = window.requestAnimationFrame(() => {
+      setSignatureUrl(nextSignatureUrl);
+    });
+
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, []);
+
+  const markSignatureComplete = () => {
+    setDateSigned(getDateInputValue(new Date()));
+  };
+
+  const clearSignature = () => {
+    signatureRef.current?.clear();
+    setDateSigned("");
+  };
+
+  const printQuotation = () => {
+    window.print();
+  };
 
   const addPhase = () => {
     setPhases((currentPhases) => [
@@ -1012,36 +1112,132 @@ export default function Home() {
     };
   }, [phases, subsidyTier]);
 
+  const installmentBreakdown = useMemo(() => {
+    const plan = installmentPlans.find(
+      (item) => item.id === selectedInstallmentPlan,
+    );
+
+    if (!plan) {
+      return null;
+    }
+
+    const cashPortion = Math.max(totals.payable, 0);
+    const medisaveGstCash = plan.isInHouse
+      ? Math.min(totals.medisave * GST_RATE, cashPortion)
+      : 0;
+    const installmentAmount = Math.max(cashPortion - medisaveGstCash, 0);
+
+    return {
+      plan,
+      medisaveGstCash,
+      installmentAmount,
+      monthlyAmount: installmentAmount / plan.months,
+    };
+  }, [selectedInstallmentPlan, totals]);
+
   return (
-    <main className="min-h-screen bg-gray-100 p-6 text-black">
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-3xl bg-white shadow-xl">
-        <header className="border-b p-8">
-          <div className="flex flex-wrap items-center gap-6">
+    <main
+      className={compactClass(
+        isFinalized,
+        "min-h-screen bg-gray-100 p-6 text-black print:bg-white print:p-0",
+        "min-h-screen bg-gray-100 p-3 text-black print:bg-white print:p-0",
+      )}
+    >
+      <div
+        className={compactClass(
+          isFinalized,
+          "print-page mx-auto max-w-7xl overflow-hidden rounded-3xl bg-white shadow-xl print:max-w-none print:rounded-none print:shadow-none",
+          "print-page mx-auto max-w-6xl overflow-hidden rounded-xl bg-white shadow-md print:max-w-none print:rounded-none print:shadow-none",
+        )}
+      >
+        <header
+          className={compactClass(
+            isFinalized,
+            "border-b p-8 print:p-4",
+            "border-b p-4 print:p-4",
+          )}
+        >
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-4">
             <Image
               src="/nofrills-logo.svg"
               alt="Nofrills Dental"
               width={120}
               height={120}
-              className="rounded-2xl"
+              className={compactClass(
+                isFinalized,
+                "rounded-2xl",
+                "h-20 w-20 rounded-xl print:h-16 print:w-16",
+              )}
               priority
             />
 
             <div>
-              <h1 className="text-4xl font-bold">Nofrills Dental</h1>
-              <p className="mt-2 text-gray-600">
+              <h1
+                className={compactClass(
+                  isFinalized,
+                  "text-4xl font-bold",
+                  "text-3xl font-bold print:text-2xl",
+                )}
+              >
+                Nofrills Dental
+              </h1>
+              <p className={compactClass(isFinalized, "mt-2 text-gray-600", "mt-1 text-sm text-gray-600")}>
                 Dental Treatment Plan & Quotation
               </p>
+            </div>
+            </div>
+
+            <div className="no-print flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => setIsFinalized((current) => !current)}
+                className="rounded-xl bg-black px-5 py-2 text-white"
+              >
+                {isFinalized ? "Edit Quotation" : "Finalize for Print"}
+              </button>
+
+              {isFinalized ? (
+                <button
+                  type="button"
+                  onClick={printQuotation}
+                  className="rounded-xl border px-5 py-2 transition hover:bg-gray-100"
+                >
+                  Print
+                </button>
+              ) : null}
             </div>
           </div>
         </header>
 
-        <div className="grid gap-8 p-8 lg:grid-cols-3">
-          <aside className="space-y-6 lg:col-span-1 lg:col-start-1 lg:row-start-1">
-            <section className="rounded-2xl border p-6">
-              <h2 className="mb-5 text-2xl font-bold">Patient Information</h2>
+        <div
+          className={compactClass(
+            isFinalized,
+            "grid gap-8 p-8 lg:grid-cols-3 print:grid-cols-1 print:gap-4 print:p-4",
+            "grid gap-4 p-4 lg:grid-cols-[18rem_minmax(0,1fr)] print:grid-cols-1 print:gap-3 print:p-3",
+          )}
+        >
+          <aside className="space-y-4 lg:col-span-1 lg:col-start-1 lg:row-start-1 print:col-auto print:row-auto print:space-y-3">
+            <section
+              className={compactClass(
+                isFinalized,
+                "avoid-break rounded-2xl border p-6",
+                "avoid-break rounded-xl border p-4 print:p-3",
+              )}
+            >
+              <h2 className={compactClass(isFinalized, "mb-5 text-2xl font-bold", "mb-3 text-xl font-bold")}>
+                Patient Information
+              </h2>
 
-              <div className="space-y-4">
-                <select className="w-full rounded-xl border px-4 py-3">
+              <div className={compactClass(isFinalized, "space-y-4", "space-y-2")}>
+                <select
+                  disabled={isFinalized}
+                  className={compactClass(
+                    isFinalized,
+                    "w-full rounded-xl border px-4 py-3",
+                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm disabled:opacity-100",
+                  )}
+                >
                   <option value="">Select Clinic Branch</option>
                   <option>Nofrills Dental Marina Square</option>
                   <option>Nofrills Dental Suntec</option>
@@ -1052,32 +1248,59 @@ export default function Home() {
                 <input
                   type="text"
                   placeholder="Dentist Name"
-                  className="w-full rounded-xl border px-4 py-3"
+                  readOnly={isFinalized}
+                  className={compactClass(
+                    isFinalized,
+                    "w-full rounded-xl border px-4 py-3",
+                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                  )}
                 />
 
                 <input
                   type="text"
                   placeholder="Patient Name"
-                  className="w-full rounded-xl border px-4 py-3"
+                  value={patientName}
+                  onChange={(event) => setPatientName(event.target.value)}
+                  readOnly={isFinalized}
+                  className={compactClass(
+                    isFinalized,
+                    "w-full rounded-xl border px-4 py-3",
+                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                  )}
                 />
 
                 <input
                   type="text"
                   placeholder="Patient ID"
-                  className="w-full rounded-xl border px-4 py-3"
+                  readOnly={isFinalized}
+                  className={compactClass(
+                    isFinalized,
+                    "w-full rounded-xl border px-4 py-3",
+                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                  )}
                 />
 
                 <input
                   type="date"
-                  className="w-full rounded-xl border px-4 py-3"
+                  readOnly={isFinalized}
+                  className={compactClass(
+                    isFinalized,
+                    "w-full rounded-xl border px-4 py-3",
+                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                  )}
                 />
 
                 <select
                   value={subsidyTier}
+                  disabled={isFinalized}
                   onChange={(event) =>
                     setSubsidyTier(event.target.value as SubsidyTier)
                   }
-                  className="w-full rounded-xl border px-4 py-3"
+                  className={compactClass(
+                    isFinalized,
+                    "w-full rounded-xl border px-4 py-3",
+                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm disabled:opacity-100",
+                  )}
                 >
                   <option>Private</option>
                   <option>CHAS Blue</option>
@@ -1088,79 +1311,124 @@ export default function Home() {
               </div>
             </section>
 
-            <section className="rounded-2xl border bg-gray-50 p-6">
-              <h2 className="mb-5 text-2xl font-bold">
-                Interest-Free Instalments
-              </h2>
+            {!isFinalized ? (
+              <>
+                <section className="avoid-break rounded-2xl border bg-gray-50 p-6">
+                  <h2 className="mb-5 text-2xl font-bold">
+                    Interest-Free Instalments
+                  </h2>
 
-              <div className="space-y-4 text-sm">
-                <div>
-                  <p className="font-semibold">Atome</p>
-                  <p>3 months interest-free</p>
-                </div>
+                  <div className="space-y-4 text-sm">
+                    <div>
+                      <p className="font-semibold">Atome</p>
+                      <p>3 months interest-free</p>
+                    </div>
 
-                <div>
-                  <p className="font-semibold">GrabPay</p>
-                  <p>4 months interest-free</p>
-                </div>
+                    <div>
+                      <p className="font-semibold">GrabPay</p>
+                      <p>4 months interest-free</p>
+                    </div>
 
-                <div>
-                  <p className="font-semibold">UOB / OCBC Credit Card 12 Mths</p>
-                  <p>12 months interest-free instalment</p>
-                </div>
+                    <div>
+                      <p className="font-semibold">
+                        UOB / OCBC Credit Card 12 Mths
+                      </p>
+                      <p>12 months interest-free instalment</p>
+                    </div>
 
-                <div>
-                  <p className="font-semibold">In-House Instalment</p>
-                  <ul className="mt-2 list-disc space-y-1 pl-5">
-                    <li>6/12 months interest-free - depending on treatment</li>
-                    <li>Applicant must be SG / PR</li>
-                    <li>1x guarantor required (SG / PR)</li>
-                    <li>Valid debit card required</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
+                    <div>
+                      <p className="font-semibold">In-House Instalment</p>
+                      <ul className="mt-2 list-disc space-y-1 pl-5">
+                        <li>
+                          6/12 months interest-free - depending on treatment
+                        </li>
+                        <li>Applicant must be SG / PR</li>
+                        <li>1x guarantor required (SG / PR)</li>
+                        <li>Valid debit card required</li>
+                      </ul>
+                    </div>
+                  </div>
+                </section>
 
-            <section className="rounded-2xl border bg-white p-6 text-sm leading-relaxed text-gray-700">
-              <h2 className="mb-4 text-2xl font-bold text-black">Disclaimer</h2>
+                <section className="avoid-break rounded-2xl border bg-white p-6 text-sm leading-relaxed text-gray-700">
+                  <h2 className="mb-4 text-2xl font-bold text-black">
+                    Disclaimer
+                  </h2>
 
-              <div className="space-y-4">
-                <p>All treatment fees stated are inclusive of prevailing 9% GST.</p>
+                  <div className="space-y-4">
+                    <p>
+                      All treatment fees stated are inclusive of prevailing 9%
+                      GST.
+                    </p>
 
-                <p>
-                  Treatment fees discussed and agreed upon shall remain valid
-                  throughout the planned treatment duration unless unforeseen
-                  clinical complications arise.
-                </p>
+                    <p>
+                      Treatment fees discussed and agreed upon shall remain valid
+                      throughout the planned treatment duration unless unforeseen
+                      clinical complications arise.
+                    </p>
 
-                <p>
-                  Additional treatment procedures required due to complications,
-                  changes in clinical condition or patient requests may incur
-                  additional treatment charges.
-                </p>
+                    <p>
+                      Additional treatment procedures required due to
+                      complications, changes in clinical condition or patient
+                      requests may incur additional treatment charges.
+                    </p>
 
-                <p>
-                  CHAS, Merdeka Generation, Pioneer Generation and Medisave
-                  claims remain subject to prevailing MOH regulations and patient
-                  eligibility.
-                </p>
-              </div>
-            </section>
+                    <p>
+                      CHAS, Merdeka Generation, Pioneer Generation and Medisave
+                      claims remain subject to prevailing MOH regulations and
+                      patient eligibility.
+                    </p>
+                  </div>
+                </section>
+              </>
+            ) : null}
           </aside>
 
-          <section className="space-y-6 lg:col-span-2 lg:col-start-2 lg:row-start-1">
-            <section className="rounded-2xl border p-6">
+          <section
+            className={compactClass(
+              isFinalized,
+              "space-y-6 lg:col-span-2 lg:col-start-2 lg:row-start-1 print:col-auto print:row-auto",
+              "space-y-3 lg:col-span-1 lg:col-start-2 lg:row-start-1 print:col-auto print:row-auto print:space-y-3",
+            )}
+          >
+            <section
+              className={compactClass(
+                isFinalized,
+                "rounded-2xl border p-6",
+                "avoid-break rounded-xl border p-4 print:p-3",
+              )}
+            >
               <div className="flex flex-wrap items-center justify-between gap-4">
-                <h2 className="text-2xl font-bold">Treatment Phases</h2>
+                <h2 className={compactClass(isFinalized, "text-2xl font-bold", "text-xl font-bold")}>
+                  Treatment Phases
+                </h2>
 
-                <button
-                  type="button"
-                  onClick={addPhase}
-                  className="rounded-xl bg-black px-6 py-3 text-white"
-                >
-                  + Add Phase
-                </button>
+                {!isFinalized ? (
+                  <button
+                    type="button"
+                    onClick={addPhase}
+                    className="rounded-xl bg-black px-6 py-3 text-white"
+                  >
+                    + Add Phase
+                  </button>
+                ) : null}
               </div>
+            </section>
+
+            <section
+              className={compactClass(
+                isFinalized,
+                "avoid-break rounded-2xl border bg-blue-50 p-5 text-sm text-blue-950",
+                "avoid-break rounded-xl border bg-blue-50 p-3 text-xs text-blue-950 print:p-2",
+              )}
+            >
+              <h3 className="font-bold">How to read each treatment cost</h3>
+              <p className="mt-2 leading-relaxed">
+                Quantity is the number of procedures planned. Claim quantity is
+                the number submitted for CHAS / Merdeka / Pioneer subsidy. Cash
+                payable is calculated as treatment subtotal (unit price x
+                quantity) plus GST, less subsidy and Medisave deductions.
+              </p>
             </section>
 
             {phases.map((phase, phaseIndex) => {
@@ -1186,23 +1454,33 @@ export default function Home() {
               return (
                 <section
                   key={phase.id}
-                  className="rounded-2xl border bg-white p-6"
+                  className={compactClass(
+                    isFinalized,
+                    "avoid-break rounded-2xl border bg-white p-6",
+                    "avoid-break rounded-xl border bg-white p-4 print:p-3",
+                  )}
                 >
                   <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div className="w-full max-w-md space-y-3">
+                    <div className={compactClass(isFinalized, "w-full max-w-md space-y-3", "w-full max-w-md space-y-1")}>
                       <input
                         type="text"
                         value={phase.title}
+                        readOnly={isFinalized}
                         onChange={(event) =>
                           updatePhase(phaseIndex, "title", event.target.value)
                         }
-                        className="w-full rounded-xl border px-4 py-3 text-xl font-bold"
+                        className={compactClass(
+                          isFinalized,
+                          "w-full rounded-xl border px-4 py-3 text-xl font-bold",
+                          "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-lg font-bold",
+                        )}
                       />
 
                       <input
                         type="text"
                         placeholder="Phase Duration"
                         value={phase.duration}
+                        readOnly={isFinalized}
                         onChange={(event) =>
                           updatePhase(
                             phaseIndex,
@@ -1210,83 +1488,193 @@ export default function Home() {
                             event.target.value,
                           )
                         }
-                        className="w-full rounded-xl border px-4 py-3"
+                        className={compactClass(
+                          isFinalized,
+                          "w-full rounded-xl border px-4 py-3",
+                          "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                        )}
                       />
                     </div>
 
                     <div className="text-right">
                       <p className="text-sm text-gray-500">Phase CASH Total</p>
-                      <p className="text-2xl font-bold">
+                      <p className={compactClass(isFinalized, "text-2xl font-bold tabular-nums", "text-xl font-bold tabular-nums")}>
                         ${phaseTotal.toFixed(2)}
                       </p>
                     </div>
                   </div>
 
-                  <div className="mt-6 flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => movePhaseUp(phaseIndex)}
-                      className="rounded-lg border px-3 py-2"
-                    >
-                      Up
-                    </button>
+                  {!isFinalized ? (
+                    <>
+                      <div className="mt-6 flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => movePhaseUp(phaseIndex)}
+                          className="rounded-lg border px-3 py-2"
+                        >
+                          Up
+                        </button>
 
-                    <button
-                      type="button"
-                      onClick={() => movePhaseDown(phaseIndex)}
-                      className="rounded-lg border px-3 py-2"
-                    >
-                      Down
-                    </button>
+                        <button
+                          type="button"
+                          onClick={() => movePhaseDown(phaseIndex)}
+                          className="rounded-lg border px-3 py-2"
+                        >
+                          Down
+                        </button>
 
-                    <button
-                      type="button"
-                      onClick={() => deletePhase(phaseIndex)}
-                      className="rounded-lg border px-3 py-2 text-red-500"
-                    >
-                      Delete
-                    </button>
-                  </div>
+                        <button
+                          type="button"
+                          onClick={() => deletePhase(phaseIndex)}
+                          className="rounded-lg border px-3 py-2 text-red-500"
+                        >
+                          Delete
+                        </button>
+                      </div>
 
-                  <div className="mt-6 grid gap-4 md:grid-cols-3">
-                    <select
-                      value={selectedCategory}
-                      onChange={(event) => {
-                        setSelectedCategory(event.target.value);
-                        setSelectedTreatment("");
-                      }}
-                      className="rounded-xl border px-4 py-3"
-                    >
-                      {treatmentCategories.map((category) => (
-                        <option key={category}>{category}</option>
-                      ))}
-                    </select>
+                      <div className="mt-6 grid gap-4 md:grid-cols-3">
+                        <select
+                          value={selectedCategory}
+                          onChange={(event) => {
+                            setSelectedCategory(event.target.value);
+                            setSelectedTreatment("");
+                          }}
+                          className="rounded-xl border px-4 py-3"
+                        >
+                          {treatmentCategories.map((category) => (
+                            <option key={category}>{category}</option>
+                          ))}
+                        </select>
 
-                    <select
-                      value={selectedTreatment}
-                      onChange={(event) =>
-                        setSelectedTreatment(event.target.value)
-                      }
-                      className="rounded-xl border px-4 py-3"
-                    >
-                      <option value="">Select Procedure</option>
-                      {filteredTreatments.map((item) => (
-                        <option key={item.name} value={item.name}>
-                          {item.name}
-                        </option>
-                      ))}
-                    </select>
+                        <select
+                          value={selectedTreatment}
+                          onChange={(event) =>
+                            setSelectedTreatment(event.target.value)
+                          }
+                          className="rounded-xl border px-4 py-3"
+                        >
+                          <option value="">Select Procedure</option>
+                          {filteredTreatments.map((item) => (
+                            <option key={item.name} value={item.name}>
+                              {item.name}
+                            </option>
+                          ))}
+                        </select>
 
-                    <button
-                      type="button"
-                      onClick={() => addProcedure(phaseIndex)}
-                      className="rounded-xl bg-black px-6 py-3 text-white"
-                    >
-                      Add Procedure
-                    </button>
-                  </div>
+                        <button
+                          type="button"
+                          onClick={() => addProcedure(phaseIndex)}
+                          className="rounded-xl bg-black px-6 py-3 text-white"
+                        >
+                          Add Procedure
+                        </button>
+                      </div>
+                    </>
+                  ) : null}
 
-                  <div className="mt-6 space-y-4">
+                  {isFinalized ? (
+                    <div className="mt-3 overflow-x-auto rounded-lg border">
+                      <table className="w-full table-fixed border-collapse text-[11px] leading-tight">
+                        <thead className="bg-gray-100 text-gray-700">
+                          <tr>
+                            <th className="w-[28%] px-2 py-2 text-left font-semibold">
+                              Treatment
+                            </th>
+                            <th className="w-[7%] px-2 py-2 text-right font-semibold tabular-nums">
+                              Qty
+                            </th>
+                            <th className="w-[8%] px-2 py-2 text-right font-semibold tabular-nums">
+                              Claim
+                            </th>
+                            <th className="w-[11%] px-2 py-2 text-right font-semibold tabular-nums">
+                              Unit Price
+                            </th>
+                            <th className="w-[10%] px-2 py-2 text-right font-semibold tabular-nums">
+                              GST
+                            </th>
+                            <th className="w-[12%] px-2 py-2 text-right font-semibold tabular-nums">
+                              Subsidy
+                              <span className="block text-[9px] font-normal">
+                                Deduction
+                              </span>
+                            </th>
+                            <th className="w-[12%] px-2 py-2 text-right font-semibold tabular-nums">
+                              Medisave
+                              <span className="block text-[9px] font-normal">
+                                Deduction
+                              </span>
+                            </th>
+                            <th className="w-[12%] px-2 py-2 text-right font-semibold tabular-nums">
+                              Cash Payable
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          {phase.procedures.map((procedure, procedureIndex) => {
+                            const subtotal =
+                              procedure.fee * procedure.quantity;
+                            const gst = subtotal * GST_RATE;
+                            const subsidy =
+                              getSubsidyAmount(procedure, subsidyTier) *
+                              procedure.subsidyClaimQty;
+                            const payable =
+                              subtotal + gst - subsidy - procedure.medisaveClaim;
+                            const hasRemarks =
+                              procedure.description.trim().length > 0;
+
+                            return (
+                                <tr
+                                  key={`${procedure.name}-${procedureIndex}`}
+                                  className="border-t align-top"
+                                >
+                                  <td className="px-2 py-2">
+                                    <div className="font-semibold">
+                                      {procedure.name}
+                                    </div>
+                                    <div className="text-[10px] text-gray-500">
+                                      {procedure.category}
+                                    </div>
+                                    {hasRemarks ? (
+                                      <div className="mt-1.5 rounded border-l-2 border-blue-300 bg-blue-50 px-1.5 py-1 text-[10px] leading-snug text-blue-950">
+                                        <span className="font-semibold">
+                                          Remarks:{" "}
+                                        </span>
+                                        <span className="whitespace-pre-wrap">
+                                          {procedure.description}
+                                        </span>
+                                      </div>
+                                    ) : null}
+                                  </td>
+                                  <td className="px-2 py-2 text-right tabular-nums">
+                                    {procedure.quantity}
+                                  </td>
+                                  <td className="px-2 py-2 text-right tabular-nums">
+                                    {procedure.subsidyClaimQty}
+                                  </td>
+                                  <td className="px-2 py-2 text-right tabular-nums">
+                                    {formatCurrency(procedure.fee)}
+                                  </td>
+                                  <td className="px-2 py-2 text-right tabular-nums">
+                                    {formatCurrency(gst)}
+                                  </td>
+                                  <td className="px-2 py-2 text-right tabular-nums">
+                                    {formatDeduction(subsidy)}
+                                  </td>
+                                  <td className="px-2 py-2 text-right tabular-nums">
+                                    {formatDeduction(procedure.medisaveClaim)}
+                                  </td>
+                                  <td className="px-2 py-2 text-right font-bold tabular-nums">
+                                    {formatCurrency(payable)}
+                                  </td>
+                                </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <div className="mt-6 space-y-4">
                     {phase.procedures.map((procedure, procedureIndex) => {
                       const subtotal = procedure.fee * procedure.quantity;
                       const gst = subtotal * GST_RATE;
@@ -1295,40 +1683,56 @@ export default function Home() {
                         procedure.subsidyClaimQty;
                       const payable =
                         subtotal + gst - subsidy - procedure.medisaveClaim;
+                      const hasRemarks = procedure.description.trim().length > 0;
 
                       return (
                         <article
                           key={`${procedure.name}-${procedureIndex}`}
-                          className="rounded-2xl border bg-gray-50 p-5"
+                          className={compactClass(
+                            isFinalized,
+                            "avoid-break rounded-2xl border bg-gray-50 p-5",
+                            "avoid-break rounded-xl border bg-gray-50 p-3",
+                          )}
                         >
                           <div className="flex flex-wrap items-start justify-between gap-4">
                             <div>
-                              <h3 className="text-xl font-bold">
+                              <h3 className={compactClass(isFinalized, "text-xl font-bold", "text-base font-bold")}>
                                 {procedure.name}
                               </h3>
-                              <p className="mt-1 text-sm">
+                              <p className={compactClass(isFinalized, "mt-1 text-sm", "mt-0.5 text-xs")}>
                                 {procedure.category}
                               </p>
                             </div>
 
-                            <button
-                              type="button"
-                              onClick={() =>
-                                deleteProcedure(phaseIndex, procedureIndex)
-                              }
-                              className="rounded-lg border px-3 py-2 text-red-500"
-                            >
-                              Delete
-                            </button>
+                            {!isFinalized ? (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  deleteProcedure(phaseIndex, procedureIndex)
+                                }
+                                className="rounded-lg border px-3 py-2 text-red-500"
+                              >
+                                Delete
+                              </button>
+                            ) : null}
                           </div>
 
-                          <div className="mt-6 grid gap-4 md:grid-cols-7">
+                          <div
+                            className={compactClass(
+                              isFinalized,
+                              "mt-6 grid gap-4 md:grid-cols-7",
+                              "mt-3 grid gap-2 text-sm md:grid-cols-7",
+                            )}
+                          >
                             <div>
-                              <label className="text-sm">Qty</label>
+                              <label className={costLabelClass(isFinalized)}>
+                                Quantity
+                              </label>
                               <input
                                 type="number"
                                 min="1"
                                 value={procedure.quantity}
+                                readOnly={isFinalized}
                                 onChange={(event) =>
                                   updateProcedure(
                                     phaseIndex,
@@ -1337,16 +1741,23 @@ export default function Home() {
                                     Number(event.target.value),
                                   )
                                 }
-                                className="mt-2 w-full rounded-xl border px-4 py-3"
+                                className={compactClass(
+                                  isFinalized,
+                                  "mt-2 w-full rounded-xl border px-4 py-3 text-right tabular-nums",
+                                  "mt-1 w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums",
+                                )}
                               />
                             </div>
 
                             <div>
-                              <label className="text-sm">Claim Qty</label>
+                              <label className={costLabelClass(isFinalized)}>
+                                Subsidy Claim Qty
+                              </label>
                               <input
                                 type="number"
                                 min="0"
                                 value={procedure.subsidyClaimQty}
+                                readOnly={isFinalized}
                                 onChange={(event) =>
                                   updateProcedure(
                                     phaseIndex,
@@ -1355,170 +1766,436 @@ export default function Home() {
                                     Number(event.target.value),
                                   )
                                 }
-                                className="mt-2 w-full rounded-xl border px-4 py-3"
+                                className={compactClass(
+                                  isFinalized,
+                                  "mt-2 w-full rounded-xl border px-4 py-3 text-right tabular-nums",
+                                  "mt-1 w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums",
+                                )}
                               />
                             </div>
 
                             <div>
-                              <label className="text-sm">PRICE</label>
-                              <input
-                                type="number"
-                                value={procedure.fee}
-                                onChange={(event) =>
-                                  updateProcedure(
-                                    phaseIndex,
-                                    procedureIndex,
-                                    "fee",
-                                    Number(event.target.value),
-                                  )
-                                }
-                                className="mt-2 w-full rounded-xl border px-4 py-3"
-                              />
+                              <label className={costLabelClass(isFinalized)}>
+                                Unit Price
+                              </label>
+                              {isFinalized ? (
+                                <div className="mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums">
+                                  ${procedure.fee.toFixed(2)}
+                                </div>
+                              ) : (
+                                <input
+                                  type="number"
+                                  value={procedure.fee}
+                                  onChange={(event) =>
+                                    updateProcedure(
+                                      phaseIndex,
+                                      procedureIndex,
+                                      "fee",
+                                      Number(event.target.value),
+                                    )
+                                  }
+                                  className="mt-2 w-full rounded-xl border px-4 py-3 text-right tabular-nums"
+                                />
+                              )}
                             </div>
 
                             <div>
-                              <label className="text-sm">GST</label>
-                              <div className="mt-2 rounded-xl border bg-white px-4 py-3">
+                              <label className={costLabelClass(isFinalized)}>
+                                GST (9%)
+                              </label>
+                              <div
+                                className={compactClass(
+                                  isFinalized,
+                                  "mt-2 rounded-xl border bg-white px-4 py-3 text-right tabular-nums",
+                                  "mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums",
+                                )}
+                              >
                                 ${gst.toFixed(2)}
                               </div>
                             </div>
 
                             <div>
-                              <label className="text-sm">Subsidy</label>
-                              <div className="mt-2 rounded-xl border bg-white px-4 py-3">
+                              <label className={costLabelClass(isFinalized)}>
+                                Subsidy Deducted
+                              </label>
+                              <div
+                                className={compactClass(
+                                  isFinalized,
+                                  "mt-2 rounded-xl border bg-white px-4 py-3 text-right tabular-nums",
+                                  "mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums",
+                                )}
+                              >
                                 ${subsidy.toFixed(2)}
                               </div>
                             </div>
 
                             <div>
-                              <label className="text-sm">Medisave</label>
-                              <input
-                                type="number"
-                                value={procedure.medisaveClaim}
-                                onChange={(event) =>
-                                  updateProcedure(
-                                    phaseIndex,
-                                    procedureIndex,
-                                    "medisaveClaim",
-                                    Number(event.target.value),
-                                  )
-                                }
-                                className="mt-2 w-full rounded-xl border px-4 py-3"
-                              />
-                            </div>
-
-                            <div>
-                              <label className="text-sm">Payable</label>
-                              <div className="mt-2 rounded-xl border bg-blue-50 px-4 py-3 font-bold">
-                                ${payable.toFixed(2)}
-                              </div>
-                            </div>
-
-                            <div className="md:col-span-7">
-                              <div className="rounded-2xl border bg-white p-4">
-                                <label className="text-sm">Remarks</label>
-                                <textarea
-                                  value={procedure.description}
+                              <label className={costLabelClass(isFinalized)}>
+                                Medisave Deducted
+                              </label>
+                              {isFinalized ? (
+                                <div className="mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums">
+                                  ${procedure.medisaveClaim.toFixed(2)}
+                                </div>
+                              ) : (
+                                <input
+                                  type="number"
+                                  value={procedure.medisaveClaim}
                                   onChange={(event) =>
                                     updateProcedure(
                                       phaseIndex,
                                       procedureIndex,
-                                      "description",
-                                      event.target.value,
+                                      "medisaveClaim",
+                                      Number(event.target.value),
                                     )
                                   }
-                                  rows={2}
-                                  placeholder="Add clinical notes, tooth number, treatment explanation, risks discussed, patient requests, etc."
-                                  className="mt-2 min-h-[70px] w-full resize-y rounded-lg border border-gray-300 px-3 py-2 text-base leading-normal focus:outline-none focus:ring-1 focus:ring-black"
+                                  className="mt-2 w-full rounded-xl border px-4 py-3 text-right tabular-nums"
                                 />
+                              )}
+                            </div>
+
+                            <div>
+                              <label className={costLabelClass(isFinalized)}>
+                                Cash Payable
+                              </label>
+                              <div
+                                className={compactClass(
+                                  isFinalized,
+                                  "mt-2 rounded-xl border bg-blue-50 px-4 py-3 text-right font-bold tabular-nums",
+                                  "mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right font-bold tabular-nums",
+                                )}
+                              >
+                                ${payable.toFixed(2)}
                               </div>
                             </div>
+
+                            {!isFinalized || hasRemarks ? (
+                              <div className="md:col-span-7">
+                                {isFinalized ? (
+                                  <div className="rounded-lg bg-white px-3 py-2 text-xs leading-snug">
+                                    <span className="font-semibold">Remarks: </span>
+                                    <span className="whitespace-pre-wrap">
+                                      {procedure.description}
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <div className="rounded-xl border bg-white p-3">
+                                    <label className="text-xs font-semibold">
+                                      Remarks
+                                    </label>
+                                    <textarea
+                                      value={procedure.description}
+                                      onChange={(event) =>
+                                        updateProcedure(
+                                          phaseIndex,
+                                          procedureIndex,
+                                          "description",
+                                          event.target.value,
+                                        )
+                                      }
+                                      rows={2}
+                                      placeholder="Clinical notes, tooth number, risks discussed, patient requests, etc."
+                                      className="mt-1 min-h-[48px] w-full resize-y rounded-lg border border-gray-300 px-3 py-2 text-sm leading-snug focus:outline-none focus:ring-1 focus:ring-black"
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                            ) : null}
                           </div>
                         </article>
                       );
                     })}
-                  </div>
+                    </div>
+                  )}
                 </section>
               );
             })}
 
-            <section className="rounded-2xl border bg-gray-50 p-6">
-              <h2 className="mb-5 text-2xl font-bold">Financial Summary</h2>
+            <section
+              className={compactClass(
+                isFinalized,
+                "avoid-break rounded-2xl border bg-gray-50 p-6",
+                "avoid-break rounded-xl border bg-gray-50 p-4 print:p-3",
+              )}
+            >
+              <h2 className={compactClass(isFinalized, "mb-5 text-2xl font-bold", "mb-3 text-xl font-bold")}>
+                Financial Summary
+              </h2>
 
-              <div className="space-y-4">
+              <div className={compactClass(isFinalized, "space-y-4", "space-y-2 text-sm")}>
                 <div className="flex justify-between">
                   <span>Treatment Subtotal</span>
-                  <span>${totals.subtotal.toFixed(2)}</span>
+                  <span className="min-w-28 text-right tabular-nums">
+                    ${totals.subtotal.toFixed(2)}
+                  </span>
                 </div>
 
                 <div className="flex justify-between">
                   <span>GST (9%)</span>
-                  <span>${totals.gst.toFixed(2)}</span>
+                  <span className="min-w-28 text-right tabular-nums">
+                    ${totals.gst.toFixed(2)}
+                  </span>
                 </div>
 
                 <div className="flex justify-between">
                   <span>Total Subsidies USED</span>
-                  <span>${totals.subsidy.toFixed(2)}</span>
+                  <span className="min-w-28 text-right tabular-nums">
+                    ${totals.subsidy.toFixed(2)}
+                  </span>
                 </div>
 
                 <div className="flex justify-between">
                   <span>Total Medisave USED</span>
-                  <span>${totals.medisave.toFixed(2)}</span>
+                  <span className="min-w-28 text-right tabular-nums">
+                    ${totals.medisave.toFixed(2)}
+                  </span>
                 </div>
 
-                <div className="flex justify-between border-t pt-5 text-2xl font-bold">
+                <div
+                  className={compactClass(
+                    isFinalized,
+                    "flex justify-between border-t pt-5 text-2xl font-bold",
+                    "flex justify-between border-t pt-3 text-xl font-bold",
+                  )}
+                >
                   <span>Cash Portion</span>
-                  <span>${totals.payable.toFixed(2)}</span>
+                  <span className="min-w-28 text-right tabular-nums">
+                    ${totals.payable.toFixed(2)}
+                  </span>
                 </div>
+
+                {!isFinalized ? (
+                  <div className="border-t pt-4">
+                    <label className="mb-2 block text-sm font-semibold text-gray-700">
+                      Optional Instalment Plan
+                    </label>
+                    <select
+                      value={selectedInstallmentPlan}
+                      onChange={(event) =>
+                        setSelectedInstallmentPlan(
+                          event.target.value as InstallmentPlanId,
+                        )
+                      }
+                      className="w-full rounded-xl border bg-white px-4 py-3"
+                    >
+                      <option value="none">No instalment plan selected</option>
+                      {installmentPlans.map((plan) => (
+                        <option key={plan.id} value={plan.id}>
+                          {plan.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ) : null}
+
+                {installmentBreakdown ? (
+                  <div className="rounded-xl border bg-white p-4 text-sm">
+                    <div className="flex justify-between gap-4 font-semibold">
+                      <span>Selected Instalment Plan</span>
+                      <span className="text-right">
+                        {installmentBreakdown.plan.label}
+                      </span>
+                    </div>
+
+                    {installmentBreakdown.plan.isInHouse ? (
+                      <div className="mt-3 space-y-2">
+                        <div className="flex justify-between gap-4">
+                          <span>
+                            Upfront cash payment (GST on Medisave portion)
+                          </span>
+                          <span className="min-w-28 text-right tabular-nums">
+                            {formatCurrency(
+                              installmentBreakdown.medisaveGstCash,
+                            )}
+                          </span>
+                        </div>
+                        <div className="flex justify-between gap-4">
+                          <span>Amount under in-house instalments</span>
+                          <span className="min-w-28 text-right tabular-nums">
+                            {formatCurrency(
+                              installmentBreakdown.installmentAmount,
+                            )}
+                          </span>
+                        </div>
+                        <p className="text-xs leading-relaxed text-gray-600">
+                          For in-house instalments, the GST amount linked to the
+                          Medisave claim is excluded from the instalment amount
+                          and collected in cash.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="mt-3 flex justify-between gap-4">
+                        <span>Amount under instalments</span>
+                        <span className="min-w-28 text-right tabular-nums">
+                          {formatCurrency(
+                            installmentBreakdown.installmentAmount,
+                          )}
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="mt-3 flex justify-between gap-4 border-t pt-3 font-bold">
+                      <span>
+                        Estimated monthly instalment (
+                        {installmentBreakdown.plan.months} months)
+                      </span>
+                      <span className="min-w-28 text-right tabular-nums">
+                        {formatCurrency(installmentBreakdown.monthlyAmount)}
+                      </span>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             </section>
 
-            <section className="rounded-2xl border bg-white p-8">
-              <h2 className="mb-6 text-2xl font-bold">
+            {isFinalized ? (
+              <div className="grid gap-3 md:grid-cols-2 print:grid-cols-2">
+                <section className="avoid-break rounded-xl border bg-gray-50 p-4 text-xs print:p-3">
+                  <h2 className="mb-3 text-xl font-bold">
+                    Interest-Free Instalments
+                  </h2>
+
+                  <div className="space-y-2">
+                    <div>
+                      <p className="font-semibold">Atome</p>
+                      <p>3 months interest-free</p>
+                    </div>
+
+                    <div>
+                      <p className="font-semibold">GrabPay</p>
+                      <p>4 months interest-free</p>
+                    </div>
+
+                    <div>
+                      <p className="font-semibold">
+                        UOB / OCBC Credit Card 12 Mths
+                      </p>
+                      <p>12 months interest-free instalment</p>
+                    </div>
+
+                    <div>
+                      <p className="font-semibold">In-House Instalment</p>
+                      <ul className="mt-1 list-disc space-y-1 pl-4">
+                        <li>
+                          6/12 months interest-free - depending on treatment
+                        </li>
+                        <li>Applicant must be SG / PR</li>
+                        <li>1x guarantor required (SG / PR)</li>
+                        <li>Valid debit card required</li>
+                      </ul>
+                    </div>
+                  </div>
+                </section>
+
+                <section className="avoid-break rounded-xl border bg-white p-4 text-xs leading-relaxed text-gray-700 print:p-3">
+                  <h2 className="mb-3 text-xl font-bold text-black">
+                    Disclaimer
+                  </h2>
+
+                  <div className="space-y-2">
+                    <p>
+                      All treatment fees stated are inclusive of prevailing 9%
+                      GST.
+                    </p>
+
+                    <p>
+                      Treatment fees discussed and agreed upon shall remain valid
+                      throughout the planned treatment duration unless unforeseen
+                      clinical complications arise.
+                    </p>
+
+                    <p>
+                      Additional treatment procedures required due to
+                      complications, changes in clinical condition or patient
+                      requests may incur additional treatment charges.
+                    </p>
+
+                    <p>
+                      CHAS, Merdeka Generation, Pioneer Generation and Medisave
+                      claims remain subject to prevailing MOH regulations and
+                      patient eligibility.
+                    </p>
+                  </div>
+                </section>
+              </div>
+            ) : null}
+
+            <section
+              id="signature"
+              className={compactClass(
+                isFinalized,
+                "avoid-break print-break-before rounded-2xl border bg-white p-8",
+                "avoid-break print-break-before rounded-xl border bg-white p-4 print:p-3",
+              )}
+            >
+              <h2 className={compactClass(isFinalized, "mb-6 text-2xl font-bold", "mb-3 text-xl font-bold")}>
                 Patient Acknowledgement & Signature
               </h2>
 
-              <div className="grid gap-8 lg:grid-cols-3">
-                <div className="flex flex-col items-center justify-center rounded-2xl border bg-gray-50 p-6 lg:col-span-1">
-                  <QRCode value="https://example.com/signature" size={180} />
+              <div
+                className={compactClass(
+                  isFinalized,
+                  "grid gap-8 lg:grid-cols-3",
+                  "grid gap-4 lg:grid-cols-3",
+                )}
+              >
+                {!isFinalized ? (
+                  <div className="no-print flex flex-col items-center justify-center rounded-2xl border bg-gray-50 p-6 lg:col-span-1">
+                    <QRCode value={signatureUrl} size={180} />
 
-                  <p className="mt-5 text-center text-sm leading-relaxed text-gray-500">
-                    Scan QR code to review and digitally sign this treatment
-                    quotation on your mobile device.
-                  </p>
-                </div>
+                    <p className="mt-5 text-center text-sm leading-relaxed text-gray-500">
+                      Scan QR code to review and digitally sign this treatment
+                      quotation on your mobile device.
+                    </p>
+                  </div>
+                ) : null}
 
-                <div className="lg:col-span-2">
-                  <div className="rounded-2xl border p-6">
-                    <p className="mb-6 text-sm leading-relaxed text-gray-600">
+                <div className={isFinalized ? "lg:col-span-3" : "lg:col-span-2"}>
+                  <div className={compactClass(isFinalized, "rounded-2xl border p-6", "rounded-xl border p-4")}>
+                    <p
+                      className={compactClass(
+                        isFinalized,
+                        "mb-6 text-sm leading-relaxed text-gray-600",
+                        "mb-3 text-xs leading-relaxed text-gray-600",
+                      )}
+                    >
                       I acknowledge that the proposed treatment, estimated fees,
                       subsidies, Medisave claims, risks and alternative options
                       have been explained clearly to me.
                     </p>
 
-                    <div className="overflow-hidden rounded-2xl border-2 border-dashed bg-white">
+                    <div
+                      className={compactClass(
+                        isFinalized,
+                        "overflow-hidden rounded-2xl border-2 border-dashed bg-white",
+                        "overflow-hidden rounded-xl border border-dashed bg-white",
+                      )}
+                    >
                       <SignatureCanvas
                         ref={signatureRef}
                         penColor="black"
+                        onEnd={markSignatureComplete}
                         canvasProps={{
                           width: 900,
-                          height: 220,
+                          height: isFinalized ? 140 : 220,
                           className: "w-full bg-white",
                         }}
                       />
                     </div>
 
-                    <div className="mt-5 flex flex-wrap gap-3">
-                      <button
-                        type="button"
-                        onClick={() => signatureRef.current?.clear()}
-                        className="rounded-xl border px-5 py-2 transition hover:bg-gray-100"
-                      >
-                        Clear Signature
-                      </button>
-                    </div>
+                    {!isFinalized ? (
+                      <div className="mt-5 flex flex-wrap gap-3">
+                        <button
+                          type="button"
+                          onClick={clearSignature}
+                          className="rounded-xl border px-5 py-2 transition hover:bg-gray-100"
+                        >
+                          Clear Signature
+                        </button>
+                      </div>
+                    ) : null}
 
-                    <div className="mt-8 grid gap-4 md:grid-cols-2">
+                    <div className={compactClass(isFinalized, "mt-8 grid gap-4 md:grid-cols-2", "mt-4 grid gap-3 md:grid-cols-2")}>
                       <div>
                         <label className="mb-2 block text-sm text-gray-500">
                           Patient Name
@@ -1526,7 +2203,14 @@ export default function Home() {
                         <input
                           type="text"
                           placeholder="Full Name"
-                          className="w-full rounded-xl border px-4 py-3"
+                          value={patientName}
+                          readOnly={isFinalized}
+                          onChange={(event) => setPatientName(event.target.value)}
+                          className={compactClass(
+                            isFinalized,
+                            "w-full rounded-xl border px-4 py-3",
+                            "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                          )}
                         />
                       </div>
 
@@ -1536,7 +2220,14 @@ export default function Home() {
                         </label>
                         <input
                           type="date"
-                          className="w-full rounded-xl border px-4 py-3"
+                          value={dateSigned}
+                          readOnly={isFinalized}
+                          onChange={(event) => setDateSigned(event.target.value)}
+                          className={compactClass(
+                            isFinalized,
+                            "w-full rounded-xl border px-4 py-3",
+                            "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                          )}
                         />
                       </div>
                     </div>
