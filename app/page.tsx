@@ -1657,7 +1657,114 @@ export default function Home() {
 
 
                   {isFinalized ? (
-                    <div className="mt-3 overflow-x-auto rounded-lg border">
+                    <>
+                      <div className="mt-3 space-y-3 lg:hidden print:hidden">
+                        {phase.procedures.map((procedure, procedureIndex) => {
+                          const subtotal = procedure.fee * procedure.quantity;
+                          const gst = subtotal * GST_RATE;
+                          const subsidy =
+                            getSubsidyAmount(procedure, subsidyTier) *
+                            procedure.subsidyClaimQty;
+                          const payable =
+                            subtotal + gst - subsidy - procedure.medisaveClaim;
+                          const hasRemarks =
+                            procedure.description.trim().length > 0;
+
+                          return (
+                            <article
+                              key={`${procedure.name}-${procedureIndex}`}
+                              className="avoid-break rounded-xl border bg-gray-50 p-3"
+                            >
+                              <div>
+                                <h3 className="text-base font-bold">
+                                  {procedure.name}
+                                </h3>
+                                <p className="mt-0.5 text-xs text-gray-500">
+                                  {procedure.category}
+                                </p>
+                              </div>
+
+                              <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                                <div>
+                                  <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+                                    Quantity
+                                  </dt>
+                                  <dd className="text-right tabular-nums">
+                                    {procedure.quantity}
+                                  </dd>
+                                </div>
+
+                                <div>
+                                  <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+                                    Claim Qty
+                                  </dt>
+                                  <dd className="text-right tabular-nums">
+                                    {procedure.subsidyClaimQty}
+                                  </dd>
+                                </div>
+
+                                <div>
+                                  <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+                                    Unit Price
+                                  </dt>
+                                  <dd className="text-right tabular-nums">
+                                    {formatCurrency(procedure.fee)}
+                                  </dd>
+                                </div>
+
+                                <div>
+                                  <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+                                    GST (9%)
+                                  </dt>
+                                  <dd className="text-right tabular-nums">
+                                    {formatCurrency(gst)}
+                                  </dd>
+                                </div>
+
+                                <div>
+                                  <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+                                    Subsidy Deducted
+                                  </dt>
+                                  <dd className="text-right tabular-nums">
+                                    {formatDeduction(subsidy)}
+                                  </dd>
+                                </div>
+
+                                <div>
+                                  <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+                                    Medisave Deducted
+                                  </dt>
+                                  <dd className="text-right tabular-nums">
+                                    {formatDeduction(procedure.medisaveClaim)}
+                                  </dd>
+                                </div>
+
+                                <div className="col-span-2 border-t pt-2">
+                                  <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+                                    Cash Payable
+                                  </dt>
+                                  <dd className="text-right text-lg font-bold tabular-nums">
+                                    {formatCurrency(payable)}
+                                  </dd>
+                                </div>
+                              </dl>
+
+                              {hasRemarks ? (
+                                <div className="mt-3 rounded border-l-2 border-blue-300 bg-blue-50 px-2 py-1.5 text-xs leading-snug text-blue-950">
+                                  <span className="font-semibold">
+                                    Remarks:{" "}
+                                  </span>
+                                  <span className="whitespace-pre-wrap">
+                                    {procedure.description}
+                                  </span>
+                                </div>
+                              ) : null}
+                            </article>
+                          );
+                        })}
+                      </div>
+
+                    <div className="mt-3 hidden overflow-x-auto rounded-lg border lg:block print:block">
                       <table className="w-full min-w-[760px] table-fixed border-collapse text-[11px] leading-tight print:min-w-0">
                         <thead className="bg-gray-100 text-gray-700">
                           <tr>
@@ -1759,6 +1866,7 @@ export default function Home() {
                         </tbody>
                       </table>
                     </div>
+                    </>
                   ) : (
                     <div className="mt-6 space-y-4">
                     {phase.procedures.map((procedure, procedureIndex) => {
