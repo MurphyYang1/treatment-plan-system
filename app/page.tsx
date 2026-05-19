@@ -1,14 +1,11 @@
 "use client";
 
-
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "react-qr-code";
 import SignatureCanvas from "react-signature-canvas";
 
-
 const GST_RATE = 0.09;
-
 
 type SubsidyTier =
   | "Private"
@@ -17,14 +14,12 @@ type SubsidyTier =
   | "Merdeka"
   | "Pioneer";
 
-
 type Subsidy = {
   chasBlue: number;
   chasOrange: number;
   merdeka: number;
   pioneer: number;
 };
-
 
 type Treatment = {
   category: string;
@@ -35,7 +30,6 @@ type Treatment = {
   subsidies: Subsidy;
 };
 
-
 type Procedure = Treatment & {
   quantity: number;
   subsidyClaimQty: number;
@@ -43,14 +37,12 @@ type Procedure = Treatment & {
   description: string;
 };
 
-
 type Phase = {
   id: number;
   title: string;
   duration: string;
   procedures: Procedure[];
 };
-
 
 type InstallmentPlanId =
   | "none"
@@ -60,7 +52,6 @@ type InstallmentPlanId =
   | "in-house-6"
   | "in-house-12";
 
-
 type InstallmentPlan = {
   id: InstallmentPlanId;
   label: string;
@@ -68,14 +59,12 @@ type InstallmentPlan = {
   isInHouse: boolean;
 };
 
-
 const noSubsidy: Subsidy = {
   chasBlue: 0,
   chasOrange: 0,
   merdeka: 0,
   pioneer: 0,
 };
-
 
 const installmentPlans: InstallmentPlan[] = [
   {
@@ -109,7 +98,6 @@ const installmentPlans: InstallmentPlan[] = [
     isInHouse: true,
   },
 ];
-
 
 const availableTreatments: Treatment[] = [
   {
@@ -873,11 +861,9 @@ const availableTreatments: Treatment[] = [
   },
 ];
 
-
 const treatmentCategories = Array.from(
   new Set(availableTreatments.map((item) => item.category)),
 );
-
 
 function getSubsidyAmount(treatment: Procedure, subsidyTier: SubsidyTier) {
   switch (subsidyTier) {
@@ -894,7 +880,6 @@ function getSubsidyAmount(treatment: Procedure, subsidyTier: SubsidyTier) {
   }
 }
 
-
 function createProcedure(treatment: Treatment): Procedure {
   return {
     ...treatment,
@@ -905,26 +890,21 @@ function createProcedure(treatment: Treatment): Procedure {
   };
 }
 
-
 function getDateInputValue(date: Date) {
   return date.toISOString().slice(0, 10);
 }
-
 
 function formatCurrency(amount: number) {
   return `$${amount.toFixed(2)}`;
 }
 
-
 function formatDeduction(amount: number) {
   return amount === 0 ? formatCurrency(0) : `-${formatCurrency(amount)}`;
 }
 
-
 function compactClass(isFinalized: boolean, editClass: string, finalClass: string) {
   return isFinalized ? finalClass : editClass;
 }
-
 
 function costLabelClass(isFinalized: boolean) {
   return compactClass(
@@ -933,7 +913,6 @@ function costLabelClass(isFinalized: boolean) {
     "flex min-h-8 items-end text-xs font-semibold uppercase leading-tight tracking-wide text-gray-600",
   );
 }
-
 
 export default function Home() {
   const signatureRef = useRef<SignatureCanvas | null>(null);
@@ -957,11 +936,9 @@ export default function Home() {
     },
   ]);
 
-
   const filteredTreatments = availableTreatments.filter(
     (item) => item.category === selectedCategory,
   );
-
 
   useEffect(() => {
     const nextSignatureUrl = `${window.location.origin}${window.location.pathname}#signature`;
@@ -969,26 +946,21 @@ export default function Home() {
       setSignatureUrl(nextSignatureUrl);
     });
 
-
     return () => window.cancelAnimationFrame(animationFrame);
   }, []);
-
 
   const markSignatureComplete = () => {
     setDateSigned(getDateInputValue(new Date()));
   };
-
 
   const clearSignature = () => {
     signatureRef.current?.clear();
     setDateSigned("");
   };
 
-
   const printQuotation = () => {
     window.print();
   };
-
 
   const addPhase = () => {
     setPhases((currentPhases) => [
@@ -1002,19 +974,16 @@ export default function Home() {
     ]);
   };
 
-
   const deletePhase = (phaseIndex: number) => {
     setPhases((currentPhases) =>
       currentPhases.filter((_, index) => index !== phaseIndex),
     );
   };
 
-
   const movePhaseUp = (phaseIndex: number) => {
     if (phaseIndex === 0) {
       return;
     }
-
 
     setPhases((currentPhases) => {
       const updated = [...currentPhases];
@@ -1026,13 +995,11 @@ export default function Home() {
     });
   };
 
-
   const movePhaseDown = (phaseIndex: number) => {
     setPhases((currentPhases) => {
       if (phaseIndex === currentPhases.length - 1) {
         return currentPhases;
       }
-
 
       const updated = [...currentPhases];
       [updated[phaseIndex + 1], updated[phaseIndex]] = [
@@ -1043,22 +1010,18 @@ export default function Home() {
     });
   };
 
-
   const addProcedure = (phaseIndex: number) => {
     if (!selectedTreatment) {
       return;
     }
 
-
     const found = availableTreatments.find(
       (item) => item.name === selectedTreatment,
     );
 
-
     if (!found) {
       return;
     }
-
 
     setPhases((currentPhases) =>
       currentPhases.map((phase, index) =>
@@ -1071,7 +1034,6 @@ export default function Home() {
       ),
     );
   };
-
 
   const deleteProcedure = (phaseIndex: number, procedureIndex: number) => {
     setPhases((currentPhases) =>
@@ -1088,7 +1050,6 @@ export default function Home() {
     );
   };
 
-
   const updatePhase = (
     phaseIndex: number,
     field: "title" | "duration",
@@ -1100,7 +1061,6 @@ export default function Home() {
       ),
     );
   };
-
 
   const updateProcedure = <K extends keyof Procedure>(
     phaseIndex: number,
@@ -1124,18 +1084,15 @@ export default function Home() {
     );
   };
 
-
   const totals = useMemo(() => {
     let subtotal = 0;
     let gst = 0;
     let subsidy = 0;
     let medisave = 0;
 
-
     phases.forEach((phase) => {
       phase.procedures.forEach((procedure) => {
         const rowSubtotal = procedure.fee * procedure.quantity;
-
 
         subtotal += rowSubtotal;
         gst += rowSubtotal * GST_RATE;
@@ -1146,7 +1103,6 @@ export default function Home() {
       });
     });
 
-
     return {
       subtotal,
       gst,
@@ -1156,24 +1112,20 @@ export default function Home() {
     };
   }, [phases, subsidyTier]);
 
-
   const installmentBreakdown = useMemo(() => {
     const plan = installmentPlans.find(
       (item) => item.id === selectedInstallmentPlan,
     );
 
-
     if (!plan) {
       return null;
     }
-
 
     const cashPortion = Math.max(totals.payable, 0);
     const medisaveGstCash = plan.isInHouse
       ? Math.min(totals.medisave * GST_RATE, cashPortion)
       : 0;
     const installmentAmount = Math.max(cashPortion - medisaveGstCash, 0);
-
 
     return {
       plan,
@@ -1182,7 +1134,6 @@ export default function Home() {
       monthlyAmount: installmentAmount / plan.months,
     };
   }, [selectedInstallmentPlan, totals]);
-
 
   return (
     <main
@@ -1209,7 +1160,7 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex flex-wrap items-center gap-4">
             <Image
-              src="/nofrills-logo.png"
+              src="/nofrills-logo.svg"
               alt="Nofrills Dental"
               width={120}
               height={120}
@@ -1220,7 +1171,6 @@ export default function Home() {
               )}
               priority
             />
-
 
             <div>
               <h1
@@ -1238,7 +1188,6 @@ export default function Home() {
             </div>
             </div>
 
-
             <div className="no-print flex flex-wrap gap-3">
               <button
                 type="button"
@@ -1247,7 +1196,6 @@ export default function Home() {
               >
                 {isFinalized ? "Edit Quotation" : "Finalize for Print"}
               </button>
-
 
               {isFinalized ? (
                 <button
@@ -1261,7 +1209,6 @@ export default function Home() {
             </div>
           </div>
         </header>
-
 
         <div
           className={compactClass(
@@ -1282,7 +1229,6 @@ export default function Home() {
                 Patient Information
               </h2>
 
-
               <div className={compactClass(isFinalized, "space-y-4", "space-y-2")}>
                 <select
                   disabled={isFinalized}
@@ -1299,7 +1245,6 @@ export default function Home() {
                   <option>Nofrills Dental Beauty World</option>
                 </select>
 
-
                 <input
                   type="text"
                   placeholder="Dentist Name"
@@ -1310,7 +1255,6 @@ export default function Home() {
                     "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
                   )}
                 />
-
 
                 <input
                   type="text"
@@ -1325,7 +1269,6 @@ export default function Home() {
                   )}
                 />
 
-
                 <input
                   type="text"
                   placeholder="Patient ID"
@@ -1337,7 +1280,6 @@ export default function Home() {
                   )}
                 />
 
-
                 <input
                   type="date"
                   readOnly={isFinalized}
@@ -1347,7 +1289,6 @@ export default function Home() {
                     "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
                   )}
                 />
-
 
                 <select
                   value={subsidyTier}
@@ -1370,7 +1311,6 @@ export default function Home() {
               </div>
             </section>
 
-
             {!isFinalized ? (
               <>
                 <section className="avoid-break rounded-2xl border bg-gray-50 p-6">
@@ -1378,19 +1318,16 @@ export default function Home() {
                     Interest-Free Instalments
                   </h2>
 
-
                   <div className="space-y-4 text-sm">
                     <div>
                       <p className="font-semibold">Atome</p>
                       <p>3 months interest-free</p>
                     </div>
 
-
                     <div>
                       <p className="font-semibold">GrabPay</p>
                       <p>4 months interest-free</p>
                     </div>
-
 
                     <div>
                       <p className="font-semibold">
@@ -1398,7 +1335,6 @@ export default function Home() {
                       </p>
                       <p>12 months interest-free instalment</p>
                     </div>
-
 
                     <div>
                       <p className="font-semibold">In-House Instalment</p>
@@ -1414,12 +1350,10 @@ export default function Home() {
                   </div>
                 </section>
 
-
                 <section className="avoid-break rounded-2xl border bg-white p-6 text-sm leading-relaxed text-gray-700">
                   <h2 className="mb-4 text-2xl font-bold text-black">
                     Disclaimer
                   </h2>
-
 
                   <div className="space-y-4">
                     <p>
@@ -1427,20 +1361,17 @@ export default function Home() {
                       GST.
                     </p>
 
-
                     <p>
                       Treatment fees discussed and agreed upon shall remain valid
                       throughout the planned treatment duration unless unforeseen
                       clinical complications arise.
                     </p>
 
-
                     <p>
                       Additional treatment procedures required due to
                       complications, changes in clinical condition or patient
                       requests may incur additional treatment charges.
                     </p>
-
 
                     <p>
                       CHAS, Merdeka Generation, Pioneer Generation and Medisave
@@ -1452,7 +1383,6 @@ export default function Home() {
               </>
             ) : null}
           </aside>
-
 
           <section
             className={compactClass(
@@ -1473,7 +1403,6 @@ export default function Home() {
                   Treatment Phases
                 </h2>
 
-
                 {!isFinalized ? (
                   <button
                     type="button"
@@ -1485,7 +1414,6 @@ export default function Home() {
                 ) : null}
               </div>
             </section>
-
 
             <section
               className={compactClass(
@@ -1503,7 +1431,6 @@ export default function Home() {
               </p>
             </section>
 
-
             {phases.map((phase, phaseIndex) => {
               const phaseTotal = phase.procedures.reduce(
                 (total, procedure) => {
@@ -1512,7 +1439,6 @@ export default function Home() {
                   const subsidy =
                     getSubsidyAmount(procedure, subsidyTier) *
                     procedure.subsidyClaimQty;
-
 
                   return (
                     total +
@@ -1524,7 +1450,6 @@ export default function Home() {
                 },
                 0,
               );
-
 
               return (
                 <section
@@ -1551,7 +1476,6 @@ export default function Home() {
                         )}
                       />
 
-
                       <input
                         type="text"
                         placeholder="Phase Duration"
@@ -1572,7 +1496,6 @@ export default function Home() {
                       />
                     </div>
 
-
                     <div className="text-right">
                       <p className="text-sm text-gray-500">Phase CASH Total</p>
                       <p className={compactClass(isFinalized, "text-2xl font-bold tabular-nums", "text-xl font-bold tabular-nums")}>
@@ -1580,7 +1503,6 @@ export default function Home() {
                       </p>
                     </div>
                   </div>
-
 
                   {!isFinalized ? (
                     <>
@@ -1590,28 +1512,25 @@ export default function Home() {
                           onClick={() => movePhaseUp(phaseIndex)}
                           className="rounded-lg border px-3 py-2"
                         >
-                          ⮝
+                          Up
                         </button>
-
 
                         <button
                           type="button"
                           onClick={() => movePhaseDown(phaseIndex)}
                           className="rounded-lg border px-3 py-2"
                         >
-                          ⮟
+                          Down
                         </button>
-
 
                         <button
                           type="button"
                           onClick={() => deletePhase(phaseIndex)}
                           className="rounded-lg border px-3 py-2 text-red-500"
                         >
-                          ✗
+                          Delete
                         </button>
                       </div>
-
 
                       <div className="mt-6 grid gap-4 md:grid-cols-3">
                         <select
@@ -1626,7 +1545,6 @@ export default function Home() {
                             <option key={category}>{category}</option>
                           ))}
                         </select>
-
 
                         <select
                           value={selectedTreatment}
@@ -1643,7 +1561,6 @@ export default function Home() {
                           ))}
                         </select>
 
-
                         <button
                           type="button"
                           onClick={() => addProcedure(phaseIndex)}
@@ -1654,7 +1571,6 @@ export default function Home() {
                       </div>
                     </>
                   ) : null}
-
 
                   {isFinalized ? (
                     <div className="mt-3 overflow-x-auto rounded-lg border">
@@ -1694,7 +1610,6 @@ export default function Home() {
                           </tr>
                         </thead>
 
-
                         <tbody>
                           {phase.procedures.map((procedure, procedureIndex) => {
                             const subtotal =
@@ -1707,7 +1622,6 @@ export default function Home() {
                               subtotal + gst - subsidy - procedure.medisaveClaim;
                             const hasRemarks =
                               procedure.description.trim().length > 0;
-
 
                             return (
                                 <tr
@@ -1771,7 +1685,6 @@ export default function Home() {
                         subtotal + gst - subsidy - procedure.medisaveClaim;
                       const hasRemarks = procedure.description.trim().length > 0;
 
-
                       return (
                         <article
                           key={`${procedure.name}-${procedureIndex}`}
@@ -1791,7 +1704,6 @@ export default function Home() {
                               </p>
                             </div>
 
-
                             {!isFinalized ? (
                               <button
                                 type="button"
@@ -1804,7 +1716,6 @@ export default function Home() {
                               </button>
                             ) : null}
                           </div>
-
 
                           <div
                             className={compactClass(
@@ -1838,7 +1749,6 @@ export default function Home() {
                               />
                             </div>
 
-
                             <div>
                               <label className={costLabelClass(isFinalized)}>
                                 Subsidy Claim Qty
@@ -1863,7 +1773,6 @@ export default function Home() {
                                 )}
                               />
                             </div>
-
 
                             <div>
                               <label className={costLabelClass(isFinalized)}>
@@ -1890,7 +1799,6 @@ export default function Home() {
                               )}
                             </div>
 
-
                             <div>
                               <label className={costLabelClass(isFinalized)}>
                                 GST (9%)
@@ -1906,7 +1814,6 @@ export default function Home() {
                               </div>
                             </div>
 
-
                             <div>
                               <label className={costLabelClass(isFinalized)}>
                                 Subsidy Deducted
@@ -1921,7 +1828,6 @@ export default function Home() {
                                 ${subsidy.toFixed(2)}
                               </div>
                             </div>
-
 
                             <div>
                               <label className={costLabelClass(isFinalized)}>
@@ -1948,7 +1854,6 @@ export default function Home() {
                               )}
                             </div>
 
-
                             <div>
                               <label className={costLabelClass(isFinalized)}>
                                 Cash Payable
@@ -1963,7 +1868,6 @@ export default function Home() {
                                 ${payable.toFixed(2)}
                               </div>
                             </div>
-
 
                             {!isFinalized || hasRemarks ? (
                               <div className="md:col-span-7">
@@ -2007,7 +1911,6 @@ export default function Home() {
               );
             })}
 
-
             <section
               className={compactClass(
                 isFinalized,
@@ -2019,7 +1922,6 @@ export default function Home() {
                 Financial Summary
               </h2>
 
-
               <div className={compactClass(isFinalized, "space-y-4", "space-y-2 text-sm")}>
                 <div className="flex justify-between">
                   <span>Treatment Subtotal</span>
@@ -2028,14 +1930,12 @@ export default function Home() {
                   </span>
                 </div>
 
-
                 <div className="flex justify-between">
                   <span>GST (9%)</span>
                   <span className="min-w-28 text-right tabular-nums">
                     ${totals.gst.toFixed(2)}
                   </span>
                 </div>
-
 
                 <div className="flex justify-between">
                   <span>Total Subsidies USED</span>
@@ -2044,14 +1944,12 @@ export default function Home() {
                   </span>
                 </div>
 
-
                 <div className="flex justify-between">
                   <span>Total Medisave USED</span>
                   <span className="min-w-28 text-right tabular-nums">
                     ${totals.medisave.toFixed(2)}
                   </span>
                 </div>
-
 
                 <div
                   className={compactClass(
@@ -2065,7 +1963,6 @@ export default function Home() {
                     ${totals.payable.toFixed(2)}
                   </span>
                 </div>
-
 
                 {!isFinalized ? (
                   <div className="border-t pt-4">
@@ -2091,7 +1988,6 @@ export default function Home() {
                   </div>
                 ) : null}
 
-
                 {installmentBreakdown ? (
                   <div className="rounded-xl border bg-white p-4 text-sm">
                     <div className="flex justify-between gap-4 font-semibold">
@@ -2100,7 +1996,6 @@ export default function Home() {
                         {installmentBreakdown.plan.label}
                       </span>
                     </div>
-
 
                     {installmentBreakdown.plan.isInHouse ? (
                       <div className="mt-3 space-y-2">
@@ -2139,7 +2034,6 @@ export default function Home() {
                       </div>
                     )}
 
-
                     <div className="mt-3 flex justify-between gap-4 border-t pt-3 font-bold">
                       <span>
                         Estimated monthly instalment (
@@ -2154,7 +2048,6 @@ export default function Home() {
               </div>
             </section>
 
-
             {isFinalized ? (
               <div className="grid gap-3 md:grid-cols-2 print:grid-cols-2">
                 <section className="avoid-break rounded-xl border bg-gray-50 p-4 text-xs print:p-3">
@@ -2162,19 +2055,16 @@ export default function Home() {
                     Interest-Free Instalments
                   </h2>
 
-
                   <div className="space-y-2">
                     <div>
                       <p className="font-semibold">Atome</p>
                       <p>3 months interest-free</p>
                     </div>
 
-
                     <div>
                       <p className="font-semibold">GrabPay</p>
                       <p>4 months interest-free</p>
                     </div>
-
 
                     <div>
                       <p className="font-semibold">
@@ -2182,7 +2072,6 @@ export default function Home() {
                       </p>
                       <p>12 months interest-free instalment</p>
                     </div>
-
 
                     <div>
                       <p className="font-semibold">In-House Instalment</p>
@@ -2198,12 +2087,10 @@ export default function Home() {
                   </div>
                 </section>
 
-
                 <section className="avoid-break rounded-xl border bg-white p-4 text-xs leading-relaxed text-gray-700 print:p-3">
                   <h2 className="mb-3 text-xl font-bold text-black">
                     Disclaimer
                   </h2>
-
 
                   <div className="space-y-2">
                     <p>
@@ -2211,20 +2098,17 @@ export default function Home() {
                       GST.
                     </p>
 
-
                     <p>
                       Treatment fees discussed and agreed upon shall remain valid
                       throughout the planned treatment duration unless unforeseen
                       clinical complications arise.
                     </p>
 
-
                     <p>
                       Additional treatment procedures required due to
                       complications, changes in clinical condition or patient
                       requests may incur additional treatment charges.
                     </p>
-
 
                     <p>
                       CHAS, Merdeka Generation, Pioneer Generation and Medisave
@@ -2235,7 +2119,6 @@ export default function Home() {
                 </section>
               </div>
             ) : null}
-
 
             <section
               id="signature"
@@ -2249,7 +2132,6 @@ export default function Home() {
                 Patient Acknowledgement & Signature
               </h2>
 
-
               <div
                 className={compactClass(
                   isFinalized,
@@ -2261,14 +2143,12 @@ export default function Home() {
                   <div className="no-print flex flex-col items-center justify-center rounded-2xl border bg-gray-50 p-6 lg:col-span-1">
                     <QRCode value={signatureUrl} size={180} />
 
-
                     <p className="mt-5 text-center text-sm leading-relaxed text-gray-500">
                       Scan QR code to review and digitally sign this treatment
                       quotation on your mobile device.
                     </p>
                   </div>
                 ) : null}
-
 
                 <div className={isFinalized ? "lg:col-span-3" : "lg:col-span-2"}>
                   <div className={compactClass(isFinalized, "rounded-2xl border p-6", "rounded-xl border p-4")}>
@@ -2283,7 +2163,6 @@ export default function Home() {
                       subsidies, Medisave claims, risks and alternative options
                       have been explained clearly to me.
                     </p>
-
 
                     <div
                       className={compactClass(
@@ -2304,7 +2183,6 @@ export default function Home() {
                       />
                     </div>
 
-
                     {!isFinalized ? (
                       <div className="mt-5 flex flex-wrap gap-3">
                         <button
@@ -2316,7 +2194,6 @@ export default function Home() {
                         </button>
                       </div>
                     ) : null}
-
 
                     <div className={compactClass(isFinalized, "mt-8 grid gap-4 md:grid-cols-2", "mt-4 grid gap-3 md:grid-cols-2")}>
                       <div>
@@ -2336,7 +2213,6 @@ export default function Home() {
                           )}
                         />
                       </div>
-
 
                       <div>
                         <label className="mb-2 block text-sm text-gray-500">

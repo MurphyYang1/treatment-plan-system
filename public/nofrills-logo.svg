@@ -1,0 +1,7 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" rx="40" fill="#111827"/>
+  <circle cx="120" cy="108" r="58" fill="#FFFFFF"/>
+  <path d="M84 102C84 77.7 99.4 58 118.4 58C137.4 58 152.8 77.7 152.8 102C152.8 140.6 134.6 181 120 181C105.4 181 84 140.6 84 102Z" fill="#E5E7EB"/>
+  <path d="M91 104C91 83.6 103.5 67 118.8 67C134.1 67 146.5 83.6 146.5 104C146.5 136.5 132.1 170 120.2 170C108.2 170 91 136.5 91 104Z" fill="#FFFFFF"/>
+  <text x="120" y="214" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#FFFFFF">NFD</text>
+</svg>
