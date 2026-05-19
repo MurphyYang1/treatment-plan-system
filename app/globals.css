@@ -4,8 +4,21 @@
   box-sizing: border-box;
 }
 
+html,
 body {
+  max-width: 100%;
   margin: 0;
+  overflow-x: hidden;
+}
+
+img,
+svg,
+canvas,
+input,
+select,
+textarea,
+button {
+  max-width: 100%;
 }
 
 @media print {
