@@ -1266,11 +1266,11 @@ export default function Home() {
         <div
           className={compactClass(
             isFinalized,
-            "grid gap-4 p-3 sm:p-4 md:gap-6 lg:grid-cols-3 lg:gap-8 lg:p-8 print:grid-cols-1 print:gap-4 print:p-4",
-            "grid gap-3 p-3 sm:gap-4 sm:p-4 lg:grid-cols-[18rem_minmax(0,1fr)] print:grid-cols-1 print:gap-3 print:p-3",
+            "grid min-w-0 gap-4 p-3 sm:p-4 md:gap-6 lg:grid-cols-3 lg:gap-8 lg:p-8 print:grid-cols-1 print:gap-4 print:p-4",
+            "grid min-w-0 gap-3 p-3 sm:gap-4 sm:p-4 lg:grid-cols-[18rem_minmax(0,1fr)] print:grid-cols-1 print:gap-3 print:p-3",
           )}
         >
-          <aside className="space-y-4 lg:col-span-1 lg:col-start-1 lg:row-start-1 print:col-auto print:row-auto print:space-y-3">
+          <aside className="min-w-0 space-y-4 lg:col-span-1 lg:col-start-1 lg:row-start-1 print:col-auto print:row-auto print:space-y-3">
             <section
               className={compactClass(
                 isFinalized,
@@ -1457,8 +1457,8 @@ export default function Home() {
           <section
             className={compactClass(
               isFinalized,
-              "space-y-6 lg:col-span-2 lg:col-start-2 lg:row-start-1 print:col-auto print:row-auto",
-              "space-y-3 lg:col-span-1 lg:col-start-2 lg:row-start-1 print:col-auto print:row-auto print:space-y-3",
+              "min-w-0 space-y-6 lg:col-span-2 lg:col-start-2 lg:row-start-1 print:col-auto print:row-auto",
+              "min-w-0 space-y-3 lg:col-span-1 lg:col-start-2 lg:row-start-1 print:col-auto print:row-auto print:space-y-3",
             )}
           >
             <section
@@ -2123,33 +2123,33 @@ export default function Home() {
 
 
               <div className={compactClass(isFinalized, "space-y-4", "space-y-2 text-sm")}>
-                <div className="flex justify-between">
-                  <span>Treatment Subtotal</span>
-                  <span className="min-w-28 text-right tabular-nums">
+                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                  <span className="min-w-0 break-words">Treatment Subtotal</span>
+                  <span className="whitespace-nowrap text-right tabular-nums">
                     ${totals.subtotal.toFixed(2)}
                   </span>
                 </div>
 
 
-                <div className="flex justify-between">
-                  <span>GST (9%)</span>
-                  <span className="min-w-28 text-right tabular-nums">
+                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                  <span className="min-w-0 break-words">GST (9%)</span>
+                  <span className="whitespace-nowrap text-right tabular-nums">
                     ${totals.gst.toFixed(2)}
                   </span>
                 </div>
 
 
-                <div className="flex justify-between">
-                  <span>Total Subsidies USED</span>
-                  <span className="min-w-28 text-right tabular-nums">
+                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                  <span className="min-w-0 break-words">Total Subsidies USED</span>
+                  <span className="whitespace-nowrap text-right tabular-nums">
                     ${totals.subsidy.toFixed(2)}
                   </span>
                 </div>
 
 
-                <div className="flex justify-between">
-                  <span>Total Medisave USED</span>
-                  <span className="min-w-28 text-right tabular-nums">
+                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                  <span className="min-w-0 break-words">Total Medisave USED</span>
+                  <span className="whitespace-nowrap text-right tabular-nums">
                     ${totals.medisave.toFixed(2)}
                   </span>
                 </div>
@@ -2158,12 +2158,12 @@ export default function Home() {
                 <div
                   className={compactClass(
                     isFinalized,
-                    "flex justify-between border-t pt-5 text-2xl font-bold",
-                    "flex justify-between border-t pt-3 text-xl font-bold",
+                    "grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 border-t pt-5 text-2xl font-bold",
+                    "grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 border-t pt-3 text-xl font-bold",
                   )}
                 >
-                  <span>Cash Portion</span>
-                  <span className="min-w-28 text-right tabular-nums">
+                  <span className="min-w-0 break-words">Cash Portion</span>
+                  <span className="whitespace-nowrap text-right tabular-nums">
                     ${totals.payable.toFixed(2)}
                   </span>
                 </div>
@@ -2206,19 +2206,19 @@ export default function Home() {
 
                     {installmentBreakdown.plan.isInHouse ? (
                       <div className="mt-3 space-y-2">
-                        <div className="flex justify-between gap-4">
-                          <span>
+                        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                          <span className="min-w-0 break-words">
                             Upfront cash payment (GST on Medisave portion)
                           </span>
-                          <span className="min-w-28 text-right tabular-nums">
+                          <span className="whitespace-nowrap text-right tabular-nums">
                             {formatCurrency(
                               installmentBreakdown.medisaveGstCash,
                             )}
                           </span>
                         </div>
-                        <div className="flex justify-between gap-4">
-                          <span>Amount under in-house instalments</span>
-                          <span className="min-w-28 text-right tabular-nums">
+                        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                          <span className="min-w-0 break-words">Amount under in-house instalments</span>
+                          <span className="whitespace-nowrap text-right tabular-nums">
                             {formatCurrency(
                               installmentBreakdown.installmentAmount,
                             )}
@@ -2231,9 +2231,9 @@ export default function Home() {
                         </p>
                       </div>
                     ) : (
-                      <div className="mt-3 flex justify-between gap-4">
-                        <span>Amount under instalments</span>
-                        <span className="min-w-28 text-right tabular-nums">
+                      <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                        <span className="min-w-0 break-words">Amount under instalments</span>
+                        <span className="whitespace-nowrap text-right tabular-nums">
                           {formatCurrency(
                             installmentBreakdown.installmentAmount,
                           )}
@@ -2242,12 +2242,12 @@ export default function Home() {
                     )}
 
 
-                    <div className="mt-3 flex flex-col gap-1 border-t pt-3 font-bold sm:flex-row sm:justify-between sm:gap-4">
-                      <span>
+                    <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 border-t pt-3 font-bold">
+                      <span className="min-w-0 break-words">
                         Estimated monthly instalment (
                         {installmentBreakdown.plan.months} months)
                       </span>
-                      <span className="min-w-28 text-right tabular-nums">
+                      <span className="whitespace-nowrap text-right tabular-nums">
                         {formatCurrency(installmentBreakdown.monthlyAmount)}
                       </span>
                     </div>
