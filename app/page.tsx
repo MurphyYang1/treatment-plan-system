@@ -1683,7 +1683,7 @@ export default function Home() {
 
                           return (
                             <article
-                              key={`${procedure.name}-${procedureIndex}`}
+                              key={`${phase.id}-mobile-${procedureIndex}`}
                               className="avoid-break rounded-xl border bg-gray-50 p-3"
                             >
                               <div>
@@ -1829,7 +1829,7 @@ export default function Home() {
 
                             return (
                                 <tr
-                                  key={`${procedure.name}-${procedureIndex}`}
+                                  key={`${phase.id}-table-${procedureIndex}`}
                                   className="border-t align-top"
                                 >
                                   <td className="px-2 py-2">
@@ -1893,7 +1893,7 @@ export default function Home() {
 
                       return (
                         <article
-                          key={`${procedure.name}-${procedureIndex}`}
+                          key={`${phase.id}-edit-${procedureIndex}`}
                           className={compactClass(
                             isFinalized,
                             "avoid-break rounded-2xl border bg-gray-50 p-5",
@@ -1915,7 +1915,7 @@ export default function Home() {
                                     )
                                   }
                                   placeholder="Type custom procedure name"
-                                  className="w-full rounded-xl border bg-white px-4 py-3 text-xl font-bold"
+                                  className="w-full rounded-xl border bg-white px-4 py-3 text-lg font-bold sm:text-xl"
                                 />
                               ) : (
                                 <h3 className="text-xl font-bold">
