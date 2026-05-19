@@ -1188,26 +1188,26 @@ export default function Home() {
     <main
       className={compactClass(
         isFinalized,
-        "min-h-screen bg-gray-100 p-6 text-black print:bg-white print:p-0",
-        "min-h-screen bg-gray-100 p-3 text-black print:bg-white print:p-0",
+        "min-h-screen bg-gray-100 p-3 text-black sm:p-4 lg:p-6 print:bg-white print:p-0",
+        "min-h-screen bg-gray-100 p-2 text-black sm:p-3 print:bg-white print:p-0",
       )}
     >
       <div
         className={compactClass(
           isFinalized,
-          "print-page mx-auto max-w-7xl overflow-hidden rounded-3xl bg-white shadow-xl print:max-w-none print:rounded-none print:shadow-none",
+          "print-page mx-auto max-w-7xl overflow-hidden rounded-2xl bg-white shadow-xl sm:rounded-3xl print:max-w-none print:rounded-none print:shadow-none",
           "print-page mx-auto max-w-6xl overflow-hidden rounded-xl bg-white shadow-md print:max-w-none print:rounded-none print:shadow-none",
         )}
       >
         <header
           className={compactClass(
             isFinalized,
-            "border-b p-8 print:p-4",
-            "border-b p-4 print:p-4",
+            "border-b p-4 sm:p-6 lg:p-8 print:p-4",
+            "border-b p-3 sm:p-4 print:p-4",
           )}
         >
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3 sm:gap-4">
             <Image
               src="/nofrills-logo.png"
               alt="Nofrills Dental"
@@ -1215,8 +1215,8 @@ export default function Home() {
               height={120}
               className={compactClass(
                 isFinalized,
-                "rounded-2xl",
-                "h-20 w-20 rounded-xl print:h-16 print:w-16",
+                "h-16 w-16 rounded-xl sm:h-24 sm:w-24 sm:rounded-2xl lg:h-[120px] lg:w-[120px]",
+                "h-14 w-14 rounded-lg sm:h-20 sm:w-20 sm:rounded-xl print:h-16 print:w-16",
               )}
               priority
             />
@@ -1226,8 +1226,8 @@ export default function Home() {
               <h1
                 className={compactClass(
                   isFinalized,
-                  "text-4xl font-bold",
-                  "text-3xl font-bold print:text-2xl",
+                  "text-2xl font-bold sm:text-3xl lg:text-4xl",
+                  "text-2xl font-bold sm:text-3xl print:text-2xl",
                 )}
               >
                 Nofrills Dental
@@ -1239,11 +1239,11 @@ export default function Home() {
             </div>
 
 
-            <div className="no-print flex flex-wrap gap-3">
+            <div className="no-print flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap">
               <button
                 type="button"
                 onClick={() => setIsFinalized((current) => !current)}
-                className="rounded-xl bg-black px-5 py-2 text-white"
+                className="w-full rounded-xl bg-black px-5 py-3 text-white sm:w-auto sm:py-2"
               >
                 {isFinalized ? "Edit Quotation" : "Finalize for Print"}
               </button>
@@ -1253,7 +1253,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={printQuotation}
-                  className="rounded-xl border px-5 py-2 transition hover:bg-gray-100"
+                  className="w-full rounded-xl border px-5 py-3 transition hover:bg-gray-100 sm:w-auto sm:py-2"
                 >
                   Print
                 </button>
@@ -1266,16 +1266,16 @@ export default function Home() {
         <div
           className={compactClass(
             isFinalized,
-            "grid gap-8 p-8 lg:grid-cols-3 print:grid-cols-1 print:gap-4 print:p-4",
-            "grid gap-4 p-4 lg:grid-cols-[18rem_minmax(0,1fr)] print:grid-cols-1 print:gap-3 print:p-3",
+            "grid gap-4 p-3 sm:p-4 md:gap-6 lg:grid-cols-3 lg:gap-8 lg:p-8 print:grid-cols-1 print:gap-4 print:p-4",
+            "grid gap-3 p-3 sm:gap-4 sm:p-4 lg:grid-cols-[18rem_minmax(0,1fr)] print:grid-cols-1 print:gap-3 print:p-3",
           )}
         >
           <aside className="space-y-4 lg:col-span-1 lg:col-start-1 lg:row-start-1 print:col-auto print:row-auto print:space-y-3">
             <section
               className={compactClass(
                 isFinalized,
-                "avoid-break rounded-2xl border p-6",
-                "avoid-break rounded-xl border p-4 print:p-3",
+                "avoid-break rounded-2xl border p-4 sm:p-6",
+                "avoid-break rounded-xl border p-3 sm:p-4 print:p-3",
               )}
             >
               <h2 className={compactClass(isFinalized, "mb-5 text-2xl font-bold", "mb-3 text-xl font-bold")}>
@@ -1373,7 +1373,7 @@ export default function Home() {
 
             {!isFinalized ? (
               <>
-                <section className="avoid-break rounded-2xl border bg-gray-50 p-6">
+                <section className="avoid-break rounded-2xl border bg-gray-50 p-4 sm:p-6">
                   <h2 className="mb-5 text-2xl font-bold">
                     Interest-Free Instalments
                   </h2>
@@ -1415,7 +1415,7 @@ export default function Home() {
                 </section>
 
 
-                <section className="avoid-break rounded-2xl border bg-white p-6 text-sm leading-relaxed text-gray-700">
+                <section className="avoid-break rounded-2xl border bg-white p-4 text-sm leading-relaxed text-gray-700 sm:p-6">
                   <h2 className="mb-4 text-2xl font-bold text-black">
                     Disclaimer
                   </h2>
@@ -1464,8 +1464,8 @@ export default function Home() {
             <section
               className={compactClass(
                 isFinalized,
-                "rounded-2xl border p-6",
-                "avoid-break rounded-xl border p-4 print:p-3",
+                "rounded-2xl border p-4 sm:p-6",
+                "avoid-break rounded-xl border p-3 sm:p-4 print:p-3",
               )}
             >
               <div className="flex flex-wrap items-center justify-between gap-4">
@@ -1531,12 +1531,12 @@ export default function Home() {
                   key={phase.id}
                   className={compactClass(
                     isFinalized,
-                    "avoid-break rounded-2xl border bg-white p-6",
-                    "avoid-break rounded-xl border bg-white p-4 print:p-3",
+                    "avoid-break rounded-2xl border bg-white p-4 sm:p-6",
+                    "avoid-break rounded-xl border bg-white p-3 sm:p-4 print:p-3",
                   )}
                 >
-                  <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div className={compactClass(isFinalized, "w-full max-w-md space-y-3", "w-full max-w-md space-y-1")}>
+                  <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
+                    <div className={compactClass(isFinalized, "w-full space-y-3 sm:max-w-md", "w-full space-y-1 sm:max-w-md")}>
                       <input
                         type="text"
                         value={phase.title}
@@ -1573,7 +1573,7 @@ export default function Home() {
                     </div>
 
 
-                    <div className="text-right">
+                    <div className="text-left sm:text-right">
                       <p className="text-sm text-gray-500">Phase CASH Total</p>
                       <p className={compactClass(isFinalized, "text-2xl font-bold tabular-nums", "text-xl font-bold tabular-nums")}>
                         ${phaseTotal.toFixed(2)}
@@ -1584,7 +1584,7 @@ export default function Home() {
 
                   {!isFinalized ? (
                     <>
-                      <div className="mt-6 flex gap-2">
+                      <div className="mt-6 grid grid-cols-3 gap-2 sm:flex">
                         <button
                           type="button"
                           onClick={() => movePhaseUp(phaseIndex)}
@@ -1613,7 +1613,7 @@ export default function Home() {
                       </div>
 
 
-                      <div className="mt-6 grid gap-4 md:grid-cols-3">
+                      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                         <select
                           value={selectedCategory}
                           onChange={(event) => {
@@ -1647,7 +1647,7 @@ export default function Home() {
                         <button
                           type="button"
                           onClick={() => addProcedure(phaseIndex)}
-                          className="rounded-xl bg-black px-6 py-3 text-white"
+                          className="rounded-xl bg-black px-6 py-3 text-white sm:col-span-2 lg:col-span-1"
                         >
                           Add Procedure
                         </button>
@@ -1658,7 +1658,7 @@ export default function Home() {
 
                   {isFinalized ? (
                     <div className="mt-3 overflow-x-auto rounded-lg border">
-                      <table className="w-full table-fixed border-collapse text-[11px] leading-tight">
+                      <table className="w-full min-w-[760px] table-fixed border-collapse text-[11px] leading-tight print:min-w-0">
                         <thead className="bg-gray-100 text-gray-700">
                           <tr>
                             <th className="w-[28%] px-2 py-2 text-left font-semibold">
@@ -1806,13 +1806,7 @@ export default function Home() {
                           </div>
 
 
-                          <div
-                            className={compactClass(
-                              isFinalized,
-                              "mt-6 grid gap-4 md:grid-cols-7",
-                              "mt-3 grid gap-2 text-sm md:grid-cols-7",
-                            )}
-                          >
+                          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-7 lg:gap-4">
                             <div>
                               <label className={costLabelClass(isFinalized)}>
                                 Quantity
@@ -1966,7 +1960,7 @@ export default function Home() {
 
 
                             {!isFinalized || hasRemarks ? (
-                              <div className="md:col-span-7">
+                              <div className="col-span-2 sm:col-span-3 lg:col-span-7">
                                 {isFinalized ? (
                                   <div className="rounded-lg bg-white px-3 py-2 text-xs leading-snug">
                                     <span className="font-semibold">Remarks: </span>
@@ -2011,8 +2005,8 @@ export default function Home() {
             <section
               className={compactClass(
                 isFinalized,
-                "avoid-break rounded-2xl border bg-gray-50 p-6",
-                "avoid-break rounded-xl border bg-gray-50 p-4 print:p-3",
+                "avoid-break rounded-2xl border bg-gray-50 p-4 sm:p-6",
+                "avoid-break rounded-xl border bg-gray-50 p-3 sm:p-4 print:p-3",
               )}
             >
               <h2 className={compactClass(isFinalized, "mb-5 text-2xl font-bold", "mb-3 text-xl font-bold")}>
@@ -2093,10 +2087,10 @@ export default function Home() {
 
 
                 {installmentBreakdown ? (
-                  <div className="rounded-xl border bg-white p-4 text-sm">
-                    <div className="flex justify-between gap-4 font-semibold">
+                  <div className="rounded-xl border bg-white p-3 text-sm sm:p-4">
+                    <div className="flex flex-col gap-1 font-semibold sm:flex-row sm:justify-between sm:gap-4">
                       <span>Selected Instalment Plan</span>
-                      <span className="text-right">
+                      <span className="sm:text-right">
                         {installmentBreakdown.plan.label}
                       </span>
                     </div>
@@ -2140,7 +2134,7 @@ export default function Home() {
                     )}
 
 
-                    <div className="mt-3 flex justify-between gap-4 border-t pt-3 font-bold">
+                    <div className="mt-3 flex flex-col gap-1 border-t pt-3 font-bold sm:flex-row sm:justify-between sm:gap-4">
                       <span>
                         Estimated monthly instalment (
                         {installmentBreakdown.plan.months} months)
@@ -2241,8 +2235,8 @@ export default function Home() {
               id="signature"
               className={compactClass(
                 isFinalized,
-                "avoid-break print-break-before rounded-2xl border bg-white p-8",
-                "avoid-break print-break-before rounded-xl border bg-white p-4 print:p-3",
+                "avoid-break print-break-before rounded-2xl border bg-white p-4 sm:p-6 lg:p-8",
+                "avoid-break print-break-before rounded-xl border bg-white p-3 sm:p-4 print:p-3",
               )}
             >
               <h2 className={compactClass(isFinalized, "mb-6 text-2xl font-bold", "mb-3 text-xl font-bold")}>
@@ -2253,13 +2247,13 @@ export default function Home() {
               <div
                 className={compactClass(
                   isFinalized,
-                  "grid gap-8 lg:grid-cols-3",
+                  "grid gap-4 lg:grid-cols-3 lg:gap-8",
                   "grid gap-4 lg:grid-cols-3",
                 )}
               >
                 {!isFinalized ? (
-                  <div className="no-print flex flex-col items-center justify-center rounded-2xl border bg-gray-50 p-6 lg:col-span-1">
-                    <QRCode value={signatureUrl} size={180} />
+                  <div className="no-print flex flex-col items-center justify-center rounded-2xl border bg-gray-50 p-4 sm:p-6 lg:col-span-1">
+                    <QRCode value={signatureUrl} size={150} className="sm:h-[180px] sm:w-[180px]" />
 
 
                     <p className="mt-5 text-center text-sm leading-relaxed text-gray-500">
@@ -2271,7 +2265,7 @@ export default function Home() {
 
 
                 <div className={isFinalized ? "lg:col-span-3" : "lg:col-span-2"}>
-                  <div className={compactClass(isFinalized, "rounded-2xl border p-6", "rounded-xl border p-4")}>
+                  <div className={compactClass(isFinalized, "rounded-2xl border p-4 sm:p-6", "rounded-xl border p-3 sm:p-4")}>
                     <p
                       className={compactClass(
                         isFinalized,
@@ -2299,18 +2293,18 @@ export default function Home() {
                         canvasProps={{
                           width: 900,
                           height: isFinalized ? 140 : 220,
-                          className: "w-full bg-white",
+                          className: "h-40 w-full bg-white sm:h-56",
                         }}
                       />
                     </div>
 
 
                     {!isFinalized ? (
-                      <div className="mt-5 flex flex-wrap gap-3">
+                      <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                         <button
                           type="button"
                           onClick={clearSignature}
-                          className="rounded-xl border px-5 py-2 transition hover:bg-gray-100"
+                          className="rounded-xl border px-5 py-3 transition hover:bg-gray-100 sm:py-2"
                         >
                           Clear Signature
                         </button>
@@ -2318,7 +2312,7 @@ export default function Home() {
                     ) : null}
 
 
-                    <div className={compactClass(isFinalized, "mt-8 grid gap-4 md:grid-cols-2", "mt-4 grid gap-3 md:grid-cols-2")}>
+                    <div className={compactClass(isFinalized, "mt-6 grid gap-4 sm:mt-8 md:grid-cols-2", "mt-4 grid gap-3 md:grid-cols-2")}>
                       <div>
                         <label className="mb-2 block text-sm text-gray-500">
                           Patient Name
