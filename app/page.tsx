@@ -33,6 +33,7 @@ type Treatment = {
   fee: number;
   medisave: number;
   subsidies: Subsidy;
+  isCustom?: boolean;
 };
 
 
@@ -677,6 +678,15 @@ const availableTreatments: Treatment[] = [
   },
   {
     category: "Other Treatment",
+    name: "Blank / Custom Procedure",
+    duration: "",
+    fee: 0,
+    medisave: 0,
+    subsidies: noSubsidy,
+    isCustom: true,
+  },
+  {
+    category: "Other Treatment",
     name: "Temporary Denture (Interim) per full arch",
     duration: "",
     fee: 1000,
@@ -898,6 +908,7 @@ function getSubsidyAmount(treatment: Procedure, subsidyTier: SubsidyTier) {
 function createProcedure(treatment: Treatment): Procedure {
   return {
     ...treatment,
+    name: treatment.isCustom ? "" : treatment.name,
     quantity: 1,
     subsidyClaimQty: 1,
     medisaveClaim: treatment.medisave,
@@ -1343,8 +1354,8 @@ export default function Home() {
                   readOnly={isFinalized}
                   className={compactClass(
                     isFinalized,
-                    "w-full rounded-xl border px-4 py-3",
-                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                    "h-12 w-full rounded-xl border px-4 py-3 leading-normal",
+                    "h-8 w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm leading-normal",
                   )}
                 />
 
@@ -1677,7 +1688,7 @@ export default function Home() {
                             >
                               <div>
                                 <h3 className="text-base font-bold">
-                                  {procedure.name}
+                                  {procedure.name || "Custom Procedure"}
                                 </h3>
                                 <p className="mt-0.5 text-xs text-gray-500">
                                   {procedure.category}
@@ -1823,7 +1834,7 @@ export default function Home() {
                                 >
                                   <td className="px-2 py-2">
                                     <div className="font-semibold">
-                                      {procedure.name}
+                                      {procedure.name || "Custom Procedure"}
                                     </div>
                                     <div className="text-[10px] text-gray-500">
                                       {procedure.category}
@@ -1891,9 +1902,26 @@ export default function Home() {
                         >
                           <div className="flex flex-wrap items-start justify-between gap-4">
                             <div>
-                              <h3 className={compactClass(isFinalized, "text-xl font-bold", "text-base font-bold")}>
-                                {procedure.name}
-                              </h3>
+                              {procedure.isCustom ? (
+                                <input
+                                  type="text"
+                                  value={procedure.name}
+                                  onChange={(event) =>
+                                    updateProcedure(
+                                      phaseIndex,
+                                      procedureIndex,
+                                      "name",
+                                      event.target.value,
+                                    )
+                                  }
+                                  placeholder="Type custom procedure name"
+                                  className="w-full rounded-xl border bg-white px-4 py-3 text-xl font-bold"
+                                />
+                              ) : (
+                                <h3 className="text-xl font-bold">
+                                  {procedure.name}
+                                </h3>
+                              )}
                               <p className={compactClass(isFinalized, "mt-1 text-sm", "mt-0.5 text-xs")}>
                                 {procedure.category}
                               </p>
@@ -2451,8 +2479,8 @@ export default function Home() {
                           onChange={(event) => setDateSigned(event.target.value)}
                           className={compactClass(
                             isFinalized,
-                            "w-full rounded-xl border px-4 py-3",
-                            "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
+                            "h-12 w-full rounded-xl border px-4 py-3 leading-normal",
+                            "h-8 w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm leading-normal",
                           )}
                         />
                       </div>
