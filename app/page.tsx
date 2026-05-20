@@ -1379,6 +1379,7 @@ export default function Home() {
   );
   const [signatureErrorMessage, setSignatureErrorMessage] = useState("");
   const [isSavingSignature, setIsSavingSignature] = useState(false);
+  const [hasSignedQuotation, setHasSignedQuotation] = useState(false);
   const [subsidyTier, setSubsidyTier] = useState<SubsidyTier>("Private");
   const [preferredLanguage, setPreferredLanguage] =
     useState<PreferredLanguage>("English");
@@ -1457,6 +1458,7 @@ export default function Home() {
         signatureDataUrl: signatureRef.current.toDataURL("image/png"),
       });
       setDateSigned(signedDate);
+      setHasSignedQuotation(true);
       setSignatureStatusMessage(
         `Signed quotation saved. Records are marked to expire after ${SIGNED_QUOTATION_RETENTION_DAYS} days.`,
       );
@@ -1770,7 +1772,7 @@ export default function Home() {
 
 
   useEffect(() => {
-    if (!isFirebaseConfigured || !signingSessionId) {
+    if (!isFirebaseConfigured || !signingSessionId || hasSignedQuotation) {
       return;
     }
 
@@ -1788,7 +1790,7 @@ export default function Home() {
     }, 600);
 
     return () => window.clearTimeout(syncTimer);
-  }, [quotationSnapshotJson, signingSessionId]);
+  }, [hasSignedQuotation, quotationSnapshotJson, signingSessionId]);
 
 
   useEffect(() => {
@@ -1804,6 +1806,8 @@ export default function Home() {
         if (!session || session.status !== "signed" || !session.signatureDataUrl) {
           return;
         }
+
+        setHasSignedQuotation(true);
 
         if (liveSignatureLoadedRef.current !== session.signatureDataUrl) {
           signatureRef.current?.fromDataURL(session.signatureDataUrl);

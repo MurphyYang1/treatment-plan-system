@@ -36,6 +36,8 @@ To automatically remove signed records, enable Firestore TTL policies for the `e
 
 The signed session also stores the signature so the desktop page can update live, so both TTL policies are needed for 45-day retention.
 
+For stricter testing rules, copy `firestore.rules` into Firebase Console > Firestore Database > Rules and publish it. The rules keep QR signing public, but restrict writes to the expected fields, prevent public reads of stored signed quotations, prevent edits after signing, and cap `expiresAt` at 45 days.
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
