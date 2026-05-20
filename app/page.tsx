@@ -73,8 +73,59 @@ type PreferredLanguage = "English" | "Malay" | "Simplified Chinese" | "Tamil";
 
 type LanguageCopy = {
   label: string;
+  documentTitle: string;
+  patientInformation: string;
+  clinicBranch: string;
+  dentist: string;
+  patientName: string;
+  patientId: string;
+  quotationDate: string;
+  subsidyTier: string;
+  treatmentPhases: string;
+  treatment: string;
+  quantity: string;
+  claimQty: string;
+  unitPrice: string;
+  gst: string;
+  subsidy: string;
+  deduction: string;
+  medisave: string;
+  cashPayable: string;
+  customProcedure: string;
+  remarks: string;
+  howToReadCosts: string;
+  howToReadCostsText: string;
+  phaseCashTotal: string;
+  financialSummary: string;
+  treatmentSubtotal: string;
+  totalSubsidiesUsed: string;
+  totalMedisaveUsed: string;
+  cashPortion: string;
+  selectedInstallmentPlan: string;
+  months: string;
+  upfrontMedisaveGstCash: string;
+  amountUnderInHouse: string;
+  amountUnderInstallments: string;
+  estimatedMonthlyInstallment: string;
+  inHouseInstallmentNote: string;
+  interestFreeInstallments: string;
+  atomePlan: string;
+  grabPayPlan: string;
+  cardPlan: string;
+  inHouseInstallment: string;
+  inHouseSixTwelve: string;
+  applicantRequirement: string;
+  guarantorRequirement: string;
+  debitCardRequirement: string;
+  disclaimer: string;
+  disclaimerItems: string[];
+  signatureHeading: string;
+  dateSigned: string;
+  scanQrText: string;
   patientSummary: string;
   acknowledgement: string;
+  englishClinicalNote: string;
+  categoryTranslations: Record<string, string>;
 };
 
 
@@ -122,31 +173,291 @@ const installmentPlans: InstallmentPlan[] = [
 const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
   English: {
     label: "English",
+    documentTitle: "Dental Treatment Plan & Quotation",
+    patientInformation: "Patient Information",
+    clinicBranch: "Clinic Branch",
+    dentist: "Dentist",
+    patientName: "Patient Name",
+    patientId: "Patient ID",
+    quotationDate: "Quotation Date",
+    subsidyTier: "Subsidy Tier",
+    treatmentPhases: "Treatment Phases",
+    treatment: "Treatment",
+    quantity: "Quantity",
+    claimQty: "Claim Qty",
+    unitPrice: "Unit Price",
+    gst: "GST (9%)",
+    subsidy: "Subsidy",
+    deduction: "Deduction",
+    medisave: "Medisave",
+    cashPayable: "Cash Payable",
+    customProcedure: "Custom Procedure",
+    remarks: "Remarks",
+    howToReadCosts: "How to read each treatment cost",
+    howToReadCostsText:
+      "Quantity is the number of procedures planned. Claim quantity is the number submitted for CHAS / Merdeka / Pioneer subsidy. Cash payable is calculated as treatment subtotal (unit price x quantity) plus GST, less subsidy and Medisave deductions.",
+    phaseCashTotal: "Phase CASH Total",
+    financialSummary: "Financial Summary",
+    treatmentSubtotal: "Treatment Subtotal",
+    totalSubsidiesUsed: "Total Subsidies USED",
+    totalMedisaveUsed: "Total Medisave USED",
+    cashPortion: "Cash Portion",
+    selectedInstallmentPlan: "Selected Instalment Plan",
+    months: "months",
+    upfrontMedisaveGstCash: "Upfront cash payment (GST on Medisave portion)",
+    amountUnderInHouse: "Amount under in-house instalments",
+    amountUnderInstallments: "Amount under instalments",
+    estimatedMonthlyInstallment: "Estimated monthly instalment",
+    inHouseInstallmentNote:
+      "For in-house instalments, the GST amount linked to the Medisave claim is excluded from the instalment amount and collected in cash.",
+    interestFreeInstallments: "Interest-Free Instalments",
+    atomePlan: "Atome: 3 months interest-free",
+    grabPayPlan: "GrabPay: 4 months interest-free",
+    cardPlan: "UOB / OCBC Credit Card: 12 months interest-free instalment",
+    inHouseInstallment: "In-House Instalment",
+    inHouseSixTwelve: "6/12 months interest-free - depending on treatment",
+    applicantRequirement: "Applicant must be SG / PR",
+    guarantorRequirement: "1x guarantor required (SG / PR)",
+    debitCardRequirement: "Valid debit card required",
+    disclaimer: "Disclaimer",
+    disclaimerItems: [
+      "All treatment fees stated are inclusive of prevailing 9% GST.",
+      "Treatment fees discussed and agreed upon shall remain valid throughout the planned treatment duration unless unforeseen clinical complications arise.",
+      "Additional treatment procedures required due to complications, changes in clinical condition or patient requests may incur additional treatment charges.",
+      "CHAS, Merdeka Generation, Pioneer Generation and Medisave claims remain subject to prevailing MOH regulations and patient eligibility.",
+    ],
+    signatureHeading: "Patient Acknowledgement & Signature",
+    dateSigned: "Date Signed",
+    scanQrText:
+      "Scan QR code to review and digitally sign this treatment quotation on your mobile device.",
     patientSummary:
       "This quotation explains the proposed treatment, estimated fees, subsidies, Medisave claims, and cash portion payable.",
     acknowledgement:
       "I acknowledge that the proposed treatment, estimated fees, subsidies, Medisave claims, risks and alternative options have been explained clearly to me.",
+    englishClinicalNote:
+      "Treatment names and clinical terms may remain in English for clinical accuracy.",
+    categoryTranslations: {},
   },
   Malay: {
     label: "Malay",
+    documentTitle: "Pelan Rawatan Pergigian & Sebut Harga",
+    patientInformation: "Maklumat Pesakit",
+    clinicBranch: "Cawangan Klinik",
+    dentist: "Doktor Gigi",
+    patientName: "Nama Pesakit",
+    patientId: "ID Pesakit",
+    quotationDate: "Tarikh Sebut Harga",
+    subsidyTier: "Kategori Subsidi",
+    treatmentPhases: "Fasa Rawatan",
+    treatment: "Rawatan",
+    quantity: "Kuantiti",
+    claimQty: "Kuantiti Tuntutan",
+    unitPrice: "Harga Seunit",
+    gst: "GST (9%)",
+    subsidy: "Subsidi",
+    deduction: "Potongan",
+    medisave: "Medisave",
+    cashPayable: "Tunai Perlu Dibayar",
+    customProcedure: "Prosedur Tersuai",
+    remarks: "Catatan",
+    howToReadCosts: "Cara membaca kos setiap rawatan",
+    howToReadCostsText:
+      "Kuantiti ialah bilangan prosedur yang dirancang. Kuantiti tuntutan ialah bilangan yang dihantar untuk subsidi CHAS / Merdeka / Perintis. Tunai perlu dibayar dikira sebagai jumlah kecil rawatan (harga seunit x kuantiti) ditambah GST, ditolak subsidi dan potongan Medisave.",
+    phaseCashTotal: "Jumlah Tunai Fasa",
+    financialSummary: "Ringkasan Kewangan",
+    treatmentSubtotal: "Jumlah Kecil Rawatan",
+    totalSubsidiesUsed: "Jumlah Subsidi Digunakan",
+    totalMedisaveUsed: "Jumlah Medisave Digunakan",
+    cashPortion: "Bahagian Tunai",
+    selectedInstallmentPlan: "Pelan Ansuran Dipilih",
+    months: "bulan",
+    upfrontMedisaveGstCash:
+      "Bayaran tunai awal (GST bagi bahagian Medisave)",
+    amountUnderInHouse: "Jumlah di bawah ansuran dalaman",
+    amountUnderInstallments: "Jumlah di bawah ansuran",
+    estimatedMonthlyInstallment: "Anggaran ansuran bulanan",
+    inHouseInstallmentNote:
+      "Untuk ansuran dalaman, jumlah GST berkaitan tuntutan Medisave tidak termasuk dalam jumlah ansuran dan perlu dibayar secara tunai.",
+    interestFreeInstallments: "Ansuran Tanpa Faedah",
+    atomePlan: "Atome: 3 bulan tanpa faedah",
+    grabPayPlan: "GrabPay: 4 bulan tanpa faedah",
+    cardPlan: "Kad Kredit UOB / OCBC: ansuran 12 bulan tanpa faedah",
+    inHouseInstallment: "Ansuran Dalaman",
+    inHouseSixTwelve: "6/12 bulan tanpa faedah - bergantung pada rawatan",
+    applicantRequirement: "Pemohon mestilah Warganegara Singapura / PR",
+    guarantorRequirement: "1 penjamin diperlukan (Warganegara Singapura / PR)",
+    debitCardRequirement: "Kad debit yang sah diperlukan",
+    disclaimer: "Penafian",
+    disclaimerItems: [
+      "Semua yuran rawatan yang dinyatakan termasuk GST 9% semasa.",
+      "Yuran rawatan yang dibincangkan dan dipersetujui akan kekal sah sepanjang tempoh rawatan yang dirancang kecuali berlaku komplikasi klinikal yang tidak dijangka.",
+      "Prosedur rawatan tambahan yang diperlukan akibat komplikasi, perubahan keadaan klinikal atau permintaan pesakit mungkin dikenakan caj tambahan.",
+      "Tuntutan CHAS, Generasi Merdeka, Generasi Perintis dan Medisave tertakluk kepada peraturan MOH semasa dan kelayakan pesakit.",
+    ],
+    signatureHeading: "Pengakuan & Tandatangan Pesakit",
+    dateSigned: "Tarikh Ditandatangani",
+    scanQrText:
+      "Imbas kod QR untuk menyemak dan menandatangani sebut harga rawatan ini secara digital melalui telefon bimbit anda.",
     patientSummary:
       "Ringkasan untuk pesakit: Sebut harga ini menerangkan rawatan yang dicadangkan, anggaran bayaran, subsidi, tuntutan Medisave dan jumlah tunai yang perlu dibayar.",
     acknowledgement:
       "Saya mengakui bahawa rawatan yang dicadangkan, anggaran bayaran, subsidi, tuntutan Medisave, risiko dan pilihan rawatan lain telah diterangkan dengan jelas kepada saya.",
+    englishClinicalNote:
+      "Nama rawatan dan istilah klinikal mungkin dikekalkan dalam Bahasa Inggeris untuk ketepatan klinikal.",
+    categoryTranslations: {
+      "General Treatment": "Rawatan Am",
+      "Surgical Treatment": "Rawatan Pembedahan",
+      "Implant Treatment": "Rawatan Implan",
+      "Orthodontic / Cosmetic Treatment": "Rawatan Ortodontik / Kosmetik",
+      "Final prosthesis for Dental implants": "Prostesis Akhir untuk Implan Pergigian",
+      "Other Treatment": "Rawatan Lain",
+    },
   },
   "Simplified Chinese": {
     label: "Simplified Chinese",
+    documentTitle: "牙科治疗计划与报价",
+    patientInformation: "患者资料",
+    clinicBranch: "诊所分行",
+    dentist: "牙医",
+    patientName: "患者姓名",
+    patientId: "患者编号",
+    quotationDate: "报价日期",
+    subsidyTier: "补贴类别",
+    treatmentPhases: "治疗阶段",
+    treatment: "治疗",
+    quantity: "数量",
+    claimQty: "申报数量",
+    unitPrice: "单价",
+    gst: "消费税 (9%)",
+    subsidy: "补贴",
+    deduction: "扣除",
+    medisave: "保健储蓄",
+    cashPayable: "需付现金",
+    customProcedure: "自定义项目",
+    remarks: "备注",
+    howToReadCosts: "如何阅读每项治疗费用",
+    howToReadCostsText:
+      "数量是计划进行的程序次数。申报数量是提交用于 CHAS / 建国一代 / 乐龄一代补贴的数量。需付现金按治疗小计（单价 x 数量）加上消费税，再扣除补贴和保健储蓄后计算。",
+    phaseCashTotal: "阶段现金总额",
+    financialSummary: "费用摘要",
+    treatmentSubtotal: "治疗小计",
+    totalSubsidiesUsed: "已使用补贴总额",
+    totalMedisaveUsed: "已使用保健储蓄总额",
+    cashPortion: "现金部分",
+    selectedInstallmentPlan: "已选择分期付款计划",
+    months: "个月",
+    upfrontMedisaveGstCash: "预付现金（保健储蓄部分的消费税）",
+    amountUnderInHouse: "诊所内部分期金额",
+    amountUnderInstallments: "分期付款金额",
+    estimatedMonthlyInstallment: "预计每月分期付款",
+    inHouseInstallmentNote:
+      "如选择诊所内部分期付款，与保健储蓄索赔相关的消费税不包括在分期金额内，并需以现金支付。",
+    interestFreeInstallments: "免息分期付款",
+    atomePlan: "Atome：3个月免息",
+    grabPayPlan: "GrabPay：4个月免息",
+    cardPlan: "UOB / OCBC 信用卡：12个月免息分期",
+    inHouseInstallment: "诊所内部分期付款",
+    inHouseSixTwelve: "6/12个月免息 - 视治疗而定",
+    applicantRequirement: "申请人必须是新加坡公民 / 永久居民",
+    guarantorRequirement: "需要1名担保人（新加坡公民 / 永久居民）",
+    debitCardRequirement: "需要有效的借记卡",
+    disclaimer: "免责声明",
+    disclaimerItems: [
+      "所有列明的治疗费用均包含现行9%消费税。",
+      "已讨论并同意的治疗费用将在计划治疗期间保持有效，除非出现无法预见的临床并发症。",
+      "因并发症、临床情况变化或患者要求而需要的额外治疗程序，可能会产生额外费用。",
+      "CHAS、建国一代、乐龄一代及保健储蓄索赔须符合卫生部现行规定及患者资格。",
+    ],
+    signatureHeading: "患者确认与签名",
+    dateSigned: "签署日期",
+    scanQrText: "请扫描二维码，在手机上查看并以电子方式签署此治疗报价。",
     patientSummary:
       "患者摘要：本报价说明建议的治疗、预计费用、补贴、保健储蓄索赔以及需要以现金支付的金额。",
     acknowledgement:
       "我确认牙医已向我清楚说明建议的治疗、预计费用、补贴、保健储蓄索赔、风险以及其他治疗选择。",
+    englishClinicalNote: "为确保临床准确性，治疗名称和临床术语可能保留英文。",
+    categoryTranslations: {
+      "General Treatment": "一般治疗",
+      "Surgical Treatment": "外科治疗",
+      "Implant Treatment": "种植牙治疗",
+      "Orthodontic / Cosmetic Treatment": "正畸 / 美容治疗",
+      "Final prosthesis for Dental implants": "种植牙最终修复体",
+      "Other Treatment": "其他治疗",
+    },
   },
   Tamil: {
     label: "Tamil",
+    documentTitle: "பல் சிகிச்சை திட்டம் & மேற்கோள்",
+    patientInformation: "நோயாளர் தகவல்",
+    clinicBranch: "கிளினிக் கிளை",
+    dentist: "பல் மருத்துவர்",
+    patientName: "நோயாளர் பெயர்",
+    patientId: "நோயாளர் அடையாள எண்",
+    quotationDate: "மேற்கோள் தேதி",
+    subsidyTier: "மானிய வகை",
+    treatmentPhases: "சிகிச்சை கட்டங்கள்",
+    treatment: "சிகிச்சை",
+    quantity: "அளவு",
+    claimQty: "கோரிக்கை அளவு",
+    unitPrice: "அலகு விலை",
+    gst: "GST (9%)",
+    subsidy: "மானியம்",
+    deduction: "கழிவு",
+    medisave: "Medisave",
+    cashPayable: "செலுத்த வேண்டிய ரொக்கம்",
+    customProcedure: "தனிப்பயன் செயல்முறை",
+    remarks: "குறிப்புகள்",
+    howToReadCosts: "ஒவ்வொரு சிகிச்சை செலவையும் படிப்பது எப்படி",
+    howToReadCostsText:
+      "அளவு என்பது திட்டமிடப்பட்ட செயல்முறைகளின் எண்ணிக்கை. கோரிக்கை அளவு என்பது CHAS / Merdeka / Pioneer மானியத்திற்கு சமர்ப்பிக்கப்படும் எண்ணிக்கை. செலுத்த வேண்டிய ரொக்கம் சிகிச்சை இடைமொத்தம் (அலகு விலை x அளவு) மற்றும் GST சேர்த்து, மானியம் மற்றும் Medisave கழிவுகளை கழித்துப் கணக்கிடப்படுகிறது.",
+    phaseCashTotal: "கட்ட ரொக்க மொத்தம்",
+    financialSummary: "நிதி சுருக்கம்",
+    treatmentSubtotal: "சிகிச்சை இடைமொத்தம்",
+    totalSubsidiesUsed: "பயன்படுத்திய மானிய மொத்தம்",
+    totalMedisaveUsed: "பயன்படுத்திய Medisave மொத்தம்",
+    cashPortion: "ரொக்க பகுதி",
+    selectedInstallmentPlan: "தேர்ந்தெடுத்த தவணை திட்டம்",
+    months: "மாதங்கள்",
+    upfrontMedisaveGstCash: "முன்கூட்டிய ரொக்க கட்டணம் (Medisave பகுதியின் GST)",
+    amountUnderInHouse: "உள் தவணைத் திட்டத்தின் கீழ் உள்ள தொகை",
+    amountUnderInstallments: "தவணைத் தொகை",
+    estimatedMonthlyInstallment: "மதிப்பிடப்பட்ட மாத தவணை",
+    inHouseInstallmentNote:
+      "உள் தவணைகளுக்கு, Medisave கோரிக்கையுடன் தொடர்புடைய GST தொகை தவணைத் தொகையில் சேர்க்கப்படாது; அது ரொக்கமாக வசூலிக்கப்படும்.",
+    interestFreeInstallments: "வட்டி இல்லா தவணைகள்",
+    atomePlan: "Atome: 3 மாதங்கள் வட்டி இல்லாது",
+    grabPayPlan: "GrabPay: 4 மாதங்கள் வட்டி இல்லாது",
+    cardPlan: "UOB / OCBC கடன் அட்டை: 12 மாத வட்டி இல்லா தவணை",
+    inHouseInstallment: "உள் தவணை",
+    inHouseSixTwelve: "6/12 மாதங்கள் வட்டி இல்லாது - சிகிச்சையைப் பொறுத்தது",
+    applicantRequirement: "விண்ணப்பதாரர் SG / PR ஆக இருக்க வேண்டும்",
+    guarantorRequirement: "1 உத்தரவாதம் அளிப்பவர் தேவை (SG / PR)",
+    debitCardRequirement: "செல்லுபடியாகும் டெபிட் கார்டு தேவை",
+    disclaimer: "பொறுப்புத்துறப்பு",
+    disclaimerItems: [
+      "குறிப்பிடப்பட்ட அனைத்து சிகிச்சை கட்டணங்களும் நடைமுறையில் உள்ள 9% GST உட்படக் குறிப்பிடப்பட்டுள்ளன.",
+      "விவாதித்து ஒப்புக்கொள்ளப்பட்ட சிகிச்சை கட்டணங்கள், எதிர்பாராத மருத்துவ சிக்கல்கள் இல்லாவிட்டால், திட்டமிடப்பட்ட சிகிச்சை காலம் முழுவதும் செல்லுபடியாகும்.",
+      "சிக்கல்கள், மருத்துவ நிலை மாற்றங்கள் அல்லது நோயாளர் கோரிக்கைகள் காரணமாக தேவைப்படும் கூடுதல் சிகிச்சைகளுக்கு கூடுதல் கட்டணம் விதிக்கப்படலாம்.",
+      "CHAS, Merdeka Generation, Pioneer Generation மற்றும் Medisave கோரிக்கைகள் MOH விதிமுறைகள் மற்றும் நோயாளர் தகுதிக்கு உட்பட்டவை.",
+    ],
+    signatureHeading: "நோயாளர் ஒப்புதல் & கையொப்பம்",
+    dateSigned: "கையொப்பமிட்ட தேதி",
+    scanQrText:
+      "இந்த சிகிச்சை மேற்கோளை உங்கள் மொபைலில் மதிப்பாய்வு செய்து டிஜிட்டல் கையொப்பமிட QR குறியீட்டை ஸ்கேன் செய்யவும்.",
     patientSummary:
       "நோயாளர் சுருக்கம்: இந்த மேற்கோள் பரிந்துரைக்கப்பட்ட சிகிச்சை, மதிப்பிடப்பட்ட கட்டணங்கள், மானியங்கள், Medisave கோரிக்கைகள் மற்றும் ரொக்கமாக செலுத்த வேண்டிய தொகையை விளக்குகிறது.",
     acknowledgement:
       "பரிந்துரைக்கப்பட்ட சிகிச்சை, மதிப்பிடப்பட்ட கட்டணங்கள், மானியங்கள், Medisave கோரிக்கைகள், அபாயங்கள் மற்றும் மாற்று சிகிச்சை விருப்பங்கள் எனக்கு தெளிவாக விளக்கப்பட்டுள்ளன என்பதை நான் ஒப்புக்கொள்கிறேன்.",
+    englishClinicalNote:
+      "மருத்துவத் துல்லியத்திற்காக சிகிச்சை பெயர்கள் மற்றும் மருத்துவ சொற்கள் ஆங்கிலத்தில் இருக்கலாம்.",
+    categoryTranslations: {
+      "General Treatment": "பொது சிகிச்சை",
+      "Surgical Treatment": "அறுவை சிகிச்சை",
+      "Implant Treatment": "இம்பிளாண்ட் சிகிச்சை",
+      "Orthodontic / Cosmetic Treatment": "ஆர்த்தோடாண்டிக் / அழகு சிகிச்சை",
+      "Final prosthesis for Dental implants": "பல் இம்பிளாண்டுக்கான இறுதி செயற்கை அமைப்பு",
+      "Other Treatment": "மற்ற சிகிச்சை",
+    },
   },
 };
 
@@ -1010,6 +1321,26 @@ function formatAttendedBy(value: string) {
   return `Attended by Dr ${trimmed}`;
 }
 
+function translateCategory(category: string, copy: LanguageCopy) {
+  return copy.categoryTranslations[category] ?? category;
+}
+
+function translateInstallmentPlan(plan: InstallmentPlan, copy: LanguageCopy) {
+  switch (plan.id) {
+    case "none":
+      return plan.label;
+    case "atome-3":
+      return copy.atomePlan;
+    case "grabpay-4":
+      return copy.grabPayPlan;
+    case "card-12":
+      return copy.cardPlan;
+    case "in-house-6":
+    case "in-house-12":
+      return `${copy.inHouseInstallment} - ${plan.months} ${copy.months}`;
+  }
+}
+
 
 export default function Home() {
   const signatureRef = useRef<SignatureCanvas | null>(null);
@@ -1316,7 +1647,9 @@ export default function Home() {
                 Nofrills Dental
               </h1>
               <p className={compactClass(isFinalized, "mt-2 text-gray-600", "mt-1 text-sm text-gray-600")}>
-                Dental Treatment Plan & Quotation
+                {isFinalized
+                  ? selectedLanguageCopy.documentTitle
+                  : "Dental Treatment Plan & Quotation"}
               </p>
             </div>
             </div>
@@ -1362,7 +1695,9 @@ export default function Home() {
               )}
             >
               <h2 className={compactClass(isFinalized, "mb-5 text-2xl font-bold", "mb-3 text-xl font-bold")}>
-                Patient Information
+                {isFinalized
+                  ? selectedLanguageCopy.patientInformation
+                  : "Patient Information"}
               </h2>
 
 
@@ -1370,7 +1705,7 @@ export default function Home() {
                 <dl className="grid gap-3 text-sm sm:grid-cols-2">
                   <div className="rounded-lg bg-gray-50 p-3">
                     <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                      Clinic Branch
+                      {selectedLanguageCopy.clinicBranch}
                     </dt>
                     <dd className="mt-1 font-medium">
                       {displayValue(clinicBranch)}
@@ -1379,7 +1714,7 @@ export default function Home() {
 
                   <div className="rounded-lg bg-gray-50 p-3">
                     <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                      Dentist
+                      {selectedLanguageCopy.dentist}
                     </dt>
                     <dd className="mt-1 font-medium">
                       {formatAttendedBy(dentistName)}
@@ -1388,7 +1723,7 @@ export default function Home() {
 
                   <div className="rounded-lg bg-gray-50 p-3">
                     <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                      Patient Name
+                      {selectedLanguageCopy.patientName}
                     </dt>
                     <dd className="mt-1 font-medium">
                       {displayValue(patientName)}
@@ -1397,7 +1732,7 @@ export default function Home() {
 
                   <div className="rounded-lg bg-gray-50 p-3">
                     <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                      Patient ID
+                      {selectedLanguageCopy.patientId}
                     </dt>
                     <dd className="mt-1 font-medium">
                       {displayValue(patientId)}
@@ -1406,7 +1741,7 @@ export default function Home() {
 
                   <div className="rounded-lg bg-gray-50 p-3">
                     <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                      Quotation Date
+                      {selectedLanguageCopy.quotationDate}
                     </dt>
                     <dd className="mt-1 font-medium">
                       {displayValue(quotationDate)}
@@ -1415,7 +1750,7 @@ export default function Home() {
 
                   <div className="rounded-lg bg-gray-50 p-3">
                     <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                      Subsidy Tier
+                      {selectedLanguageCopy.subsidyTier}
                     </dt>
                     <dd className="mt-1 font-medium">{subsidyTier}</dd>
                   </div>
@@ -1599,7 +1934,9 @@ export default function Home() {
             >
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <h2 className={compactClass(isFinalized, "text-2xl font-bold", "text-xl font-bold")}>
-                  Treatment Phases
+                  {isFinalized
+                    ? selectedLanguageCopy.treatmentPhases
+                    : "Treatment Phases"}
                 </h2>
 
 
@@ -1623,12 +1960,15 @@ export default function Home() {
                 "avoid-break rounded-xl border bg-blue-50 p-3 text-xs text-blue-950 print:p-2",
               )}
             >
-              <h3 className="font-bold">How to read each treatment cost</h3>
+              <h3 className="font-bold">
+                {isFinalized
+                  ? selectedLanguageCopy.howToReadCosts
+                  : "How to read each treatment cost"}
+              </h3>
               <p className="mt-2 leading-relaxed">
-                Quantity is the number of procedures planned. Claim quantity is
-                the number submitted for CHAS / Merdeka / Pioneer subsidy. Cash
-                payable is calculated as treatment subtotal (unit price x
-                quantity) plus GST, less subsidy and Medisave deductions.
+                {isFinalized
+                  ? selectedLanguageCopy.howToReadCostsText
+                  : "Quantity is the number of procedures planned. Claim quantity is the number submitted for CHAS / Merdeka / Pioneer subsidy. Cash payable is calculated as treatment subtotal (unit price x quantity) plus GST, less subsidy and Medisave deductions."}
               </p>
             </section>
 
@@ -1703,7 +2043,11 @@ export default function Home() {
 
 
                     <div className="text-left sm:text-right">
-                      <p className="text-sm text-gray-500">Phase CASH Total</p>
+                      <p className="text-sm text-gray-500">
+                        {isFinalized
+                          ? selectedLanguageCopy.phaseCashTotal
+                          : "Phase CASH Total"}
+                      </p>
                       <p className={compactClass(isFinalized, "text-2xl font-bold tabular-nums", "text-xl font-bold tabular-nums")}>
                         ${phaseTotal.toFixed(2)}
                       </p>
@@ -1806,17 +2150,21 @@ export default function Home() {
                             >
                               <div>
                                 <h3 className="text-base font-bold">
-                                  {procedure.name || "Custom Procedure"}
+                                  {procedure.name ||
+                                    selectedLanguageCopy.customProcedure}
                                 </h3>
                                 <p className="mt-0.5 text-xs text-gray-500">
-                                  {procedure.category}
+                                  {translateCategory(
+                                    procedure.category,
+                                    selectedLanguageCopy,
+                                  )}
                                 </p>
                               </div>
 
                               <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                                 <div>
                                   <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
-                                    Quantity
+                                    {selectedLanguageCopy.quantity}
                                   </dt>
                                   <dd className="text-right tabular-nums">
                                     {procedure.quantity}
@@ -1825,7 +2173,7 @@ export default function Home() {
 
                                 <div>
                                   <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
-                                    Claim Qty
+                                    {selectedLanguageCopy.claimQty}
                                   </dt>
                                   <dd className="text-right tabular-nums">
                                     {procedure.subsidyClaimQty}
@@ -1834,7 +2182,7 @@ export default function Home() {
 
                                 <div>
                                   <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
-                                    Unit Price
+                                    {selectedLanguageCopy.unitPrice}
                                   </dt>
                                   <dd className="text-right tabular-nums">
                                     {formatCurrency(procedure.fee)}
@@ -1843,7 +2191,7 @@ export default function Home() {
 
                                 <div>
                                   <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
-                                    GST (9%)
+                                    {selectedLanguageCopy.gst}
                                   </dt>
                                   <dd className="text-right tabular-nums">
                                     {formatCurrency(gst)}
@@ -1852,7 +2200,8 @@ export default function Home() {
 
                                 <div>
                                   <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
-                                    Subsidy Deducted
+                                    {selectedLanguageCopy.subsidy}{" "}
+                                    {selectedLanguageCopy.deduction}
                                   </dt>
                                   <dd className="text-right tabular-nums">
                                     {formatDeduction(subsidy)}
@@ -1861,7 +2210,8 @@ export default function Home() {
 
                                 <div>
                                   <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
-                                    Medisave Deducted
+                                    {selectedLanguageCopy.medisave}{" "}
+                                    {selectedLanguageCopy.deduction}
                                   </dt>
                                   <dd className="text-right tabular-nums">
                                     {formatDeduction(procedure.medisaveClaim)}
@@ -1870,7 +2220,7 @@ export default function Home() {
 
                                 <div className="col-span-2 border-t pt-2">
                                   <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
-                                    Cash Payable
+                                    {selectedLanguageCopy.cashPayable}
                                   </dt>
                                   <dd className="text-right text-lg font-bold tabular-nums">
                                     {formatCurrency(payable)}
@@ -1881,7 +2231,7 @@ export default function Home() {
                               {hasRemarks ? (
                                 <div className="mt-3 rounded border-l-2 border-blue-300 bg-blue-50 px-2 py-1.5 text-xs leading-snug text-blue-950">
                                   <span className="font-semibold">
-                                    Remarks:{" "}
+                                    {selectedLanguageCopy.remarks}:{" "}
                                   </span>
                                   <span className="whitespace-pre-wrap">
                                     {procedure.description}
@@ -1898,34 +2248,34 @@ export default function Home() {
                         <thead className="bg-gray-100 text-gray-700">
                           <tr>
                             <th className="w-[28%] px-2 py-2 text-left font-semibold">
-                              Treatment
+                              {selectedLanguageCopy.treatment}
                             </th>
                             <th className="w-[7%] px-2 py-2 text-right font-semibold tabular-nums">
-                              Qty
+                              {selectedLanguageCopy.quantity}
                             </th>
                             <th className="w-[8%] px-2 py-2 text-right font-semibold tabular-nums">
-                              Claim
+                              {selectedLanguageCopy.claimQty}
                             </th>
                             <th className="w-[11%] px-2 py-2 text-right font-semibold tabular-nums">
-                              Unit Price
+                              {selectedLanguageCopy.unitPrice}
                             </th>
                             <th className="w-[10%] px-2 py-2 text-right font-semibold tabular-nums">
-                              GST
+                              {selectedLanguageCopy.gst}
                             </th>
                             <th className="w-[12%] px-2 py-2 text-right font-semibold tabular-nums">
-                              Subsidy
+                              {selectedLanguageCopy.subsidy}
                               <span className="block text-[9px] font-normal">
-                                Deduction
+                                {selectedLanguageCopy.deduction}
                               </span>
                             </th>
                             <th className="w-[12%] px-2 py-2 text-right font-semibold tabular-nums">
-                              Medisave
+                              {selectedLanguageCopy.medisave}
                               <span className="block text-[9px] font-normal">
-                                Deduction
+                                {selectedLanguageCopy.deduction}
                               </span>
                             </th>
                             <th className="w-[12%] px-2 py-2 text-right font-semibold tabular-nums">
-                              Cash Payable
+                              {selectedLanguageCopy.cashPayable}
                             </th>
                           </tr>
                         </thead>
@@ -1952,15 +2302,19 @@ export default function Home() {
                                 >
                                   <td className="px-2 py-2">
                                     <div className="font-semibold">
-                                      {procedure.name || "Custom Procedure"}
+                                      {procedure.name ||
+                                        selectedLanguageCopy.customProcedure}
                                     </div>
                                     <div className="text-[10px] text-gray-500">
-                                      {procedure.category}
+                                      {translateCategory(
+                                        procedure.category,
+                                        selectedLanguageCopy,
+                                      )}
                                     </div>
                                     {hasRemarks ? (
                                       <div className="mt-1.5 rounded border-l-2 border-blue-300 bg-blue-50 px-1.5 py-1 text-[10px] leading-snug text-blue-950">
                                         <span className="font-semibold">
-                                          Remarks:{" "}
+                                          {selectedLanguageCopy.remarks}:{" "}
                                         </span>
                                         <span className="whitespace-pre-wrap">
                                           {procedure.description}
@@ -2217,7 +2571,12 @@ export default function Home() {
                               <div className="col-span-2 sm:col-span-3 lg:col-span-7">
                                 {isFinalized ? (
                                   <div className="rounded-lg bg-white px-3 py-2 text-xs leading-snug">
-                                    <span className="font-semibold">Remarks: </span>
+                                    <span className="font-semibold">
+                                      {isFinalized
+                                        ? selectedLanguageCopy.remarks
+                                        : "Remarks"}
+                                      :{" "}
+                                    </span>
                                     <span className="whitespace-pre-wrap">
                                       {procedure.description}
                                     </span>
@@ -2264,13 +2623,19 @@ export default function Home() {
               )}
             >
               <h2 className={compactClass(isFinalized, "mb-5 text-2xl font-bold", "mb-3 text-xl font-bold")}>
-                Financial Summary
+                {isFinalized
+                  ? selectedLanguageCopy.financialSummary
+                  : "Financial Summary"}
               </h2>
 
 
               <div className={compactClass(isFinalized, "space-y-4", "space-y-2 text-sm")}>
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                  <span className="min-w-0 break-words">Treatment Subtotal</span>
+                  <span className="min-w-0 break-words">
+                    {isFinalized
+                      ? selectedLanguageCopy.treatmentSubtotal
+                      : "Treatment Subtotal"}
+                  </span>
                   <span className="whitespace-nowrap text-right tabular-nums">
                     ${totals.subtotal.toFixed(2)}
                   </span>
@@ -2278,7 +2643,9 @@ export default function Home() {
 
 
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                  <span className="min-w-0 break-words">GST (9%)</span>
+                  <span className="min-w-0 break-words">
+                    {isFinalized ? selectedLanguageCopy.gst : "GST (9%)"}
+                  </span>
                   <span className="whitespace-nowrap text-right tabular-nums">
                     ${totals.gst.toFixed(2)}
                   </span>
@@ -2286,7 +2653,11 @@ export default function Home() {
 
 
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                  <span className="min-w-0 break-words">Total Subsidies USED</span>
+                  <span className="min-w-0 break-words">
+                    {isFinalized
+                      ? selectedLanguageCopy.totalSubsidiesUsed
+                      : "Total Subsidies USED"}
+                  </span>
                   <span className="whitespace-nowrap text-right tabular-nums">
                     ${totals.subsidy.toFixed(2)}
                   </span>
@@ -2294,7 +2665,11 @@ export default function Home() {
 
 
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                  <span className="min-w-0 break-words">Total Medisave USED</span>
+                  <span className="min-w-0 break-words">
+                    {isFinalized
+                      ? selectedLanguageCopy.totalMedisaveUsed
+                      : "Total Medisave USED"}
+                  </span>
                   <span className="whitespace-nowrap text-right tabular-nums">
                     ${totals.medisave.toFixed(2)}
                   </span>
@@ -2308,7 +2683,9 @@ export default function Home() {
                     "grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 border-t pt-3 text-xl font-bold",
                   )}
                 >
-                  <span className="min-w-0 break-words">Cash Portion</span>
+                  <span className="min-w-0 break-words">
+                    {isFinalized ? selectedLanguageCopy.cashPortion : "Cash Portion"}
+                  </span>
                   <span className="whitespace-nowrap text-right tabular-nums">
                     ${totals.payable.toFixed(2)}
                   </span>
@@ -2343,9 +2720,18 @@ export default function Home() {
                 {installmentBreakdown ? (
                   <div className="rounded-xl border bg-white p-3 text-sm sm:p-4">
                     <div className="flex flex-col gap-1 font-semibold sm:flex-row sm:justify-between sm:gap-4">
-                      <span>Selected Instalment Plan</span>
+                      <span>
+                        {isFinalized
+                          ? selectedLanguageCopy.selectedInstallmentPlan
+                          : "Selected Instalment Plan"}
+                      </span>
                       <span className="sm:text-right">
-                        {installmentBreakdown.plan.label}
+                        {isFinalized
+                          ? translateInstallmentPlan(
+                              installmentBreakdown.plan,
+                              selectedLanguageCopy,
+                            )
+                          : installmentBreakdown.plan.label}
                       </span>
                     </div>
 
@@ -2354,7 +2740,9 @@ export default function Home() {
                       <div className="mt-3 space-y-2">
                         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
                           <span className="min-w-0 break-words">
-                            Upfront cash payment (GST on Medisave portion)
+                            {isFinalized
+                              ? selectedLanguageCopy.upfrontMedisaveGstCash
+                              : "Upfront cash payment (GST on Medisave portion)"}
                           </span>
                           <span className="whitespace-nowrap text-right tabular-nums">
                             {formatCurrency(
@@ -2363,7 +2751,11 @@ export default function Home() {
                           </span>
                         </div>
                         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                          <span className="min-w-0 break-words">Amount under in-house instalments</span>
+                          <span className="min-w-0 break-words">
+                            {isFinalized
+                              ? selectedLanguageCopy.amountUnderInHouse
+                              : "Amount under in-house instalments"}
+                          </span>
                           <span className="whitespace-nowrap text-right tabular-nums">
                             {formatCurrency(
                               installmentBreakdown.installmentAmount,
@@ -2371,14 +2763,18 @@ export default function Home() {
                           </span>
                         </div>
                         <p className="text-xs leading-relaxed text-gray-600">
-                          For in-house instalments, the GST amount linked to the
-                          Medisave claim is excluded from the instalment amount
-                          and collected in cash.
+                          {isFinalized
+                            ? selectedLanguageCopy.inHouseInstallmentNote
+                            : "For in-house instalments, the GST amount linked to the Medisave claim is excluded from the instalment amount and collected in cash."}
                         </p>
                       </div>
                     ) : (
                       <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                        <span className="min-w-0 break-words">Amount under instalments</span>
+                        <span className="min-w-0 break-words">
+                          {isFinalized
+                            ? selectedLanguageCopy.amountUnderInstallments
+                            : "Amount under instalments"}
+                        </span>
                         <span className="whitespace-nowrap text-right tabular-nums">
                           {formatCurrency(
                             installmentBreakdown.installmentAmount,
@@ -2390,8 +2786,12 @@ export default function Home() {
 
                     <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 border-t pt-3 font-bold">
                       <span className="min-w-0 break-words">
-                        Estimated monthly instalment (
-                        {installmentBreakdown.plan.months} months)
+                        {isFinalized
+                          ? selectedLanguageCopy.estimatedMonthlyInstallment
+                          : "Estimated monthly instalment"}{" "}
+                        (
+                        {installmentBreakdown.plan.months}{" "}
+                        {isFinalized ? selectedLanguageCopy.months : "months"})
                       </span>
                       <span className="whitespace-nowrap text-right tabular-nums">
                         {formatCurrency(installmentBreakdown.monthlyAmount)}
@@ -2406,12 +2806,11 @@ export default function Home() {
             {isFinalized && preferredLanguage !== "English" ? (
               <section className="avoid-break rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm leading-relaxed text-blue-950 print:p-3">
                 <h2 className="mb-2 text-lg font-bold">
-                  Patient Language Summary ({selectedLanguageCopy.label})
+                  {selectedLanguageCopy.documentTitle}
                 </h2>
                 <p>{selectedLanguageCopy.patientSummary}</p>
                 <p className="mt-2 text-xs text-blue-800">
-                  The original quotation and treatment names remain in English.
-                  This section is provided as a patient-facing language aid.
+                  {selectedLanguageCopy.englishClinicalNote}
                 </p>
               </section>
             ) : null}
@@ -2421,40 +2820,35 @@ export default function Home() {
               <div className="grid gap-3 md:grid-cols-2 print:grid-cols-2">
                 <section className="avoid-break rounded-xl border bg-gray-50 p-4 text-xs print:p-3">
                   <h2 className="mb-3 text-xl font-bold">
-                    Interest-Free Instalments
+                    {selectedLanguageCopy.interestFreeInstallments}
                   </h2>
 
 
                   <div className="space-y-2">
                     <div>
-                      <p className="font-semibold">Atome</p>
-                      <p>3 months interest-free</p>
+                      <p>{selectedLanguageCopy.atomePlan}</p>
                     </div>
 
 
                     <div>
-                      <p className="font-semibold">GrabPay</p>
-                      <p>4 months interest-free</p>
+                      <p>{selectedLanguageCopy.grabPayPlan}</p>
+                    </div>
+
+
+                    <div>
+                      <p>{selectedLanguageCopy.cardPlan}</p>
                     </div>
 
 
                     <div>
                       <p className="font-semibold">
-                        UOB / OCBC Credit Card 12 Mths
+                        {selectedLanguageCopy.inHouseInstallment}
                       </p>
-                      <p>12 months interest-free instalment</p>
-                    </div>
-
-
-                    <div>
-                      <p className="font-semibold">In-House Instalment</p>
                       <ul className="mt-1 list-disc space-y-1 pl-4">
-                        <li>
-                          6/12 months interest-free - depending on treatment
-                        </li>
-                        <li>Applicant must be SG / PR</li>
-                        <li>1x guarantor required (SG / PR)</li>
-                        <li>Valid debit card required</li>
+                        <li>{selectedLanguageCopy.inHouseSixTwelve}</li>
+                        <li>{selectedLanguageCopy.applicantRequirement}</li>
+                        <li>{selectedLanguageCopy.guarantorRequirement}</li>
+                        <li>{selectedLanguageCopy.debitCardRequirement}</li>
                       </ul>
                     </div>
                   </div>
@@ -2463,36 +2857,14 @@ export default function Home() {
 
                 <section className="avoid-break rounded-xl border bg-white p-4 text-xs leading-relaxed text-gray-700 print:p-3">
                   <h2 className="mb-3 text-xl font-bold text-black">
-                    Disclaimer
+                    {selectedLanguageCopy.disclaimer}
                   </h2>
 
 
                   <div className="space-y-2">
-                    <p>
-                      All treatment fees stated are inclusive of prevailing 9%
-                      GST.
-                    </p>
-
-
-                    <p>
-                      Treatment fees discussed and agreed upon shall remain valid
-                      throughout the planned treatment duration unless unforeseen
-                      clinical complications arise.
-                    </p>
-
-
-                    <p>
-                      Additional treatment procedures required due to
-                      complications, changes in clinical condition or patient
-                      requests may incur additional treatment charges.
-                    </p>
-
-
-                    <p>
-                      CHAS, Merdeka Generation, Pioneer Generation and Medisave
-                      claims remain subject to prevailing MOH regulations and
-                      patient eligibility.
-                    </p>
+                    {selectedLanguageCopy.disclaimerItems.map((item) => (
+                      <p key={item}>{item}</p>
+                    ))}
                   </div>
                 </section>
               </div>
@@ -2508,7 +2880,9 @@ export default function Home() {
               )}
             >
               <h2 className={compactClass(isFinalized, "mb-6 text-2xl font-bold", "mb-3 text-xl font-bold")}>
-                Patient Acknowledgement & Signature
+                {isFinalized
+                  ? selectedLanguageCopy.signatureHeading
+                  : "Patient Acknowledgement & Signature"}
               </h2>
 
 
@@ -2525,8 +2899,9 @@ export default function Home() {
 
 
                     <p className="mt-5 text-center text-sm leading-relaxed text-gray-500">
-                      Scan QR code to review and digitally sign this treatment
-                      quotation on your mobile device.
+                      {isFinalized
+                        ? selectedLanguageCopy.scanQrText
+                        : "Scan QR code to review and digitally sign this treatment quotation on your mobile device."}
                     </p>
                   </div>
                 ) : null}
@@ -2541,14 +2916,9 @@ export default function Home() {
                         "mb-3 text-xs leading-relaxed text-gray-600",
                       )}
                     >
-                      I acknowledge that the proposed treatment, estimated fees,
-                      subsidies, Medisave claims, risks and alternative options
-                      have been explained clearly to me.
-                      {preferredLanguage !== "English" ? (
-                        <span className="mt-3 block border-t pt-3 text-blue-950">
-                          {selectedLanguageCopy.acknowledgement}
-                        </span>
-                      ) : null}
+                      {isFinalized
+                        ? selectedLanguageCopy.acknowledgement
+                        : "I acknowledge that the proposed treatment, estimated fees, subsidies, Medisave claims, risks and alternative options have been explained clearly to me."}
                     </p>
 
 
@@ -2588,7 +2958,9 @@ export default function Home() {
                     <div className={compactClass(isFinalized, "mt-6 grid gap-4 sm:mt-8 md:grid-cols-2", "mt-4 grid gap-3 md:grid-cols-2")}>
                       <div>
                         <label className="mb-2 block text-sm text-gray-500">
-                          Patient Name
+                          {isFinalized
+                            ? selectedLanguageCopy.patientName
+                            : "Patient Name"}
                         </label>
                         <input
                           type="text"
@@ -2607,7 +2979,9 @@ export default function Home() {
 
                       <div>
                         <label className="mb-2 block text-sm text-gray-500">
-                          Date Signed
+                          {isFinalized
+                            ? selectedLanguageCopy.dateSigned
+                            : "Date Signed"}
                         </label>
                         <input
                           type="date"
