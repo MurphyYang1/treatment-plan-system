@@ -5,6 +5,17 @@ import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "react-qr-code";
 import SignatureCanvas from "react-signature-canvas";
+import { onSnapshot } from "firebase/firestore";
+import { isFirebaseConfigured } from "../lib/firebase";
+import {
+  createSigningSession,
+  getSigningSessionRef,
+  SIGNED_QUOTATION_RETENTION_DAYS,
+  submitSignedQuotation,
+  updateSigningSessionQuotation,
+  type SigningQuotationSnapshot,
+  type SigningSessionRecord,
+} from "../lib/signingSessions";
 
 
 const GST_RATE = 0.09;
@@ -1286,6 +1297,11 @@ function formatDeduction(amount: number) {
 }
 
 
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Something went wrong.";
+}
+
+
 function compactClass(isFinalized: boolean, editClass: string, finalClass: string) {
   return isFinalized ? finalClass : editClass;
 }
@@ -1344,6 +1360,9 @@ function translateInstallmentPlan(plan: InstallmentPlan, copy: LanguageCopy) {
 
 export default function Home() {
   const signatureRef = useRef<SignatureCanvas | null>(null);
+  const liveSignatureLoadedRef = useRef<string | null>(null);
+  const signingSessionStartedRef = useRef(false);
+  const quotationSnapshotRef = useRef<SigningQuotationSnapshot | null>(null);
   const [isFinalized, setIsFinalized] = useState(false);
   const [clinicBranch, setClinicBranch] = useState("");
   const [dentistName, setDentistName] = useState("");
@@ -1352,6 +1371,10 @@ export default function Home() {
   const [quotationDate, setQuotationDate] = useState("");
   const [dateSigned, setDateSigned] = useState("");
   const [signatureUrl, setSignatureUrl] = useState("#signature");
+  const [signingSessionId, setSigningSessionId] = useState("");
+  const [signatureStatusMessage, setSignatureStatusMessage] = useState("");
+  const [signatureErrorMessage, setSignatureErrorMessage] = useState("");
+  const [isSavingSignature, setIsSavingSignature] = useState(false);
   const [subsidyTier, setSubsidyTier] = useState<SubsidyTier>("Private");
   const [preferredLanguage, setPreferredLanguage] =
     useState<PreferredLanguage>("English");
@@ -1389,13 +1412,55 @@ export default function Home() {
 
 
   const markSignatureComplete = () => {
+    liveSignatureLoadedRef.current = null;
     setDateSigned(getDateInputValue(new Date()));
   };
 
 
   const clearSignature = () => {
     signatureRef.current?.clear();
+    liveSignatureLoadedRef.current = null;
     setDateSigned("");
+  };
+
+
+  const saveDesktopSignature = async () => {
+    if (!isFirebaseConfigured) {
+      setSignatureErrorMessage("Add your Firebase environment variables before saving signed quotations.");
+      return;
+    }
+
+    if (!signingSessionId) {
+      setSignatureErrorMessage("The live signing session is still starting. Please try again shortly.");
+      return;
+    }
+
+    if (!signatureRef.current || signatureRef.current.isEmpty()) {
+      setSignatureErrorMessage("Please collect a signature before saving the quotation.");
+      return;
+    }
+
+    const signedDate = dateSigned || getDateInputValue(new Date());
+    setIsSavingSignature(true);
+    setSignatureErrorMessage("");
+
+    try {
+      await submitSignedQuotation({
+        sessionId: signingSessionId,
+        quotation: quotationSnapshot,
+        patientName,
+        dateSigned: signedDate,
+        signatureDataUrl: signatureRef.current.toDataURL("image/png"),
+      });
+      setDateSigned(signedDate);
+      setSignatureStatusMessage(
+        `Signed quotation saved. Records are marked to expire after ${SIGNED_QUOTATION_RETENTION_DAYS} days.`,
+      );
+    } catch (error) {
+      setSignatureErrorMessage(getErrorMessage(error));
+    } finally {
+      setIsSavingSignature(false);
+    }
   };
 
 
@@ -1596,6 +1661,185 @@ export default function Home() {
       monthlyAmount: installmentAmount / plan.months,
     };
   }, [selectedInstallmentPlan, totals]);
+
+
+  const quotationSnapshot = useMemo<SigningQuotationSnapshot>(() => {
+    const selectedPlan = installmentPlans.find(
+      (item) => item.id === selectedInstallmentPlan,
+    );
+
+    return {
+      clinicBranch,
+      dentistName,
+      patientName,
+      patientId,
+      quotationDate,
+      preferredLanguage,
+      subsidyTier,
+      installmentPlan: selectedPlan
+        ? {
+            id: selectedPlan.id,
+            label: translateInstallmentPlan(selectedPlan, selectedLanguageCopy),
+            months: selectedPlan.months,
+            isInHouse: selectedPlan.isInHouse,
+          }
+        : null,
+      installmentBreakdown: installmentBreakdown
+        ? {
+            medisaveGstCash: installmentBreakdown.medisaveGstCash,
+            installmentAmount: installmentBreakdown.installmentAmount,
+            monthlyAmount: installmentBreakdown.monthlyAmount,
+          }
+        : null,
+      totals,
+      phases: phases.map((phase) => ({
+        id: phase.id,
+        title: phase.title,
+        duration: phase.duration,
+        procedures: phase.procedures.map((procedure) => {
+          const rowSubtotal = procedure.fee * procedure.quantity;
+          const gst = rowSubtotal * GST_RATE;
+          const subsidy =
+            getSubsidyAmount(procedure, subsidyTier) *
+            procedure.subsidyClaimQty;
+
+          return {
+            category: procedure.category,
+            name: procedure.name,
+            quantity: procedure.quantity,
+            subsidyClaimQty: procedure.subsidyClaimQty,
+            fee: procedure.fee,
+            gst,
+            subsidy,
+            medisaveClaim: procedure.medisaveClaim,
+            cashPayable: rowSubtotal + gst - subsidy - procedure.medisaveClaim,
+            description: procedure.description,
+          };
+        }),
+      })),
+    };
+  }, [
+    clinicBranch,
+    dentistName,
+    installmentBreakdown,
+    patientId,
+    patientName,
+    phases,
+    preferredLanguage,
+    quotationDate,
+    selectedInstallmentPlan,
+    selectedLanguageCopy,
+    subsidyTier,
+    totals,
+  ]);
+
+
+  useEffect(() => {
+    quotationSnapshotRef.current = quotationSnapshot;
+  }, [quotationSnapshot]);
+
+
+  useEffect(() => {
+    if (isFirebaseConfigured) {
+      return;
+    }
+
+    setSignatureStatusMessage(
+      "Live mobile signing is disabled until Firebase environment variables are added.",
+    );
+  }, []);
+
+
+  useEffect(() => {
+    if (!isFirebaseConfigured || signingSessionStartedRef.current) {
+      return;
+    }
+
+    let isMounted = true;
+    signingSessionStartedRef.current = true;
+    setSignatureStatusMessage("Starting live mobile signing session...");
+
+    createSigningSession(quotationSnapshotRef.current ?? {})
+      .then((sessionId) => {
+        if (!isMounted) {
+          return;
+        }
+
+        setSigningSessionId(sessionId);
+        setSignatureUrl(`${window.location.origin}/sign/${sessionId}`);
+        setSignatureStatusMessage(
+          "Live signing is ready. Ask the patient to scan the QR code.",
+        );
+      })
+      .catch((error) => {
+        if (!isMounted) {
+          return;
+        }
+
+        signingSessionStartedRef.current = false;
+        setSignatureErrorMessage(getErrorMessage(error));
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+
+  useEffect(() => {
+    if (!isFirebaseConfigured || !signingSessionId) {
+      return;
+    }
+
+    const syncTimer = window.setTimeout(() => {
+      updateSigningSessionQuotation(signingSessionId, quotationSnapshot).catch(
+        (error) => {
+          setSignatureErrorMessage(getErrorMessage(error));
+        },
+      );
+    }, 600);
+
+    return () => window.clearTimeout(syncTimer);
+  }, [quotationSnapshot, signingSessionId]);
+
+
+  useEffect(() => {
+    if (!isFirebaseConfigured || !signingSessionId) {
+      return;
+    }
+
+    return onSnapshot(
+      getSigningSessionRef(signingSessionId),
+      (snapshot) => {
+        const session = snapshot.data() as SigningSessionRecord | undefined;
+
+        if (!session || session.status !== "signed" || !session.signatureDataUrl) {
+          return;
+        }
+
+        if (liveSignatureLoadedRef.current !== session.signatureDataUrl) {
+          signatureRef.current?.fromDataURL(session.signatureDataUrl);
+          liveSignatureLoadedRef.current = session.signatureDataUrl;
+        }
+
+        if (session.patientName) {
+          setPatientName(session.patientName);
+        }
+
+        if (session.dateSigned) {
+          setDateSigned(session.dateSigned);
+        }
+
+        setSignatureErrorMessage("");
+        setSignatureStatusMessage(
+          `Signature received. Signed quotation records expire after ${SIGNED_QUOTATION_RETENTION_DAYS} days.`,
+        );
+      },
+      (error) => {
+        setSignatureErrorMessage(getErrorMessage(error));
+      },
+    );
+  }, [signingSessionId]);
 
 
   return (
@@ -2903,6 +3147,20 @@ export default function Home() {
                         ? selectedLanguageCopy.scanQrText
                         : "Scan QR code to review and digitally sign this treatment quotation on your mobile device."}
                     </p>
+
+
+                    {signatureStatusMessage ? (
+                      <p className="mt-3 text-center text-xs leading-relaxed text-gray-500">
+                        {signatureStatusMessage}
+                      </p>
+                    ) : null}
+
+
+                    {signatureErrorMessage ? (
+                      <p className="mt-3 text-center text-xs leading-relaxed text-red-600">
+                        {signatureErrorMessage}
+                      </p>
+                    ) : null}
                   </div>
                 ) : null}
 
@@ -2950,6 +3208,16 @@ export default function Home() {
                           className="rounded-xl border px-5 py-3 transition hover:bg-gray-100 sm:py-2"
                         >
                           Clear Signature
+                        </button>
+                        <button
+                          type="button"
+                          onClick={saveDesktopSignature}
+                          disabled={isSavingSignature || !isFirebaseConfigured}
+                          className="rounded-xl bg-black px-5 py-3 text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300 sm:py-2"
+                        >
+                          {isSavingSignature
+                            ? "Saving..."
+                            : "Save Signed Quotation"}
                         </button>
                       </div>
                     ) : null}
