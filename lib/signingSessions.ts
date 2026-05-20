@@ -4,9 +4,9 @@ import {
   doc,
   serverTimestamp,
   setDoc,
-  Timestamp,
   type DocumentData,
   type DocumentReference,
+  type Timestamp,
 } from "firebase/firestore";
 import { db } from "./firebase";
 
@@ -138,37 +138,32 @@ export async function submitSignedQuotation({
   dateSigned,
   signatureDataUrl,
 }: SubmitSignedQuotationInput) {
-  const expiresAt = Timestamp.fromDate(getSignedQuotationExpiryDate());
-  const signedQuotation = {
-    sessionId,
-    quotation: removeUndefinedValues(quotation),
-    patientName,
-    dateSigned,
-    signatureDataUrl,
-    createdAt: serverTimestamp(),
-    signedAt: serverTimestamp(),
-    expiresAt,
-  };
-
-  const signedQuotationRef = await addDoc(
-    collection(getDb(), SIGNED_QUOTATIONS_COLLECTION),
-    signedQuotation,
-  );
-
-  await setDoc(
-    getSigningSessionRef(sessionId),
+  const response = await fetch(
+    `/api/signing-sessions/${encodeURIComponent(sessionId)}/submit`,
     {
-      status: "signed",
-      patientName,
-      dateSigned,
-      signatureDataUrl,
-      signedQuotationId: signedQuotationRef.id,
-      signedAt: serverTimestamp(),
-      expiresAt,
-      updatedAt: serverTimestamp(),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        quotation: removeUndefinedValues(quotation),
+        patientName,
+        dateSigned,
+        signatureDataUrl,
+      }),
     },
-    { merge: true },
   );
 
-  return signedQuotationRef.id;
+  const responseBody = (await response.json().catch(() => null)) as {
+    signedQuotationId?: string;
+    error?: string;
+  } | null;
+
+  if (!response.ok) {
+    throw new Error(
+      responseBody?.error ?? "Unable to save the signed quotation.",
+    );
+  }
+
+  return responseBody?.signedQuotationId ?? "";
 }
