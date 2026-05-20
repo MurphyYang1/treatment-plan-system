@@ -38,6 +38,20 @@ The signed session also stores the signature so the desktop page can update live
 
 For stricter testing rules, copy `firestore.rules` into Firebase Console > Firestore Database > Rules and publish it. The rules keep QR signing public, but restrict writes to the expected fields, prevent public reads of stored signed quotations, prevent edits after signing, and cap `expiresAt` at 45 days.
 
+## Staff signed quotation viewer
+
+Signed quotations can be viewed at `/admin`. The page uses Firebase Admin on the Next.js server, so saved quotation reads do not need to be public in Firestore rules.
+
+Add these server-only environment variables to your deployment:
+
+- `ADMIN_ACCESS_CODE` - the staff passcode used to unlock `/admin`
+- `ADMIN_SESSION_SECRET` - a long random string used to sign the admin cookie
+- `FIREBASE_PROJECT_ID` - your Firebase project ID
+- `FIREBASE_CLIENT_EMAIL` - service account client email
+- `FIREBASE_PRIVATE_KEY` - service account private key
+
+Create the service account values in Firebase Console > Project settings > Service accounts > Generate new private key. In Vercel, paste the private key with newline escapes (`\n`) preserved.
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
