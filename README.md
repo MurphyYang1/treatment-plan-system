@@ -18,6 +18,24 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
+## Live mobile signatures
+
+This app can use Firebase Firestore for live patient signatures:
+
+1. Copy `.env.example` to `.env.local`.
+2. Fill in the `NEXT_PUBLIC_FIREBASE_*` values from your Firebase web app config.
+3. Enable Firestore in the Firebase console.
+4. Run `npm run dev`, create a quotation, and scan the QR code in the signature section.
+
+When a patient signs on the mobile page, the desktop quotation updates through a Firestore listener. A copy is also saved in the `signedQuotations` collection with an `expiresAt` timestamp 45 days after signing.
+
+To automatically remove signed records, enable Firestore TTL policies for the `expiresAt` field on both collection groups:
+
+- `signedQuotations`
+- `signingSessions`
+
+The signed session also stores the signature so the desktop page can update live, so both TTL policies are needed for 45-day retention.
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
