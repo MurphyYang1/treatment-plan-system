@@ -1420,14 +1420,6 @@ export default function Home() {
                     <dd className="mt-1 font-medium">{subsidyTier}</dd>
                   </div>
 
-                  <div className="rounded-lg bg-blue-50 p-3 sm:col-span-2">
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-blue-700">
-                      Preferred Language
-                    </dt>
-                    <dd className="mt-1 font-medium text-blue-950">
-                      {selectedLanguageCopy.label}
-                    </dd>
-                  </div>
                 </dl>
               ) : (
                 <div className="space-y-4">
