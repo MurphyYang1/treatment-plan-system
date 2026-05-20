@@ -1372,7 +1372,11 @@ export default function Home() {
   const [dateSigned, setDateSigned] = useState("");
   const [signatureUrl, setSignatureUrl] = useState("#signature");
   const [signingSessionId, setSigningSessionId] = useState("");
-  const [signatureStatusMessage, setSignatureStatusMessage] = useState("");
+  const [signatureStatusMessage, setSignatureStatusMessage] = useState(
+    isFirebaseConfigured
+      ? ""
+      : "Live mobile signing is disabled until Firebase environment variables are added.",
+  );
   const [signatureErrorMessage, setSignatureErrorMessage] = useState("");
   const [isSavingSignature, setIsSavingSignature] = useState(false);
   const [subsidyTier, setSubsidyTier] = useState<SubsidyTier>("Private");
@@ -1663,91 +1667,67 @@ export default function Home() {
   }, [selectedInstallmentPlan, totals]);
 
 
-  const quotationSnapshot = useMemo<SigningQuotationSnapshot>(() => {
-    const selectedPlan = installmentPlans.find(
-      (item) => item.id === selectedInstallmentPlan,
-    );
-
-    return {
-      clinicBranch,
-      dentistName,
-      patientName,
-      patientId,
-      quotationDate,
-      preferredLanguage,
-      subsidyTier,
-      installmentPlan: selectedPlan
-        ? {
-            id: selectedPlan.id,
-            label: translateInstallmentPlan(selectedPlan, selectedLanguageCopy),
-            months: selectedPlan.months,
-            isInHouse: selectedPlan.isInHouse,
-          }
-        : null,
-      installmentBreakdown: installmentBreakdown
-        ? {
-            medisaveGstCash: installmentBreakdown.medisaveGstCash,
-            installmentAmount: installmentBreakdown.installmentAmount,
-            monthlyAmount: installmentBreakdown.monthlyAmount,
-          }
-        : null,
-      totals,
-      phases: phases.map((phase) => ({
-        id: phase.id,
-        title: phase.title,
-        duration: phase.duration,
-        procedures: phase.procedures.map((procedure) => {
-          const rowSubtotal = procedure.fee * procedure.quantity;
-          const gst = rowSubtotal * GST_RATE;
-          const subsidy =
-            getSubsidyAmount(procedure, subsidyTier) *
-            procedure.subsidyClaimQty;
-
-          return {
-            category: procedure.category,
-            name: procedure.name,
-            quantity: procedure.quantity,
-            subsidyClaimQty: procedure.subsidyClaimQty,
-            fee: procedure.fee,
-            gst,
-            subsidy,
-            medisaveClaim: procedure.medisaveClaim,
-            cashPayable: rowSubtotal + gst - subsidy - procedure.medisaveClaim,
-            description: procedure.description,
-          };
-        }),
-      })),
-    };
-  }, [
+  const selectedSnapshotPlan = installmentPlans.find(
+    (item) => item.id === selectedInstallmentPlan,
+  );
+  const quotationSnapshot: SigningQuotationSnapshot = {
     clinicBranch,
     dentistName,
-    installmentBreakdown,
-    patientId,
     patientName,
-    phases,
-    preferredLanguage,
+    patientId,
     quotationDate,
-    selectedInstallmentPlan,
-    selectedLanguageCopy,
+    preferredLanguage,
     subsidyTier,
+    installmentPlan: selectedSnapshotPlan
+      ? {
+          id: selectedSnapshotPlan.id,
+          label: translateInstallmentPlan(
+            selectedSnapshotPlan,
+            selectedLanguageCopy,
+          ),
+          months: selectedSnapshotPlan.months,
+          isInHouse: selectedSnapshotPlan.isInHouse,
+        }
+      : null,
+    installmentBreakdown: installmentBreakdown
+      ? {
+          medisaveGstCash: installmentBreakdown.medisaveGstCash,
+          installmentAmount: installmentBreakdown.installmentAmount,
+          monthlyAmount: installmentBreakdown.monthlyAmount,
+        }
+      : null,
     totals,
-  ]);
+    phases: phases.map((phase) => ({
+      id: phase.id,
+      title: phase.title,
+      duration: phase.duration,
+      procedures: phase.procedures.map((procedure) => {
+        const rowSubtotal = procedure.fee * procedure.quantity;
+        const gst = rowSubtotal * GST_RATE;
+        const subsidy =
+          getSubsidyAmount(procedure, subsidyTier) *
+          procedure.subsidyClaimQty;
+
+        return {
+          category: procedure.category,
+          name: procedure.name,
+          quantity: procedure.quantity,
+          subsidyClaimQty: procedure.subsidyClaimQty,
+          fee: procedure.fee,
+          gst,
+          subsidy,
+          medisaveClaim: procedure.medisaveClaim,
+          cashPayable: rowSubtotal + gst - subsidy - procedure.medisaveClaim,
+          description: procedure.description,
+        };
+      }),
+    })),
+  };
 
 
   useEffect(() => {
     quotationSnapshotRef.current = quotationSnapshot;
   }, [quotationSnapshot]);
-
-
-  useEffect(() => {
-    if (isFirebaseConfigured) {
-      return;
-    }
-
-    setSignatureStatusMessage(
-      "Live mobile signing is disabled until Firebase environment variables are added.",
-    );
-  }, []);
 
 
   useEffect(() => {

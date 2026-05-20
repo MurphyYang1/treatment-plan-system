@@ -154,23 +154,22 @@ function QuotationSummary({
 export default function SignQuotationPage() {
   const params = useParams<{ sessionId?: string | string[] }>();
   const sessionId = getSessionId(params.sessionId);
+  const initialLinkError = !isFirebaseConfigured
+    ? "Firebase is not configured for this signing page."
+    : !sessionId
+      ? "This signing link is missing its session ID."
+      : "";
   const signatureRef = useRef<SignatureCanvas | null>(null);
   const didPrefillNameRef = useRef(false);
   const [session, setSession] = useState<SigningSessionRecord | null>(null);
   const [patientName, setPatientName] = useState("");
   const [dateSigned, setDateSigned] = useState(getDateInputValue(new Date()));
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(initialLinkError);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
-    if (!isFirebaseConfigured) {
-      setErrorMessage("Firebase is not configured for this signing page.");
-      return;
-    }
-
-    if (!sessionId) {
-      setErrorMessage("This signing link is missing its session ID.");
+    if (!isFirebaseConfigured || !sessionId) {
       return;
     }
 
