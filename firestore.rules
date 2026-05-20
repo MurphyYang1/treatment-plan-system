@@ -1,0 +1,103 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function hasOnlyKeys(keys) {
+      return request.resource.data.keys().hasOnly(keys);
+    }
+
+    function changedOnlyKeys(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+    }
+
+    function isValidSignaturePayload() {
+      return request.resource.data.patientName is string
+        && request.resource.data.patientName.size() <= 160
+        && request.resource.data.dateSigned is string
+        && request.resource.data.dateSigned.matches('^\\d{4}-\\d{2}-\\d{2}$')
+        && request.resource.data.signatureDataUrl is string
+        && request.resource.data.signatureDataUrl.matches('^data:image/png;base64,[A-Za-z0-9+/=]+$')
+        && request.resource.data.signatureDataUrl.size() <= 900000
+        && request.resource.data.expiresAt is timestamp
+        && request.resource.data.expiresAt > request.time
+        && request.resource.data.expiresAt <= request.time + duration.value(45, 'd');
+    }
+
+    function signedQuotationExistsForSession(sessionId, signedQuotationId) {
+      return signedQuotationId is string
+        && signedQuotationId.size() > 0
+        && exists(/databases/$(database)/documents/signedQuotations/$(signedQuotationId))
+        && get(/databases/$(database)/documents/signedQuotations/$(signedQuotationId)).data.sessionId == sessionId;
+    }
+
+    match /signingSessions/{sessionId} {
+      allow read: if true;
+
+      allow create: if hasOnlyKeys([
+          'status',
+          'quotation',
+          'createdAt',
+          'updatedAt'
+        ])
+        && request.resource.data.status == 'pending'
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+
+      allow update: if (
+          resource.data.status == 'pending'
+          && request.resource.data.status == 'pending'
+          && changedOnlyKeys([
+            'quotation',
+            'updatedAt'
+          ])
+          && request.resource.data.updatedAt == request.time
+        ) || (
+          resource.data.status == 'pending'
+          && request.resource.data.status == 'signed'
+          && changedOnlyKeys([
+            'status',
+            'patientName',
+            'dateSigned',
+            'signatureDataUrl',
+            'signedQuotationId',
+            'signedAt',
+            'expiresAt',
+            'updatedAt'
+          ])
+          && isValidSignaturePayload()
+          && request.resource.data.signedAt == request.time
+          && request.resource.data.updatedAt == request.time
+          && signedQuotationExistsForSession(
+            sessionId,
+            request.resource.data.signedQuotationId
+          )
+        );
+
+      allow delete: if false;
+    }
+
+    match /signedQuotations/{quotationId} {
+      allow read: if false;
+
+      allow create: if hasOnlyKeys([
+          'sessionId',
+          'quotation',
+          'patientName',
+          'dateSigned',
+          'signatureDataUrl',
+          'createdAt',
+          'signedAt',
+          'expiresAt'
+        ])
+        && request.resource.data.sessionId is string
+        && request.resource.data.sessionId.size() > 0
+        && exists(/databases/$(database)/documents/signingSessions/$(request.resource.data.sessionId))
+        && get(/databases/$(database)/documents/signingSessions/$(request.resource.data.sessionId)).data.status == 'pending'
+        && isValidSignaturePayload()
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.signedAt == request.time;
+
+      allow update, delete: if false;
+    }
+  }
+}
