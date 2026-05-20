@@ -1723,11 +1723,14 @@ export default function Home() {
       }),
     })),
   };
+  const quotationSnapshotJson = JSON.stringify(quotationSnapshot);
 
 
   useEffect(() => {
-    quotationSnapshotRef.current = quotationSnapshot;
-  }, [quotationSnapshot]);
+    quotationSnapshotRef.current = JSON.parse(
+      quotationSnapshotJson,
+    ) as SigningQuotationSnapshot;
+  }, [quotationSnapshotJson]);
 
 
   useEffect(() => {
@@ -1772,15 +1775,20 @@ export default function Home() {
     }
 
     const syncTimer = window.setTimeout(() => {
-      updateSigningSessionQuotation(signingSessionId, quotationSnapshot).catch(
-        (error) => {
-          setSignatureErrorMessage(getErrorMessage(error));
-        },
-      );
+      const nextQuotationSnapshot = JSON.parse(
+        quotationSnapshotJson,
+      ) as SigningQuotationSnapshot;
+
+      updateSigningSessionQuotation(
+        signingSessionId,
+        nextQuotationSnapshot,
+      ).catch((error) => {
+        setSignatureErrorMessage(getErrorMessage(error));
+      });
     }, 600);
 
     return () => window.clearTimeout(syncTimer);
-  }, [quotationSnapshot, signingSessionId]);
+  }, [quotationSnapshotJson, signingSessionId]);
 
 
   useEffect(() => {
