@@ -69,6 +69,14 @@ type InstallmentPlan = {
   isInHouse: boolean;
 };
 
+type PreferredLanguage = "English" | "Malay" | "Simplified Chinese" | "Tamil";
+
+type LanguageCopy = {
+  label: string;
+  patientSummary: string;
+  acknowledgement: string;
+};
+
 
 const noSubsidy: Subsidy = {
   chasBlue: 0,
@@ -110,6 +118,41 @@ const installmentPlans: InstallmentPlan[] = [
     isInHouse: true,
   },
 ];
+
+const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
+  English: {
+    label: "English",
+    patientSummary:
+      "This quotation explains the proposed treatment, estimated fees, subsidies, Medisave claims, and cash portion payable.",
+    acknowledgement:
+      "I acknowledge that the proposed treatment, estimated fees, subsidies, Medisave claims, risks and alternative options have been explained clearly to me.",
+  },
+  Malay: {
+    label: "Malay",
+    patientSummary:
+      "Ringkasan untuk pesakit: Sebut harga ini menerangkan rawatan yang dicadangkan, anggaran bayaran, subsidi, tuntutan Medisave dan jumlah tunai yang perlu dibayar.",
+    acknowledgement:
+      "Saya mengakui bahawa rawatan yang dicadangkan, anggaran bayaran, subsidi, tuntutan Medisave, risiko dan pilihan rawatan lain telah diterangkan dengan jelas kepada saya.",
+  },
+  "Simplified Chinese": {
+    label: "Simplified Chinese",
+    patientSummary:
+      "患者摘要：本报价说明建议的治疗、预计费用、补贴、保健储蓄索赔以及需要以现金支付的金额。",
+    acknowledgement:
+      "我确认牙医已向我清楚说明建议的治疗、预计费用、补贴、保健储蓄索赔、风险以及其他治疗选择。",
+  },
+  Tamil: {
+    label: "Tamil",
+    patientSummary:
+      "நோயாளர் சுருக்கம்: இந்த மேற்கோள் பரிந்துரைக்கப்பட்ட சிகிச்சை, மதிப்பிடப்பட்ட கட்டணங்கள், மானியங்கள், Medisave கோரிக்கைகள் மற்றும் ரொக்கமாக செலுத்த வேண்டிய தொகையை விளக்குகிறது.",
+    acknowledgement:
+      "பரிந்துரைக்கப்பட்ட சிகிச்சை, மதிப்பிடப்பட்ட கட்டணங்கள், மானியங்கள், Medisave கோரிக்கைகள், அபாயங்கள் மற்றும் மாற்று சிகிச்சை விருப்பங்கள் எனக்கு தெளிவாக விளக்கப்பட்டுள்ளன என்பதை நான் ஒப்புக்கொள்கிறேன்.",
+  },
+};
+
+const preferredLanguageOptions = Object.keys(
+  languageCopy,
+) as PreferredLanguage[];
 
 
 const availableTreatments: Treatment[] = [
@@ -945,14 +988,42 @@ function costLabelClass(isFinalized: boolean) {
   );
 }
 
+function displayValue(value: string) {
+  return value.trim() || "—";
+}
+
+function formatAttendedBy(value: string) {
+  const trimmed = value.trim();
+
+  if (!trimmed) {
+    return "—";
+  }
+
+  if (/^attended by/i.test(trimmed)) {
+    return trimmed;
+  }
+
+  if (/^dr\.?\s*/i.test(trimmed)) {
+    return `Attended by ${trimmed}`;
+  }
+
+  return `Attended by Dr ${trimmed}`;
+}
+
 
 export default function Home() {
   const signatureRef = useRef<SignatureCanvas | null>(null);
   const [isFinalized, setIsFinalized] = useState(false);
+  const [clinicBranch, setClinicBranch] = useState("");
+  const [dentistName, setDentistName] = useState("");
   const [patientName, setPatientName] = useState("");
+  const [patientId, setPatientId] = useState("");
+  const [quotationDate, setQuotationDate] = useState("");
   const [dateSigned, setDateSigned] = useState("");
   const [signatureUrl, setSignatureUrl] = useState("#signature");
   const [subsidyTier, setSubsidyTier] = useState<SubsidyTier>("Private");
+  const [preferredLanguage, setPreferredLanguage] =
+    useState<PreferredLanguage>("English");
   const [selectedInstallmentPlan, setSelectedInstallmentPlan] =
     useState<InstallmentPlanId>("none");
   const [selectedCategory, setSelectedCategory] = useState(
@@ -972,6 +1043,7 @@ export default function Home() {
   const filteredTreatments = availableTreatments.filter(
     (item) => item.category === selectedCategory,
   );
+  const selectedLanguageCopy = languageCopy[preferredLanguage];
 
 
   useEffect(() => {
@@ -1294,91 +1366,137 @@ export default function Home() {
               </h2>
 
 
-              <div className={compactClass(isFinalized, "space-y-4", "space-y-2")}>
-                <select
-                  disabled={isFinalized}
-                  className={compactClass(
-                    isFinalized,
-                    "w-full rounded-xl border px-4 py-3",
-                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm disabled:opacity-100",
-                  )}
-                >
-                  <option value="">Select Clinic Branch</option>
-                  <option>Nofrills Dental Marina Square</option>
-                  <option>Nofrills Dental Suntec</option>
-                  <option>Nofrills Dental Katong</option>
-                  <option>Nofrills Dental Beauty World</option>
-                </select>
+              {isFinalized ? (
+                <dl className="grid gap-3 text-sm sm:grid-cols-2">
+                  <div className="rounded-lg bg-gray-50 p-3">
+                    <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Clinic Branch
+                    </dt>
+                    <dd className="mt-1 font-medium">
+                      {displayValue(clinicBranch)}
+                    </dd>
+                  </div>
 
+                  <div className="rounded-lg bg-gray-50 p-3">
+                    <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Dentist
+                    </dt>
+                    <dd className="mt-1 font-medium">
+                      {formatAttendedBy(dentistName)}
+                    </dd>
+                  </div>
 
-                <input
-                  type="text"
-                  placeholder="Dentist Name"
-                  readOnly={isFinalized}
-                  className={compactClass(
-                    isFinalized,
-                    "w-full rounded-xl border px-4 py-3",
-                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
-                  )}
-                />
+                  <div className="rounded-lg bg-gray-50 p-3">
+                    <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Patient Name
+                    </dt>
+                    <dd className="mt-1 font-medium">
+                      {displayValue(patientName)}
+                    </dd>
+                  </div>
 
+                  <div className="rounded-lg bg-gray-50 p-3">
+                    <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Patient ID
+                    </dt>
+                    <dd className="mt-1 font-medium">
+                      {displayValue(patientId)}
+                    </dd>
+                  </div>
 
-                <input
-                  type="text"
-                  placeholder="Patient Name"
-                  value={patientName}
-                  onChange={(event) => setPatientName(event.target.value)}
-                  readOnly={isFinalized}
-                  className={compactClass(
-                    isFinalized,
-                    "w-full rounded-xl border px-4 py-3",
-                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
-                  )}
-                />
+                  <div className="rounded-lg bg-gray-50 p-3">
+                    <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Quotation Date
+                    </dt>
+                    <dd className="mt-1 font-medium">
+                      {displayValue(quotationDate)}
+                    </dd>
+                  </div>
 
+                  <div className="rounded-lg bg-gray-50 p-3">
+                    <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Subsidy Tier
+                    </dt>
+                    <dd className="mt-1 font-medium">{subsidyTier}</dd>
+                  </div>
 
-                <input
-                  type="text"
-                  placeholder="Patient ID"
-                  readOnly={isFinalized}
-                  className={compactClass(
-                    isFinalized,
-                    "w-full rounded-xl border px-4 py-3",
-                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
-                  )}
-                />
+                </dl>
+              ) : (
+                <div className="space-y-4">
+                  <select
+                    value={clinicBranch}
+                    onChange={(event) => setClinicBranch(event.target.value)}
+                    className="w-full rounded-xl border px-4 py-3"
+                  >
+                    <option value="">Select Clinic Branch</option>
+                    <option>Nofrills Dental Marina Square</option>
+                    <option>Nofrills Dental Suntec</option>
+                    <option>Nofrills Dental Katong</option>
+                    <option>Nofrills Dental Beauty World</option>
+                  </select>
 
+                  <input
+                    type="text"
+                    placeholder="Dentist name (e.g. Dr Ben)"
+                    value={dentistName}
+                    onChange={(event) => setDentistName(event.target.value)}
+                    className="w-full rounded-xl border px-4 py-3"
+                  />
 
-                <input
-                  type="date"
-                  readOnly={isFinalized}
-                  className={compactClass(
-                    isFinalized,
-                    "h-12 w-full rounded-xl border px-4 py-3 leading-normal",
-                    "h-8 w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm leading-normal",
-                  )}
-                />
+                  <input
+                    type="text"
+                    placeholder="Patient Name"
+                    value={patientName}
+                    onChange={(event) => setPatientName(event.target.value)}
+                    className="w-full rounded-xl border px-4 py-3"
+                  />
 
+                  <input
+                    type="text"
+                    placeholder="Patient ID"
+                    value={patientId}
+                    onChange={(event) => setPatientId(event.target.value)}
+                    className="w-full rounded-xl border px-4 py-3"
+                  />
 
-                <select
-                  value={subsidyTier}
-                  disabled={isFinalized}
-                  onChange={(event) =>
-                    setSubsidyTier(event.target.value as SubsidyTier)
-                  }
-                  className={compactClass(
-                    isFinalized,
-                    "w-full rounded-xl border px-4 py-3",
-                    "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm disabled:opacity-100",
-                  )}
-                >
-                  <option>Private</option>
-                  <option>CHAS Blue</option>
-                  <option>CHAS Orange</option>
-                  <option>Merdeka</option>
-                  <option>Pioneer</option>
-                </select>
-              </div>
+                  <input
+                    type="date"
+                    value={quotationDate}
+                    onChange={(event) => setQuotationDate(event.target.value)}
+                    className="h-12 w-full rounded-xl border px-4 py-3 leading-normal"
+                  />
+
+                  <select
+                    value={subsidyTier}
+                    onChange={(event) =>
+                      setSubsidyTier(event.target.value as SubsidyTier)
+                    }
+                    className="w-full rounded-xl border px-4 py-3"
+                  >
+                    <option>Private</option>
+                    <option>CHAS Blue</option>
+                    <option>CHAS Orange</option>
+                    <option>Merdeka</option>
+                    <option>Pioneer</option>
+                  </select>
+
+                  <select
+                    value={preferredLanguage}
+                    onChange={(event) =>
+                      setPreferredLanguage(
+                        event.target.value as PreferredLanguage,
+                      )
+                    }
+                    className="w-full rounded-xl border px-4 py-3"
+                  >
+                    {preferredLanguageOptions.map((language) => (
+                      <option key={language} value={language}>
+                        Preferred Language: {languageCopy[language].label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </section>
 
 
@@ -2285,6 +2403,20 @@ export default function Home() {
             </section>
 
 
+            {isFinalized && preferredLanguage !== "English" ? (
+              <section className="avoid-break rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm leading-relaxed text-blue-950 print:p-3">
+                <h2 className="mb-2 text-lg font-bold">
+                  Patient Language Summary ({selectedLanguageCopy.label})
+                </h2>
+                <p>{selectedLanguageCopy.patientSummary}</p>
+                <p className="mt-2 text-xs text-blue-800">
+                  The original quotation and treatment names remain in English.
+                  This section is provided as a patient-facing language aid.
+                </p>
+              </section>
+            ) : null}
+
+
             {isFinalized ? (
               <div className="grid gap-3 md:grid-cols-2 print:grid-cols-2">
                 <section className="avoid-break rounded-xl border bg-gray-50 p-4 text-xs print:p-3">
@@ -2412,6 +2544,11 @@ export default function Home() {
                       I acknowledge that the proposed treatment, estimated fees,
                       subsidies, Medisave claims, risks and alternative options
                       have been explained clearly to me.
+                      {preferredLanguage !== "English" ? (
+                        <span className="mt-3 block border-t pt-3 text-blue-950">
+                          {selectedLanguageCopy.acknowledgement}
+                        </span>
+                      ) : null}
                     </p>
 
 
