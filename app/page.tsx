@@ -3178,12 +3178,12 @@ export default function Home() {
                 ) : null}
 
 
-                <div className={isFinalized ? "lg:col-span-3" : "lg:col-span-2"}>
-                  <div className={compactClass(isFinalized, "rounded-2xl border p-4 sm:p-6", "rounded-xl border p-3 sm:p-4")}>
+                <div className={isFinalized ? "mx-auto w-full max-w-3xl lg:col-span-3" : "lg:col-span-2"}>
+                  <div className={compactClass(isFinalized, "rounded-2xl border p-4 text-center sm:p-6", "rounded-xl border p-3 sm:p-4")}>
                     <p
                       className={compactClass(
                         isFinalized,
-                        "mb-6 text-sm leading-relaxed text-gray-600",
+                        "mx-auto mb-6 max-w-2xl text-sm leading-relaxed text-gray-600",
                         "mb-3 text-xs leading-relaxed text-gray-600",
                       )}
                     >
@@ -3196,7 +3196,7 @@ export default function Home() {
                     <div
                       className={compactClass(
                         isFinalized,
-                        "overflow-hidden rounded-2xl border-2 border-dashed bg-white",
+                        "mx-auto max-w-2xl overflow-hidden rounded-2xl border-2 border-dashed bg-white",
                         "overflow-hidden rounded-xl border border-dashed bg-white",
                       )}
                     >
@@ -3237,7 +3237,7 @@ export default function Home() {
                     ) : null}
 
 
-                    <div className={compactClass(isFinalized, "mt-6 grid gap-4 sm:mt-8 md:grid-cols-2", "mt-4 grid gap-3 md:grid-cols-2")}>
+                    <div className={compactClass(isFinalized, "mx-auto mt-6 grid max-w-2xl gap-4 text-left sm:mt-8 md:grid-cols-2", "mt-4 grid gap-3 md:grid-cols-2")}>
                       <div>
                         <label className="mb-2 block text-sm text-gray-500">
                           {isFinalized
