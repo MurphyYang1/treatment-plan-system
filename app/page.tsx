@@ -69,7 +69,9 @@ type InstallmentPlanId =
   | "atome-3"
   | "grabpay-4"
   | "card-12"
+  | "in-house-3"
   | "in-house-6"
+  | "in-house-9"
   | "in-house-12";
 
 
@@ -115,6 +117,7 @@ type LanguageCopy = {
   cashPortion: string;
   selectedInstallmentPlan: string;
   months: string;
+  ifApplicable: string;
   upfrontMedisaveGstCash: string;
   amountUnderInHouse: string;
   amountUnderInstallments: string;
@@ -169,9 +172,21 @@ const installmentPlans: InstallmentPlan[] = [
     isInHouse: false,
   },
   {
+    id: "in-house-3",
+    label: "In-House Instalment - 3 months",
+    months: 3,
+    isInHouse: true,
+  },
+  {
     id: "in-house-6",
     label: "In-House Instalment - 6 months",
     months: 6,
+    isInHouse: true,
+  },
+  {
+    id: "in-house-9",
+    label: "In-House Instalment - 9 months",
+    months: 9,
     isInHouse: true,
   },
   {
@@ -216,6 +231,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     cashPortion: "Cash Portion",
     selectedInstallmentPlan: "Selected Instalment Plan",
     months: "months",
+    ifApplicable: "(if applicable)",
     upfrontMedisaveGstCash: "Upfront cash payment (GST on Medisave portion)",
     amountUnderInHouse: "Amount under in-house instalments",
     amountUnderInstallments: "Amount under instalments",
@@ -227,7 +243,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     grabPayPlan: "GrabPay: 4 months interest-free",
     cardPlan: "UOB / OCBC Credit Card: 12 months interest-free instalment",
     inHouseInstallment: "In-House Instalment",
-    inHouseSixTwelve: "6/12 months interest-free - depending on treatment",
+    inHouseSixTwelve: "3/6/9/12 months interest-free - depending on treatment",
     applicantRequirement: "Applicant must be SG / PR",
     guarantorRequirement: "1x guarantor required (SG / PR)",
     debitCardRequirement: "Valid debit card required",
@@ -283,6 +299,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     cashPortion: "Bahagian Tunai",
     selectedInstallmentPlan: "Pelan Ansuran Dipilih",
     months: "bulan",
+    ifApplicable: "(jika berkenaan)",
     upfrontMedisaveGstCash:
       "Bayaran tunai awal (GST bagi bahagian Medisave)",
     amountUnderInHouse: "Jumlah di bawah ansuran dalaman",
@@ -295,7 +312,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     grabPayPlan: "GrabPay: 4 bulan tanpa faedah",
     cardPlan: "Kad Kredit UOB / OCBC: ansuran 12 bulan tanpa faedah",
     inHouseInstallment: "Ansuran Dalaman",
-    inHouseSixTwelve: "6/12 bulan tanpa faedah - bergantung pada rawatan",
+    inHouseSixTwelve: "3/6/9/12 bulan tanpa faedah - bergantung pada rawatan",
     applicantRequirement: "Pemohon mestilah Warganegara Singapura / PR",
     guarantorRequirement: "1 penjamin diperlukan (Warganegara Singapura / PR)",
     debitCardRequirement: "Kad debit yang sah diperlukan",
@@ -358,6 +375,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     cashPortion: "现金部分",
     selectedInstallmentPlan: "已选择分期付款计划",
     months: "个月",
+    ifApplicable: "（如适用）",
     upfrontMedisaveGstCash: "预付现金（保健储蓄部分的消费税）",
     amountUnderInHouse: "诊所内部分期金额",
     amountUnderInstallments: "分期付款金额",
@@ -369,7 +387,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     grabPayPlan: "GrabPay：4个月免息",
     cardPlan: "UOB / OCBC 信用卡：12个月免息分期",
     inHouseInstallment: "诊所内部分期付款",
-    inHouseSixTwelve: "6/12个月免息 - 视治疗而定",
+    inHouseSixTwelve: "3/6/9/12个月免息 - 视治疗而定",
     applicantRequirement: "申请人必须是新加坡公民 / 永久居民",
     guarantorRequirement: "需要1名担保人（新加坡公民 / 永久居民）",
     debitCardRequirement: "需要有效的借记卡",
@@ -430,6 +448,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     cashPortion: "ரொக்க பகுதி",
     selectedInstallmentPlan: "தேர்ந்தெடுத்த தவணை திட்டம்",
     months: "மாதங்கள்",
+    ifApplicable: "(பொருந்தினால்)",
     upfrontMedisaveGstCash: "முன்கூட்டிய ரொக்க கட்டணம் (Medisave பகுதியின் GST)",
     amountUnderInHouse: "உள் தவணைத் திட்டத்தின் கீழ் உள்ள தொகை",
     amountUnderInstallments: "தவணைத் தொகை",
@@ -441,7 +460,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     grabPayPlan: "GrabPay: 4 மாதங்கள் வட்டி இல்லாது",
     cardPlan: "UOB / OCBC கடன் அட்டை: 12 மாத வட்டி இல்லா தவணை",
     inHouseInstallment: "உள் தவணை",
-    inHouseSixTwelve: "6/12 மாதங்கள் வட்டி இல்லாது - சிகிச்சையைப் பொறுத்தது",
+    inHouseSixTwelve: "3/6/9/12 மாதங்கள் வட்டி இல்லாது - சிகிச்சையைப் பொறுத்தது",
     applicantRequirement: "விண்ணப்பதாரர் SG / PR ஆக இருக்க வேண்டும்",
     guarantorRequirement: "1 உத்தரவாதம் அளிப்பவர் தேவை (SG / PR)",
     debitCardRequirement: "செல்லுபடியாகும் டெபிட் கார்டு தேவை",
@@ -509,6 +528,7 @@ const languageStringKeys = [
   "cashPortion",
   "selectedInstallmentPlan",
   "months",
+  "ifApplicable",
   "upfrontMedisaveGstCash",
   "amountUnderInHouse",
   "amountUnderInstallments",
@@ -1457,7 +1477,9 @@ function translateInstallmentPlan(plan: InstallmentPlan, copy: LanguageCopy) {
       return copy.grabPayPlan;
     case "card-12":
       return copy.cardPlan;
+    case "in-house-3":
     case "in-house-6":
+    case "in-house-9":
     case "in-house-12":
       return `${copy.inHouseInstallment} - ${plan.months} ${copy.months}`;
   }
@@ -2406,24 +2428,25 @@ export default function Home() {
                       />
 
 
-                      <input
-                        type="text"
-                        placeholder="Phase Duration"
-                        value={phase.duration}
-                        readOnly={isFinalized}
-                        onChange={(event) =>
-                          updatePhase(
-                            phaseIndex,
-                            "duration",
-                            event.target.value,
-                          )
-                        }
-                        className={compactClass(
-                          isFinalized,
-                          "w-full rounded-xl border px-4 py-3",
-                          "w-full rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm",
-                        )}
-                      />
+                      {isFinalized ? (
+                        <div className="w-full whitespace-pre-wrap break-words rounded-lg border border-transparent bg-transparent px-0 py-1 text-sm">
+                          {phase.duration || "—"}
+                        </div>
+                      ) : (
+                        <textarea
+                          placeholder="Phase Duration"
+                          value={phase.duration}
+                          rows={2}
+                          onChange={(event) =>
+                            updatePhase(
+                              phaseIndex,
+                              "duration",
+                              event.target.value,
+                            )
+                          }
+                          className="min-h-12 w-full resize-y rounded-xl border px-4 py-3"
+                        />
+                      )}
                     </div>
 
 
@@ -3177,6 +3200,14 @@ export default function Home() {
                         (
                         {installmentBreakdown.plan.months}{" "}
                         {isFinalized ? selectedLanguageCopy.months : "months"})
+                        {installmentBreakdown.plan.isInHouse ? (
+                          <>
+                            {" "}
+                            {isFinalized
+                              ? selectedLanguageCopy.ifApplicable
+                              : "(if applicable)"}
+                          </>
+                        ) : null}
                       </span>
                       <span className="whitespace-nowrap text-right tabular-nums">
                         {formatCurrency(installmentBreakdown.monthlyAmount)}
