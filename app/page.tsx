@@ -81,6 +81,7 @@ type InstallmentPlan = {
 };
 
 type PreferredLanguage = "English" | "Malay" | "Simplified Chinese" | "Tamil";
+type PrintLanguageMode = "english" | "bilingual";
 
 type LanguageCopy = {
   label: string;
@@ -475,6 +476,63 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
 const preferredLanguageOptions = Object.keys(
   languageCopy,
 ) as PreferredLanguage[];
+
+const languageStringKeys = [
+  "label",
+  "documentTitle",
+  "patientInformation",
+  "clinicBranch",
+  "dentist",
+  "patientName",
+  "patientId",
+  "quotationDate",
+  "subsidyTier",
+  "treatmentPhases",
+  "treatment",
+  "quantity",
+  "claimQty",
+  "unitPrice",
+  "gst",
+  "subsidy",
+  "deduction",
+  "medisave",
+  "cashPayable",
+  "customProcedure",
+  "remarks",
+  "howToReadCosts",
+  "howToReadCostsText",
+  "phaseCashTotal",
+  "financialSummary",
+  "treatmentSubtotal",
+  "totalSubsidiesUsed",
+  "totalMedisaveUsed",
+  "cashPortion",
+  "selectedInstallmentPlan",
+  "months",
+  "upfrontMedisaveGstCash",
+  "amountUnderInHouse",
+  "amountUnderInstallments",
+  "estimatedMonthlyInstallment",
+  "inHouseInstallmentNote",
+  "interestFreeInstallments",
+  "atomePlan",
+  "grabPayPlan",
+  "cardPlan",
+  "inHouseInstallment",
+  "inHouseSixTwelve",
+  "applicantRequirement",
+  "guarantorRequirement",
+  "debitCardRequirement",
+  "disclaimer",
+  "signatureHeading",
+  "dateSigned",
+  "scanQrText",
+  "patientSummary",
+  "acknowledgement",
+  "englishClinicalNote",
+] as const satisfies ReadonlyArray<
+  keyof Omit<LanguageCopy, "disclaimerItems" | "categoryTranslations">
+>;
 
 
 const availableTreatments: Treatment[] = [
@@ -1341,6 +1399,54 @@ function translateCategory(category: string, copy: LanguageCopy) {
   return copy.categoryTranslations[category] ?? category;
 }
 
+function combineLanguageText(englishText: string, translatedText: string) {
+  return englishText === translatedText
+    ? englishText
+    : `${englishText} / ${translatedText}`;
+}
+
+function getPrintLanguageCopy(
+  preferredLanguage: PreferredLanguage,
+  printLanguageMode: PrintLanguageMode,
+) {
+  const englishCopy = languageCopy.English;
+  const preferredCopy = languageCopy[preferredLanguage];
+
+  if (printLanguageMode === "english" || preferredLanguage === "English") {
+    return englishCopy;
+  }
+
+  const bilingualCopy: LanguageCopy = {
+    ...englishCopy,
+    label: `English + ${preferredCopy.label}`,
+    disclaimerItems: englishCopy.disclaimerItems.map((item, index) =>
+      combineLanguageText(item, preferredCopy.disclaimerItems[index] ?? item),
+    ),
+    categoryTranslations: {},
+  };
+
+  languageStringKeys.forEach((key) => {
+    (bilingualCopy as unknown as Record<string, string>)[key] = combineLanguageText(
+      englishCopy[key],
+      preferredCopy[key],
+    );
+  });
+
+  const categoryKeys = new Set([
+    ...Object.keys(englishCopy.categoryTranslations),
+    ...Object.keys(preferredCopy.categoryTranslations),
+  ]);
+
+  categoryKeys.forEach((category) => {
+    bilingualCopy.categoryTranslations[category] = combineLanguageText(
+      englishCopy.categoryTranslations[category] ?? category,
+      preferredCopy.categoryTranslations[category] ?? category,
+    );
+  });
+
+  return bilingualCopy;
+}
+
 function translateInstallmentPlan(plan: InstallmentPlan, copy: LanguageCopy) {
   switch (plan.id) {
     case "none":
@@ -1384,6 +1490,8 @@ export default function Home() {
   const [subsidyTier, setSubsidyTier] = useState<SubsidyTier>("Private");
   const [preferredLanguage, setPreferredLanguage] =
     useState<PreferredLanguage>("English");
+  const [printLanguageMode, setPrintLanguageMode] =
+    useState<PrintLanguageMode>("english");
   const [selectedInstallmentPlan, setSelectedInstallmentPlan] =
     useState<InstallmentPlanId>("none");
   const [selectedCategory, setSelectedCategory] = useState(
@@ -1403,7 +1511,10 @@ export default function Home() {
   const filteredTreatments = availableTreatments.filter(
     (item) => item.category === selectedCategory,
   );
-  const selectedLanguageCopy = languageCopy[preferredLanguage];
+  const selectedLanguageCopy = getPrintLanguageCopy(
+    preferredLanguage,
+    printLanguageMode,
+  );
 
 
   useEffect(() => {
@@ -2086,6 +2197,23 @@ export default function Home() {
                         Preferred Language: {languageCopy[language].label}
                       </option>
                     ))}
+                  </select>
+
+                  <select
+                    value={printLanguageMode}
+                    onChange={(event) =>
+                      setPrintLanguageMode(
+                        event.target.value as PrintLanguageMode,
+                      )
+                    }
+                    className="w-full rounded-xl border px-4 py-3"
+                  >
+                    <option value="english">
+                      Print Language: English only
+                    </option>
+                    <option value="bilingual">
+                      Print Language: English + preferred language
+                    </option>
                   </select>
                 </div>
               )}
