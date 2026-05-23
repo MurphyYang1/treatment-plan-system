@@ -1370,6 +1370,7 @@ export default function Home() {
   const [patientId, setPatientId] = useState("");
   const [quotationDate, setQuotationDate] = useState("");
   const [dateSigned, setDateSigned] = useState("");
+  const [signatureDataUrl, setSignatureDataUrl] = useState("");
   const [signatureUrl, setSignatureUrl] = useState("#signature");
   const [signingSessionId, setSigningSessionId] = useState("");
   const [signatureStatusMessage, setSignatureStatusMessage] = useState(
@@ -1418,6 +1419,9 @@ export default function Home() {
 
   const markSignatureComplete = () => {
     liveSignatureLoadedRef.current = null;
+    if (signatureRef.current && !signatureRef.current.isEmpty()) {
+      setSignatureDataUrl(signatureRef.current.toDataURL("image/png"));
+    }
     setDateSigned(getDateInputValue(new Date()));
   };
 
@@ -1425,6 +1429,7 @@ export default function Home() {
   const clearSignature = () => {
     signatureRef.current?.clear();
     liveSignatureLoadedRef.current = null;
+    setSignatureDataUrl("");
     setDateSigned("");
   };
 
@@ -1457,6 +1462,7 @@ export default function Home() {
         dateSigned: signedDate,
         signatureDataUrl: signatureRef.current.toDataURL("image/png"),
       });
+      setSignatureDataUrl(signatureRef.current.toDataURL("image/png"));
       setDateSigned(signedDate);
       setHasSignedQuotation(true);
       setSignatureStatusMessage(
@@ -1813,6 +1819,7 @@ export default function Home() {
           signatureRef.current?.fromDataURL(session.signatureDataUrl);
           liveSignatureLoadedRef.current = session.signatureDataUrl;
         }
+        setSignatureDataUrl(session.signatureDataUrl);
 
         if (session.patientName) {
           setPatientName(session.patientName);
@@ -1832,6 +1839,20 @@ export default function Home() {
       },
     );
   }, [signingSessionId]);
+
+
+  useEffect(() => {
+    if (!signatureDataUrl) {
+      return;
+    }
+
+    const animationFrame = window.requestAnimationFrame(() => {
+      signatureRef.current?.fromDataURL(signatureDataUrl);
+      liveSignatureLoadedRef.current = signatureDataUrl;
+    });
+
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [isFinalized, signatureDataUrl]);
 
 
   return (
@@ -3183,9 +3204,10 @@ export default function Home() {
                         ref={signatureRef}
                         penColor="black"
                         onEnd={markSignatureComplete}
+                        clearOnResize={false}
                         canvasProps={{
                           width: 900,
-                          height: isFinalized ? 140 : 220,
+                          height: 220,
                           className: "h-40 w-full bg-white sm:h-56",
                         }}
                       />
