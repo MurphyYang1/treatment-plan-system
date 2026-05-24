@@ -65,6 +65,20 @@ export type SigningQuotationSnapshot = {
     payable?: number;
   };
   phases?: SigningQuotationPhase[];
+  options?: Array<{
+    id?: number;
+    title?: string;
+    description?: string;
+    estimatedDuration?: string;
+    totals?: {
+      subtotal?: number;
+      gst?: number;
+      subsidy?: number;
+      medisave?: number;
+      payable?: number;
+    };
+    phases?: SigningQuotationPhase[];
+  }>;
 };
 
 export type SigningSessionRecord = {

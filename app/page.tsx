@@ -63,12 +63,12 @@ type Phase = {
   procedures: Procedure[];
 };
 
-type AlternativeOptionSummary = {
+type TreatmentOption = {
   id: number;
   title: string;
   description: string;
   estimatedDuration: string;
-  cashPayable: number;
+  phases: Phase[];
 };
 
 
@@ -1370,6 +1370,61 @@ function createProcedure(treatment: Treatment): Procedure {
   };
 }
 
+function createInitialPhase(): Phase {
+  return {
+    id: Date.now(),
+    title: "Treatment Phase 1",
+    duration: "",
+    procedures: [],
+  };
+}
+
+function createTreatmentOption(index: number): TreatmentOption {
+  const optionLetter = String.fromCharCode(65 + index);
+
+  return {
+    id: Date.now() + index,
+    title:
+      index === 0
+        ? "Option A - Recommended Plan"
+        : `Option ${optionLetter}`,
+    description: "",
+    estimatedDuration: "",
+    phases: [createInitialPhase()],
+  };
+}
+
+function calculateTotalsForPhases(
+  phases: Phase[],
+  subsidyTier: SubsidyTier,
+) {
+  let subtotal = 0;
+  let gst = 0;
+  let subsidy = 0;
+  let medisave = 0;
+
+  phases.forEach((phase) => {
+    phase.procedures.forEach((procedure) => {
+      const rowSubtotal = procedure.fee * procedure.quantity;
+
+      subtotal += rowSubtotal;
+      gst += rowSubtotal * GST_RATE;
+      subsidy +=
+        getSubsidyAmount(procedure, subsidyTier) *
+        procedure.subsidyClaimQty;
+      medisave += procedure.medisaveClaim;
+    });
+  });
+
+  return {
+    subtotal,
+    gst,
+    subsidy,
+    medisave,
+    payable: subtotal + gst - subsidy - medisave,
+  };
+}
+
 
 function getDateInputValue(date: Date) {
   return date.toISOString().slice(0, 10);
@@ -1531,22 +1586,12 @@ export default function Home() {
     treatmentCategories[0] ?? "",
   );
   const [selectedTreatment, setSelectedTreatment] = useState("");
-  const [phases, setPhases] = useState<Phase[]>([
-    {
-      id: 1,
-      title: "Treatment Phase 1",
-      duration: "",
-      procedures: [],
-    },
-  ]);
-  const [primaryOptionTitle, setPrimaryOptionTitle] =
-    useState("Option A - Recommended Plan");
-  const [primaryOptionDescription, setPrimaryOptionDescription] = useState("");
-  const [primaryOptionEstimatedDuration, setPrimaryOptionEstimatedDuration] =
-    useState("");
-  const [alternativeOptions, setAlternativeOptions] = useState<
-    AlternativeOptionSummary[]
-  >([]);
+  const [treatmentOptions, setTreatmentOptions] = useState<TreatmentOption[]>(
+    () => [createTreatmentOption(0)],
+  );
+  const [activeOptionId, setActiveOptionId] = useState(
+    () => treatmentOptions[0]?.id ?? 0,
+  );
 
 
   const filteredTreatments = availableTreatments.filter(
@@ -1556,6 +1601,29 @@ export default function Home() {
     preferredLanguage,
     printLanguageMode,
   );
+  const activeOption =
+    treatmentOptions.find((option) => option.id === activeOptionId) ??
+    treatmentOptions[0];
+  const phases = activeOption?.phases ?? [];
+  const setPhases = (
+    nextPhases: Phase[] | ((currentPhases: Phase[]) => Phase[]),
+  ) => {
+    setTreatmentOptions((currentOptions) =>
+      currentOptions.map((option) => {
+        if (option.id !== activeOption?.id) {
+          return option;
+        }
+
+        return {
+          ...option,
+          phases:
+            typeof nextPhases === "function"
+              ? nextPhases(option.phases)
+              : nextPhases,
+        };
+      }),
+    );
+  };
 
 
   useEffect(() => {
@@ -1767,31 +1835,34 @@ export default function Home() {
     );
   };
 
-  const addAlternativeOption = () => {
-    setAlternativeOptions((currentOptions) => [
-      ...currentOptions,
-      {
-        id: Date.now(),
-        title: `Option ${String.fromCharCode(66 + currentOptions.length)}`,
-        description: "",
-        estimatedDuration: "",
-        cashPayable: 0,
-      },
-    ]);
+  const addTreatmentOption = () => {
+    const nextOption = createTreatmentOption(treatmentOptions.length);
+    setTreatmentOptions((currentOptions) => [...currentOptions, nextOption]);
+    setActiveOptionId(nextOption.id);
   };
 
-  const deleteAlternativeOption = (optionId: number) => {
-    setAlternativeOptions((currentOptions) =>
-      currentOptions.filter((option) => option.id !== optionId),
+  const deleteTreatmentOption = (optionId: number) => {
+    if (treatmentOptions.length <= 1) {
+      return;
+    }
+
+    const nextOptions = treatmentOptions.filter(
+      (option) => option.id !== optionId,
     );
+
+    setTreatmentOptions(nextOptions);
+
+    if (activeOptionId === optionId) {
+      setActiveOptionId(nextOptions[0]?.id ?? 0);
+    }
   };
 
-  const updateAlternativeOption = <K extends keyof AlternativeOptionSummary>(
+  const updateTreatmentOption = <K extends keyof TreatmentOption>(
     optionId: number,
     field: K,
-    value: AlternativeOptionSummary[K],
+    value: TreatmentOption[K],
   ) => {
-    setAlternativeOptions((currentOptions) =>
+    setTreatmentOptions((currentOptions) =>
       currentOptions.map((option) =>
         option.id === optionId ? { ...option, [field]: value } : option,
       ),
@@ -1799,36 +1870,19 @@ export default function Home() {
   };
 
 
-  const totals = useMemo(() => {
-    let subtotal = 0;
-    let gst = 0;
-    let subsidy = 0;
-    let medisave = 0;
-
-
-    phases.forEach((phase) => {
-      phase.procedures.forEach((procedure) => {
-        const rowSubtotal = procedure.fee * procedure.quantity;
-
-
-        subtotal += rowSubtotal;
-        gst += rowSubtotal * GST_RATE;
-        subsidy +=
-          getSubsidyAmount(procedure, subsidyTier) *
-          procedure.subsidyClaimQty;
-        medisave += procedure.medisaveClaim;
-      });
-    });
-
-
-    return {
-      subtotal,
-      gst,
-      subsidy,
-      medisave,
-      payable: subtotal + gst - subsidy - medisave,
-    };
-  }, [phases, subsidyTier]);
+  const optionTotals = useMemo(
+    () =>
+      new Map(
+        treatmentOptions.map((option) => [
+          option.id,
+          calculateTotalsForPhases(option.phases, subsidyTier),
+        ]),
+      ),
+    [subsidyTier, treatmentOptions],
+  );
+  const totals =
+    optionTotals.get(activeOption?.id ?? 0) ??
+    calculateTotalsForPhases(phases, subsidyTier);
 
 
   const installmentBreakdown = useMemo(() => {
@@ -1857,24 +1911,13 @@ export default function Home() {
     };
   }, [selectedInstallmentPlan, totals]);
 
-  const comparisonRows = [
-    {
-      id: "primary",
-      title: displayValue(primaryOptionTitle),
-      description: primaryOptionDescription,
-      estimatedDuration: primaryOptionEstimatedDuration,
-      cashPayable: totals.payable,
-      source: "Detailed plan",
-    },
-    ...alternativeOptions.map((option) => ({
-      id: String(option.id),
-      title: displayValue(option.title),
-      description: option.description,
-      estimatedDuration: option.estimatedDuration,
-      cashPayable: option.cashPayable,
-      source: "Alternative summary",
-    })),
-  ];
+  const comparisonRows = treatmentOptions.map((option) => ({
+    id: String(option.id),
+    title: displayValue(option.title),
+    description: option.description,
+    estimatedDuration: option.estimatedDuration,
+    cashPayable: optionTotals.get(option.id)?.payable ?? 0,
+  }));
 
 
   const selectedSnapshotPlan = installmentPlans.find(
@@ -1907,6 +1950,38 @@ export default function Home() {
         }
       : null,
     totals,
+    options: treatmentOptions.map((option) => ({
+      id: option.id,
+      title: option.title,
+      description: option.description,
+      estimatedDuration: option.estimatedDuration,
+      totals: optionTotals.get(option.id),
+      phases: option.phases.map((phase) => ({
+        id: phase.id,
+        title: phase.title,
+        duration: phase.duration,
+        procedures: phase.procedures.map((procedure) => {
+          const rowSubtotal = procedure.fee * procedure.quantity;
+          const gst = rowSubtotal * GST_RATE;
+          const subsidy =
+            getSubsidyAmount(procedure, subsidyTier) *
+            procedure.subsidyClaimQty;
+
+          return {
+            category: procedure.category,
+            name: procedure.name,
+            quantity: procedure.quantity,
+            subsidyClaimQty: procedure.subsidyClaimQty,
+            fee: procedure.fee,
+            gst,
+            subsidy,
+            medisaveClaim: procedure.medisaveClaim,
+            cashPayable: rowSubtotal + gst - subsidy - procedure.medisaveClaim,
+            description: procedure.description,
+          };
+        }),
+      })),
+    })),
     phases: phases.map((phase) => ({
       id: phase.id,
       title: phase.title,
@@ -2401,183 +2476,116 @@ export default function Home() {
               "min-w-0 space-y-3 lg:col-span-1 lg:col-start-2 lg:row-start-1 print:col-auto print:row-auto print:space-y-3",
             )}
           >
-            <section
-              className={compactClass(
-                isFinalized,
-                "avoid-break rounded-2xl border bg-white p-4 sm:p-6",
-                "avoid-break rounded-xl border bg-white p-3 sm:p-4 print:p-3",
-              )}
-            >
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <h2 className={compactClass(isFinalized, "text-2xl font-bold", "text-xl font-bold")}>
-                    Treatment Options Comparison
-                  </h2>
-                  <p className="mt-1 text-sm text-gray-500">
-                    Compare the recommended plan with any alternative options.
-                  </p>
-                </div>
+            {!isFinalized ? (
+              <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-2xl font-bold">Treatment Options</h2>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Each option has its own phases and procedures. Select an
+                      option to edit its detailed plan.
+                    </p>
+                  </div>
 
-                {!isFinalized ? (
                   <button
                     type="button"
-                    onClick={addAlternativeOption}
+                    onClick={addTreatmentOption}
                     className="rounded-xl border px-4 py-2 text-sm transition hover:bg-gray-100"
                   >
-                    + Add Alternative Option
+                    + Add Treatment Option
                   </button>
-                ) : null}
-              </div>
-
-              {isFinalized ? (
-                <div className="mt-4 overflow-x-auto rounded-lg border">
-                  <table className="w-full min-w-[620px] table-fixed border-collapse text-sm print:min-w-0">
-                    <thead className="bg-gray-100 text-gray-700">
-                      <tr>
-                        <th className="w-[22%] px-3 py-2 text-left font-semibold">
-                          Option
-                        </th>
-                        <th className="w-[34%] px-3 py-2 text-left font-semibold">
-                          Description
-                        </th>
-                        <th className="w-[22%] px-3 py-2 text-left font-semibold">
-                          Est. Duration
-                        </th>
-                        <th className="w-[22%] px-3 py-2 text-right font-semibold">
-                          Cash Payable
-                        </th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      {comparisonRows.map((option) => (
-                        <tr key={option.id} className="border-t align-top">
-                          <td className="px-3 py-2 font-semibold">
-                            {option.title}
-                            <div className="text-[11px] font-normal text-gray-500">
-                              {option.source}
-                            </div>
-                          </td>
-                          <td className="whitespace-pre-wrap break-words px-3 py-2">
-                            {displayValue(option.description)}
-                          </td>
-                          <td className="whitespace-pre-wrap break-words px-3 py-2">
-                            {displayValue(option.estimatedDuration)}
-                          </td>
-                          <td className="px-3 py-2 text-right font-bold tabular-nums">
-                            {formatCurrency(option.cashPayable)}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
                 </div>
-              ) : (
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {treatmentOptions.map((option) => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => setActiveOptionId(option.id)}
+                      className={`rounded-xl border px-4 py-2 text-sm transition ${
+                        option.id === activeOption?.id
+                          ? "bg-black text-white"
+                          : "hover:bg-gray-100"
+                      }`}
+                    >
+                      {displayValue(option.title)}
+                    </button>
+                  ))}
+                </div>
+
                 <div className="mt-4 space-y-4">
                   <div className="rounded-2xl border bg-gray-50 p-4">
                     <div className="grid gap-3 md:grid-cols-2">
                       <input
                         type="text"
-                        value={primaryOptionTitle}
+                        value={activeOption?.title ?? ""}
                         onChange={(event) =>
-                          setPrimaryOptionTitle(event.target.value)
+                          activeOption
+                            ? updateTreatmentOption(
+                                activeOption.id,
+                                "title",
+                                event.target.value,
+                              )
+                            : undefined
                         }
                         placeholder="Option title"
                         className="w-full rounded-xl border bg-white px-4 py-3 font-semibold"
                       />
                       <input
                         type="text"
-                        value={primaryOptionEstimatedDuration}
+                        value={activeOption?.estimatedDuration ?? ""}
                         onChange={(event) =>
-                          setPrimaryOptionEstimatedDuration(event.target.value)
+                          activeOption
+                            ? updateTreatmentOption(
+                                activeOption.id,
+                                "estimatedDuration",
+                                event.target.value,
+                              )
+                            : undefined
                         }
                         placeholder="Est. Duration"
                         className="w-full rounded-xl border bg-white px-4 py-3"
                       />
                       <textarea
-                        value={primaryOptionDescription}
+                        value={activeOption?.description ?? ""}
                         onChange={(event) =>
-                          setPrimaryOptionDescription(event.target.value)
+                          activeOption
+                            ? updateTreatmentOption(
+                                activeOption.id,
+                                "description",
+                                event.target.value,
+                              )
+                            : undefined
                         }
                         rows={2}
                         placeholder="Option description / clinical positioning"
                         className="min-h-20 w-full resize-y rounded-xl border bg-white px-4 py-3 md:col-span-2"
                       />
                     </div>
-                    <p className="mt-3 text-sm text-gray-500">
-                      Cash payable is calculated automatically from the detailed
-                      phases below: {formatCurrency(totals.payable)}.
-                    </p>
-                  </div>
-
-                  {alternativeOptions.map((option) => (
-                    <div key={option.id} className="rounded-2xl border p-4">
-                      <div className="grid gap-3 md:grid-cols-2">
-                        <input
-                          type="text"
-                          value={option.title}
-                          onChange={(event) =>
-                            updateAlternativeOption(
-                              option.id,
-                              "title",
-                              event.target.value,
-                            )
-                          }
-                          placeholder="Alternative option title"
-                          className="w-full rounded-xl border px-4 py-3 font-semibold"
-                        />
-                        <input
-                          type="text"
-                          value={option.estimatedDuration}
-                          onChange={(event) =>
-                            updateAlternativeOption(
-                              option.id,
-                              "estimatedDuration",
-                              event.target.value,
-                            )
-                          }
-                          placeholder="Est. Duration"
-                          className="w-full rounded-xl border px-4 py-3"
-                        />
-                        <textarea
-                          value={option.description}
-                          onChange={(event) =>
-                            updateAlternativeOption(
-                              option.id,
-                              "description",
-                              event.target.value,
-                            )
-                          }
-                          rows={2}
-                          placeholder="Alternative option description"
-                          className="min-h-20 w-full resize-y rounded-xl border px-4 py-3 md:col-span-2"
-                        />
-                        <input
-                          type="number"
-                          value={option.cashPayable}
-                          onChange={(event) =>
-                            updateAlternativeOption(
-                              option.id,
-                              "cashPayable",
-                              Number(event.target.value),
-                            )
-                          }
-                          placeholder="Estimated cash payable"
-                          className="w-full rounded-xl border px-4 py-3 text-right tabular-nums"
-                        />
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-sm text-gray-500">
+                      <p>
+                        Cash payable for this option is calculated automatically:
+                        {" "}
+                        {formatCurrency(totals.payable)}.
+                      </p>
+                      {treatmentOptions.length > 1 ? (
                         <button
                           type="button"
-                          onClick={() => deleteAlternativeOption(option.id)}
-                          className="rounded-xl border px-4 py-3 text-red-500 transition hover:bg-red-50"
+                          onClick={() =>
+                            activeOption
+                              ? deleteTreatmentOption(activeOption.id)
+                              : undefined
+                          }
+                          className="rounded-xl border px-4 py-2 text-red-500 transition hover:bg-red-50"
                         >
-                          Remove Alternative Option
+                          Delete Current Option
                         </button>
-                      </div>
+                      ) : null}
                     </div>
-                  ))}
+                  </div>
                 </div>
-              )}
-            </section>
+              </section>
+            ) : null}
 
             <section
               className={compactClass(
@@ -2627,7 +2635,42 @@ export default function Home() {
             </section>
 
 
-            {phases.map((phase, phaseIndex) => {
+            {(isFinalized
+              ? treatmentOptions
+              : activeOption
+                ? [activeOption]
+                : []
+            ).map((option) => (
+              <div key={option.id} className="space-y-4">
+                {isFinalized ? (
+                  <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <h2 className="text-xl font-bold">
+                          {displayValue(option.title)}
+                        </h2>
+                        {option.description.trim() ? (
+                          <p className="mt-2 whitespace-pre-wrap break-words text-sm text-gray-600">
+                            {option.description}
+                          </p>
+                        ) : null}
+                        {option.estimatedDuration.trim() ? (
+                          <p className="mt-2 text-sm text-gray-500">
+                            Est. Duration: {option.estimatedDuration}
+                          </p>
+                        ) : null}
+                      </div>
+                      <div className="text-left sm:text-right">
+                        <p className="text-sm text-gray-500">Option Cash Total</p>
+                        <p className="text-xl font-bold tabular-nums">
+                          {formatCurrency(optionTotals.get(option.id)?.payable ?? 0)}
+                        </p>
+                      </div>
+                    </div>
+                  </section>
+                ) : null}
+
+            {option.phases.map((phase, phaseIndex) => {
               const phaseTotal = phase.procedures.reduce(
                 (total, procedure) => {
                   const subtotal = procedure.fee * procedure.quantity;
@@ -3270,6 +3313,8 @@ export default function Home() {
                 </section>
               );
             })}
+              </div>
+            ))}
 
 
             <section
@@ -3458,6 +3503,61 @@ export default function Home() {
                 ) : null}
               </div>
             </section>
+
+
+            {isFinalized && treatmentOptions.length > 1 ? (
+              <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
+                <div>
+                  <h2 className="text-xl font-bold">
+                    Treatment Options Comparison
+                  </h2>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Compare the treatment options after reviewing their detailed
+                    phases and procedures above.
+                  </p>
+                </div>
+
+                <div className="mt-4 overflow-x-auto rounded-lg border">
+                  <table className="w-full min-w-[620px] table-fixed border-collapse text-sm print:min-w-0">
+                    <thead className="bg-gray-100 text-gray-700">
+                      <tr>
+                        <th className="w-[22%] px-3 py-2 text-left font-semibold">
+                          Option
+                        </th>
+                        <th className="w-[34%] px-3 py-2 text-left font-semibold">
+                          Description
+                        </th>
+                        <th className="w-[22%] px-3 py-2 text-left font-semibold">
+                          Est. Duration
+                        </th>
+                        <th className="w-[22%] px-3 py-2 text-right font-semibold">
+                          Cash Payable
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {comparisonRows.map((option) => (
+                        <tr key={option.id} className="border-t align-top">
+                          <td className="px-3 py-2 font-semibold">
+                            {option.title}
+                          </td>
+                          <td className="whitespace-pre-wrap break-words px-3 py-2">
+                            {displayValue(option.description)}
+                          </td>
+                          <td className="whitespace-pre-wrap break-words px-3 py-2">
+                            {displayValue(option.estimatedDuration)}
+                          </td>
+                          <td className="px-3 py-2 text-right font-bold tabular-nums">
+                            {formatCurrency(option.cashPayable)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            ) : null}
 
 
             {isFinalized && preferredLanguage !== "English" ? (
