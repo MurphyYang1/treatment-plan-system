@@ -2652,76 +2652,32 @@ export default function Home() {
                 key={option.id}
                 className={compactClass(
                   isFinalized,
-                  "space-y-4 rounded-3xl border-2 border-gray-300 bg-gray-50 p-3 sm:p-4 print:bg-white",
+                  "space-y-4 rounded-[2rem] border-4 border-gray-300 bg-gray-100 p-3 shadow-sm sm:p-4 print:bg-white",
                   "space-y-4",
                 )}
               >
                 {isFinalized ? (
-                  <section className="avoid-break rounded-2xl border bg-white p-4 shadow-sm sm:p-6">
+                  <section className="avoid-break overflow-hidden rounded-2xl border bg-white shadow-sm">
+                    <div className="bg-black px-4 py-3 text-white sm:px-6">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-300">
+                        Treatment Option
+                      </p>
+                      <h2 className="text-xl font-bold">
+                        {displayValue(option.title)}
+                      </h2>
+                    </div>
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
-                        <h2 className="text-xl font-bold">
-                          {displayValue(option.title)}
-                        </h2>
+                      <div className="p-4 sm:p-6">
                         {option.description.trim() ? (
-                          <p className="mt-2 whitespace-pre-wrap break-words text-sm text-gray-600">
+                          <p className="whitespace-pre-wrap break-words text-sm text-gray-600">
                             {option.description}
                           </p>
                         ) : null}
                         {option.estimatedDuration.trim() ? (
-                          <p className="mt-2 text-sm text-gray-500">
+                          <p className="mt-2 text-sm font-medium text-gray-600">
                             Est. Duration: {option.estimatedDuration}
                           </p>
                         ) : null}
-                      </div>
-                      <div className="text-left sm:text-right">
-                        <p className="text-sm text-gray-500">Option Cash Total</p>
-                        <p className="text-xl font-bold tabular-nums">
-                          {formatCurrency(optionSummary.payable)}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="mt-4 grid gap-2 border-t pt-4 text-sm sm:grid-cols-2 lg:grid-cols-5">
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                          {selectedLanguageCopy.treatmentSubtotal}
-                        </p>
-                        <p className="font-semibold tabular-nums">
-                          {formatCurrency(optionSummary.subtotal)}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                          {selectedLanguageCopy.gst}
-                        </p>
-                        <p className="font-semibold tabular-nums">
-                          {formatCurrency(optionSummary.gst)}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                          {selectedLanguageCopy.totalSubsidiesUsed}
-                        </p>
-                        <p className="font-semibold tabular-nums">
-                          {formatDeduction(optionSummary.subsidy)}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                          {selectedLanguageCopy.totalMedisaveUsed}
-                        </p>
-                        <p className="font-semibold tabular-nums">
-                          {formatDeduction(optionSummary.medisave)}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                          {selectedLanguageCopy.cashPortion}
-                        </p>
-                        <p className="text-lg font-bold tabular-nums">
-                          {formatCurrency(optionSummary.payable)}
-                        </p>
                       </div>
                     </div>
                   </section>
@@ -3370,11 +3326,77 @@ export default function Home() {
                 </section>
               );
             })}
+                {isFinalized ? (
+                  <section className="avoid-break rounded-2xl border-2 border-gray-300 bg-white p-4 sm:p-6">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          {selectedLanguageCopy.financialSummary}
+                        </p>
+                        <h3 className="text-lg font-bold">
+                          {displayValue(option.title)}
+                        </h3>
+                      </div>
+                      <div className="text-left sm:text-right">
+                        <p className="text-sm text-gray-500">
+                          {selectedLanguageCopy.cashPortion}
+                        </p>
+                        <p className="text-2xl font-bold tabular-nums">
+                          {formatCurrency(optionSummary.payable)}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 grid gap-2 border-t pt-4 text-sm sm:grid-cols-2 lg:grid-cols-5">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          {selectedLanguageCopy.treatmentSubtotal}
+                        </p>
+                        <p className="font-semibold tabular-nums">
+                          {formatCurrency(optionSummary.subtotal)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          {selectedLanguageCopy.gst}
+                        </p>
+                        <p className="font-semibold tabular-nums">
+                          {formatCurrency(optionSummary.gst)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          {selectedLanguageCopy.totalSubsidiesUsed}
+                        </p>
+                        <p className="font-semibold tabular-nums">
+                          {formatDeduction(optionSummary.subsidy)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          {selectedLanguageCopy.totalMedisaveUsed}
+                        </p>
+                        <p className="font-semibold tabular-nums">
+                          {formatDeduction(optionSummary.medisave)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          {selectedLanguageCopy.cashPortion}
+                        </p>
+                        <p className="text-lg font-bold tabular-nums">
+                          {formatCurrency(optionSummary.payable)}
+                        </p>
+                      </div>
+                    </div>
+                  </section>
+                ) : null}
               </div>
               );
             })}
 
 
+            {!(isFinalized && treatmentOptions.length > 1) ? (
             <section
               className={compactClass(
                 isFinalized,
@@ -3624,6 +3646,7 @@ export default function Home() {
               </div>
               )}
             </section>
+            ) : null}
 
 
             {isFinalized && treatmentOptions.length > 1 ? (
