@@ -63,6 +63,14 @@ type Phase = {
   procedures: Procedure[];
 };
 
+type AlternativeOptionSummary = {
+  id: number;
+  title: string;
+  description: string;
+  estimatedDuration: string;
+  cashPayable: number;
+};
+
 
 type InstallmentPlanId =
   | "none"
@@ -1531,6 +1539,14 @@ export default function Home() {
       procedures: [],
     },
   ]);
+  const [primaryOptionTitle, setPrimaryOptionTitle] =
+    useState("Option A - Recommended Plan");
+  const [primaryOptionDescription, setPrimaryOptionDescription] = useState("");
+  const [primaryOptionEstimatedDuration, setPrimaryOptionEstimatedDuration] =
+    useState("");
+  const [alternativeOptions, setAlternativeOptions] = useState<
+    AlternativeOptionSummary[]
+  >([]);
 
 
   const filteredTreatments = availableTreatments.filter(
@@ -1751,6 +1767,37 @@ export default function Home() {
     );
   };
 
+  const addAlternativeOption = () => {
+    setAlternativeOptions((currentOptions) => [
+      ...currentOptions,
+      {
+        id: Date.now(),
+        title: `Option ${String.fromCharCode(66 + currentOptions.length)}`,
+        description: "",
+        estimatedDuration: "",
+        cashPayable: 0,
+      },
+    ]);
+  };
+
+  const deleteAlternativeOption = (optionId: number) => {
+    setAlternativeOptions((currentOptions) =>
+      currentOptions.filter((option) => option.id !== optionId),
+    );
+  };
+
+  const updateAlternativeOption = <K extends keyof AlternativeOptionSummary>(
+    optionId: number,
+    field: K,
+    value: AlternativeOptionSummary[K],
+  ) => {
+    setAlternativeOptions((currentOptions) =>
+      currentOptions.map((option) =>
+        option.id === optionId ? { ...option, [field]: value } : option,
+      ),
+    );
+  };
+
 
   const totals = useMemo(() => {
     let subtotal = 0;
@@ -1809,6 +1856,25 @@ export default function Home() {
       monthlyAmount: installmentAmount / plan.months,
     };
   }, [selectedInstallmentPlan, totals]);
+
+  const comparisonRows = [
+    {
+      id: "primary",
+      title: displayValue(primaryOptionTitle),
+      description: primaryOptionDescription,
+      estimatedDuration: primaryOptionEstimatedDuration,
+      cashPayable: totals.payable,
+      source: "Detailed plan",
+    },
+    ...alternativeOptions.map((option) => ({
+      id: String(option.id),
+      title: displayValue(option.title),
+      description: option.description,
+      estimatedDuration: option.estimatedDuration,
+      cashPayable: option.cashPayable,
+      source: "Alternative summary",
+    })),
+  ];
 
 
   const selectedSnapshotPlan = installmentPlans.find(
@@ -2335,6 +2401,184 @@ export default function Home() {
               "min-w-0 space-y-3 lg:col-span-1 lg:col-start-2 lg:row-start-1 print:col-auto print:row-auto print:space-y-3",
             )}
           >
+            <section
+              className={compactClass(
+                isFinalized,
+                "avoid-break rounded-2xl border bg-white p-4 sm:p-6",
+                "avoid-break rounded-xl border bg-white p-3 sm:p-4 print:p-3",
+              )}
+            >
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <h2 className={compactClass(isFinalized, "text-2xl font-bold", "text-xl font-bold")}>
+                    Treatment Options Comparison
+                  </h2>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Compare the recommended plan with any alternative options.
+                  </p>
+                </div>
+
+                {!isFinalized ? (
+                  <button
+                    type="button"
+                    onClick={addAlternativeOption}
+                    className="rounded-xl border px-4 py-2 text-sm transition hover:bg-gray-100"
+                  >
+                    + Add Alternative Option
+                  </button>
+                ) : null}
+              </div>
+
+              {isFinalized ? (
+                <div className="mt-4 overflow-x-auto rounded-lg border">
+                  <table className="w-full min-w-[620px] table-fixed border-collapse text-sm print:min-w-0">
+                    <thead className="bg-gray-100 text-gray-700">
+                      <tr>
+                        <th className="w-[22%] px-3 py-2 text-left font-semibold">
+                          Option
+                        </th>
+                        <th className="w-[34%] px-3 py-2 text-left font-semibold">
+                          Description
+                        </th>
+                        <th className="w-[22%] px-3 py-2 text-left font-semibold">
+                          Est. Duration
+                        </th>
+                        <th className="w-[22%] px-3 py-2 text-right font-semibold">
+                          Cash Payable
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {comparisonRows.map((option) => (
+                        <tr key={option.id} className="border-t align-top">
+                          <td className="px-3 py-2 font-semibold">
+                            {option.title}
+                            <div className="text-[11px] font-normal text-gray-500">
+                              {option.source}
+                            </div>
+                          </td>
+                          <td className="whitespace-pre-wrap break-words px-3 py-2">
+                            {displayValue(option.description)}
+                          </td>
+                          <td className="whitespace-pre-wrap break-words px-3 py-2">
+                            {displayValue(option.estimatedDuration)}
+                          </td>
+                          <td className="px-3 py-2 text-right font-bold tabular-nums">
+                            {formatCurrency(option.cashPayable)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="mt-4 space-y-4">
+                  <div className="rounded-2xl border bg-gray-50 p-4">
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <input
+                        type="text"
+                        value={primaryOptionTitle}
+                        onChange={(event) =>
+                          setPrimaryOptionTitle(event.target.value)
+                        }
+                        placeholder="Option title"
+                        className="w-full rounded-xl border bg-white px-4 py-3 font-semibold"
+                      />
+                      <input
+                        type="text"
+                        value={primaryOptionEstimatedDuration}
+                        onChange={(event) =>
+                          setPrimaryOptionEstimatedDuration(event.target.value)
+                        }
+                        placeholder="Est. Duration"
+                        className="w-full rounded-xl border bg-white px-4 py-3"
+                      />
+                      <textarea
+                        value={primaryOptionDescription}
+                        onChange={(event) =>
+                          setPrimaryOptionDescription(event.target.value)
+                        }
+                        rows={2}
+                        placeholder="Option description / clinical positioning"
+                        className="min-h-20 w-full resize-y rounded-xl border bg-white px-4 py-3 md:col-span-2"
+                      />
+                    </div>
+                    <p className="mt-3 text-sm text-gray-500">
+                      Cash payable is calculated automatically from the detailed
+                      phases below: {formatCurrency(totals.payable)}.
+                    </p>
+                  </div>
+
+                  {alternativeOptions.map((option) => (
+                    <div key={option.id} className="rounded-2xl border p-4">
+                      <div className="grid gap-3 md:grid-cols-2">
+                        <input
+                          type="text"
+                          value={option.title}
+                          onChange={(event) =>
+                            updateAlternativeOption(
+                              option.id,
+                              "title",
+                              event.target.value,
+                            )
+                          }
+                          placeholder="Alternative option title"
+                          className="w-full rounded-xl border px-4 py-3 font-semibold"
+                        />
+                        <input
+                          type="text"
+                          value={option.estimatedDuration}
+                          onChange={(event) =>
+                            updateAlternativeOption(
+                              option.id,
+                              "estimatedDuration",
+                              event.target.value,
+                            )
+                          }
+                          placeholder="Est. Duration"
+                          className="w-full rounded-xl border px-4 py-3"
+                        />
+                        <textarea
+                          value={option.description}
+                          onChange={(event) =>
+                            updateAlternativeOption(
+                              option.id,
+                              "description",
+                              event.target.value,
+                            )
+                          }
+                          rows={2}
+                          placeholder="Alternative option description"
+                          className="min-h-20 w-full resize-y rounded-xl border px-4 py-3 md:col-span-2"
+                        />
+                        <input
+                          type="number"
+                          value={option.cashPayable}
+                          onChange={(event) =>
+                            updateAlternativeOption(
+                              option.id,
+                              "cashPayable",
+                              Number(event.target.value),
+                            )
+                          }
+                          placeholder="Estimated cash payable"
+                          className="w-full rounded-xl border px-4 py-3 text-right tabular-nums"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => deleteAlternativeOption(option.id)}
+                          className="rounded-xl border px-4 py-3 text-red-500 transition hover:bg-red-50"
+                        >
+                          Remove Alternative Option
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+
             <section
               className={compactClass(
                 isFinalized,
