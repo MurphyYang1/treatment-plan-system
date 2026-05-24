@@ -1916,7 +1916,9 @@ export default function Home() {
     title: displayValue(option.title),
     description: option.description,
     estimatedDuration: option.estimatedDuration,
-    cashPayable: optionTotals.get(option.id)?.payable ?? 0,
+    totals:
+      optionTotals.get(option.id) ??
+      calculateTotalsForPhases(option.phases, subsidyTier),
   }));
 
 
@@ -3387,6 +3389,68 @@ export default function Home() {
               </h2>
 
 
+              {isFinalized && treatmentOptions.length > 1 ? (
+                <div className="space-y-3">
+                  {treatmentOptions.map((option) => {
+                    const summary =
+                      optionTotals.get(option.id) ??
+                      calculateTotalsForPhases(option.phases, subsidyTier);
+
+                    return (
+                      <div
+                        key={option.id}
+                        className="rounded-xl border bg-white p-3"
+                      >
+                        <h3 className="font-semibold">
+                          {displayValue(option.title)}
+                        </h3>
+                        <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-5">
+                          <div>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                              {selectedLanguageCopy.treatmentSubtotal}
+                            </p>
+                            <p className="font-semibold tabular-nums">
+                              {formatCurrency(summary.subtotal)}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                              {selectedLanguageCopy.gst}
+                            </p>
+                            <p className="font-semibold tabular-nums">
+                              {formatCurrency(summary.gst)}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                              {selectedLanguageCopy.totalSubsidiesUsed}
+                            </p>
+                            <p className="font-semibold tabular-nums">
+                              {formatDeduction(summary.subsidy)}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                              {selectedLanguageCopy.totalMedisaveUsed}
+                            </p>
+                            <p className="font-semibold tabular-nums">
+                              {formatDeduction(summary.medisave)}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                              {selectedLanguageCopy.cashPortion}
+                            </p>
+                            <p className="text-lg font-bold tabular-nums">
+                              {formatCurrency(summary.payable)}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
               <div className={compactClass(isFinalized, "space-y-4", "space-y-2 text-sm")}>
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
                   <span className="min-w-0 break-words">
@@ -3558,6 +3622,7 @@ export default function Home() {
                   </div>
                 ) : null}
               </div>
+              )}
             </section>
 
 
@@ -3574,19 +3639,25 @@ export default function Home() {
                 </div>
 
                 <div className="mt-4 overflow-x-auto rounded-lg border">
-                  <table className="w-full min-w-[620px] table-fixed border-collapse text-sm print:min-w-0">
+                  <table className="w-full min-w-[820px] table-fixed border-collapse text-sm print:min-w-0">
                     <thead className="bg-gray-100 text-gray-700">
                       <tr>
-                        <th className="w-[22%] px-3 py-2 text-left font-semibold">
+                        <th className="w-[18%] px-3 py-2 text-left font-semibold">
                           Option
                         </th>
-                        <th className="w-[34%] px-3 py-2 text-left font-semibold">
+                        <th className="w-[26%] px-3 py-2 text-left font-semibold">
                           Description
                         </th>
-                        <th className="w-[22%] px-3 py-2 text-left font-semibold">
+                        <th className="w-[16%] px-3 py-2 text-left font-semibold">
                           Est. Duration
                         </th>
-                        <th className="w-[22%] px-3 py-2 text-right font-semibold">
+                        <th className="w-[13%] px-3 py-2 text-right font-semibold">
+                          Subsidies
+                        </th>
+                        <th className="w-[13%] px-3 py-2 text-right font-semibold">
+                          Medisave
+                        </th>
+                        <th className="w-[14%] px-3 py-2 text-right font-semibold">
                           Cash Payable
                         </th>
                       </tr>
@@ -3604,8 +3675,14 @@ export default function Home() {
                           <td className="whitespace-pre-wrap break-words px-3 py-2">
                             {displayValue(option.estimatedDuration)}
                           </td>
+                          <td className="px-3 py-2 text-right tabular-nums">
+                            {formatDeduction(option.totals.subsidy)}
+                          </td>
+                          <td className="px-3 py-2 text-right tabular-nums">
+                            {formatDeduction(option.totals.medisave)}
+                          </td>
                           <td className="px-3 py-2 text-right font-bold tabular-nums">
-                            {formatCurrency(option.cashPayable)}
+                            {formatCurrency(option.totals.payable)}
                           </td>
                         </tr>
                       ))}
