@@ -2640,10 +2640,22 @@ export default function Home() {
               : activeOption
                 ? [activeOption]
                 : []
-            ).map((option) => (
-              <div key={option.id} className="space-y-4">
+            ).map((option) => {
+              const optionSummary =
+                optionTotals.get(option.id) ??
+                calculateTotalsForPhases(option.phases, subsidyTier);
+
+              return (
+              <div
+                key={option.id}
+                className={compactClass(
+                  isFinalized,
+                  "space-y-4 rounded-3xl border-2 border-gray-300 bg-gray-50 p-3 sm:p-4 print:bg-white",
+                  "space-y-4",
+                )}
+              >
                 {isFinalized ? (
-                  <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
+                  <section className="avoid-break rounded-2xl border bg-white p-4 shadow-sm sm:p-6">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div>
                         <h2 className="text-xl font-bold">
@@ -2663,7 +2675,50 @@ export default function Home() {
                       <div className="text-left sm:text-right">
                         <p className="text-sm text-gray-500">Option Cash Total</p>
                         <p className="text-xl font-bold tabular-nums">
-                          {formatCurrency(optionTotals.get(option.id)?.payable ?? 0)}
+                          {formatCurrency(optionSummary.payable)}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 grid gap-2 border-t pt-4 text-sm sm:grid-cols-2 lg:grid-cols-5">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          {selectedLanguageCopy.treatmentSubtotal}
+                        </p>
+                        <p className="font-semibold tabular-nums">
+                          {formatCurrency(optionSummary.subtotal)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          {selectedLanguageCopy.gst}
+                        </p>
+                        <p className="font-semibold tabular-nums">
+                          {formatCurrency(optionSummary.gst)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          {selectedLanguageCopy.totalSubsidiesUsed}
+                        </p>
+                        <p className="font-semibold tabular-nums">
+                          {formatDeduction(optionSummary.subsidy)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          {selectedLanguageCopy.totalMedisaveUsed}
+                        </p>
+                        <p className="font-semibold tabular-nums">
+                          {formatDeduction(optionSummary.medisave)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          {selectedLanguageCopy.cashPortion}
+                        </p>
+                        <p className="text-lg font-bold tabular-nums">
+                          {formatCurrency(optionSummary.payable)}
                         </p>
                       </div>
                     </div>
@@ -3314,7 +3369,8 @@ export default function Home() {
               );
             })}
               </div>
-            ))}
+              );
+            })}
 
 
             <section
