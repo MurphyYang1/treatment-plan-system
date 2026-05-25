@@ -2592,7 +2592,9 @@ export default function Home() {
             <section
               className={compactClass(
                 isFinalized,
-                "rounded-2xl border p-4 sm:p-6",
+                `rounded-2xl border p-4 sm:p-6 ${
+                  treatmentOptions.length > 1 ? "hidden print:hidden" : ""
+                }`,
                 "avoid-break rounded-xl border p-3 sm:p-4 print:p-3",
               )}
             >
@@ -2652,7 +2654,7 @@ export default function Home() {
                 key={option.id}
                 className={compactClass(
                   isFinalized,
-                  "space-y-4 rounded-[2rem] border-4 border-gray-300 bg-gray-100 p-3 shadow-sm sm:p-4 print:bg-white",
+                  "space-y-4 rounded-[2rem] border-4 border-gray-300 bg-gray-100 p-3 shadow-sm sm:p-4 print:border-4 print:border-gray-400 print:bg-gray-100 print:p-3",
                   "space-y-4",
                 )}
               >
