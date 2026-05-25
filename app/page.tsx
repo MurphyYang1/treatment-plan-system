@@ -2660,8 +2660,8 @@ export default function Home() {
               >
                 {isFinalized ? (
                   <section className="avoid-break overflow-hidden rounded-2xl border bg-white shadow-sm">
-                    <div className="bg-black px-4 py-3 text-white sm:px-6">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-300">
+                    <div className="print-exact bg-black px-4 py-3 text-white print:bg-black print:text-white sm:px-6">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-300 print:text-gray-300">
                         Treatment Option
                       </p>
                       <h2 className="text-xl font-bold">
