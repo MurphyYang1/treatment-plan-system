@@ -2484,8 +2484,9 @@ export default function Home() {
                   <div>
                     <h2 className="text-2xl font-bold">Treatment Options</h2>
                     <p className="mt-1 text-sm text-gray-500">
-                      Each option has its own phases and procedures. Select an
-                      option to edit its detailed plan.
+                      Select one option below to edit its phases and procedures.
+                      The finalized printout will show each option as a separate
+                      section, then compare them at the end.
                     </p>
                   </div>
 
@@ -2593,7 +2594,7 @@ export default function Home() {
               className={compactClass(
                 isFinalized,
                 `rounded-2xl border p-4 sm:p-6 ${
-                  treatmentOptions.length > 1 ? "hidden print:hidden" : ""
+                  treatmentOptions.length > 1 ? "print:hidden" : ""
                 }`,
                 "avoid-break rounded-xl border p-3 sm:p-4 print:p-3",
               )}
