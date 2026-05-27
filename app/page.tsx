@@ -1595,6 +1595,12 @@ export default function Home() {
   const [activeOptionId, setActiveOptionId] = useState(
     () => treatmentOptions[0]?.id ?? 0,
   );
+  const [recommendedOptionId, setRecommendedOptionId] = useState(
+    () => treatmentOptions[0]?.id ?? 0,
+  );
+  const [patientSelectedOptionId, setPatientSelectedOptionId] = useState<
+    number | "discuss" | ""
+  >("");
 
 
   const filteredTreatments = availableTreatments.filter(
@@ -1858,6 +1864,14 @@ export default function Home() {
     if (activeOptionId === optionId) {
       setActiveOptionId(nextOptions[0]?.id ?? 0);
     }
+
+    if (recommendedOptionId === optionId) {
+      setRecommendedOptionId(nextOptions[0]?.id ?? 0);
+    }
+
+    if (patientSelectedOptionId === optionId) {
+      setPatientSelectedOptionId("");
+    }
   };
 
   const updateTreatmentOption = <K extends keyof TreatmentOption>(
@@ -1936,6 +1950,8 @@ export default function Home() {
     quotationDate,
     preferredLanguage,
     subsidyTier,
+    recommendedOptionId,
+    patientSelectedOptionId,
     installmentPlan: selectedSnapshotPlan
       ? {
           id: selectedSnapshotPlan.id,
@@ -2484,6 +2500,28 @@ export default function Home() {
             )}
           >
             {!isFinalized ? (
+              <section className="rounded-2xl border bg-white p-4 sm:p-6">
+                <h2 className="text-xl font-bold">Guided Workflow</h2>
+                <ol className="mt-4 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
+                  {[
+                    ["1", "Patient Info", "Confirm branch, dentist, patient details, and language."],
+                    ["2", "Treatment Options", "Create Option A/B/C and choose the active option to edit."],
+                    ["3", "Phases & Procedures", "Add phases, procedures, claims, Medisave, GST, and remarks."],
+                    ["4", "Review & Sign", "Finalize, review patient summary, collect signature, then print."],
+                  ].map(([step, title, description]) => (
+                    <li key={step} className="rounded-xl bg-gray-50 p-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-sm font-bold text-white">
+                        {step}
+                      </div>
+                      <p className="mt-2 font-semibold">{title}</p>
+                      <p className="mt-1 text-gray-600">{description}</p>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            ) : null}
+
+            {!isFinalized ? (
               <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div>
@@ -2517,6 +2555,11 @@ export default function Home() {
                       }`}
                     >
                       {displayValue(option.title)}
+                      {option.id === recommendedOptionId ? (
+                        <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
+                          Recommended
+                        </span>
+                      ) : null}
                     </button>
                   ))}
                 </div>
@@ -2576,6 +2619,19 @@ export default function Home() {
                         {" "}
                         {formatCurrency(totals.payable)}.
                       </p>
+                      {treatmentOptions.length > 1 ? (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            activeOption
+                              ? setRecommendedOptionId(activeOption.id)
+                              : undefined
+                          }
+                          className="rounded-xl border px-4 py-2 text-green-700 transition hover:bg-green-50"
+                        >
+                          Mark Current Option Recommended
+                        </button>
+                      ) : null}
                       {treatmentOptions.length > 1 ? (
                         <button
                           type="button"
@@ -2644,6 +2700,72 @@ export default function Home() {
               </p>
             </section>
 
+            {isFinalized ? (
+              <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
+                <h2 className="text-xl font-bold">Patient Summary</h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  Key figures for each treatment option before reading the detailed procedures.
+                </p>
+                <div className="mt-4 grid gap-4 lg:grid-cols-2">
+                  {comparisonRows.map((option) => {
+                    const totalBeforeDeductions =
+                      option.totals.subtotal + option.totals.gst;
+
+                    return (
+                      <div
+                        key={option.id}
+                        className={`rounded-2xl border p-4 ${
+                          Number(option.id) === recommendedOptionId
+                            ? "border-green-300 bg-green-50"
+                            : "bg-gray-50"
+                        }`}
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <h3 className="font-bold">{option.title}</h3>
+                          {Number(option.id) === recommendedOptionId ? (
+                            <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-800">
+                              Recommended
+                            </span>
+                          ) : null}
+                        </div>
+                        {option.estimatedDuration.trim() ? (
+                          <p className="mt-1 text-sm text-gray-600">
+                            Est. Duration: {option.estimatedDuration}
+                          </p>
+                        ) : null}
+                        <div className="mt-3 space-y-2 text-sm">
+                          <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3">
+                            <span>Treatment cost before deductions</span>
+                            <span className="font-semibold tabular-nums">
+                              {formatCurrency(totalBeforeDeductions)}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 text-green-700">
+                            <span>Less government subsidy</span>
+                            <span className="font-semibold tabular-nums">
+                              {formatDeduction(option.totals.subsidy)}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 text-green-700">
+                            <span>Less Medisave</span>
+                            <span className="font-semibold tabular-nums">
+                              {formatDeduction(option.totals.medisave)}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 border-t pt-2 text-lg font-bold">
+                            <span>Estimated cash payable</span>
+                            <span className="tabular-nums">
+                              {formatCurrency(option.totals.payable)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            ) : null}
+
 
             {(isFinalized
               ? treatmentOptions
@@ -2670,9 +2792,16 @@ export default function Home() {
                       <p className="text-xs font-semibold uppercase tracking-wide text-gray-300 print:text-gray-300">
                         Treatment Option
                       </p>
-                      <h2 className="text-xl font-bold">
-                        {displayValue(option.title)}
-                      </h2>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h2 className="text-xl font-bold">
+                          {displayValue(option.title)}
+                        </h2>
+                        {option.id === recommendedOptionId ? (
+                          <span className="print-exact rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-800">
+                            Recommended by dentist
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div className="p-4 sm:p-6">
@@ -2691,6 +2820,56 @@ export default function Home() {
                   </section>
                 ) : null}
 
+                {isFinalized ? (
+                  <details className="rounded-2xl border bg-white p-3 lg:hidden print:hidden">
+                    <summary className="cursor-pointer font-semibold">
+                      View detailed phases and procedures
+                    </summary>
+                    <div className="mt-3 space-y-3">
+                      {option.phases.map((phase) => (
+                        <div key={`${option.id}-mobile-detail-${phase.id}`} className="rounded-xl bg-gray-50 p-3">
+                          <p className="font-semibold">{phase.title}</p>
+                          {phase.duration.trim() ? (
+                            <p className="mt-1 text-sm text-gray-600">
+                              {phase.duration}
+                            </p>
+                          ) : null}
+                          <ul className="mt-2 space-y-1 text-sm">
+                            {phase.procedures.map((procedure, procedureIndex) => {
+                              const subtotal =
+                                procedure.fee * procedure.quantity;
+                              const gst = procedure.gstApplicable
+                                ? subtotal * GST_RATE
+                                : 0;
+                              const subsidy =
+                                getSubsidyAmount(procedure, subsidyTier) *
+                                procedure.subsidyClaimQty;
+                              const payable =
+                                subtotal +
+                                gst -
+                                subsidy -
+                                procedure.medisaveClaim;
+
+                              return (
+                                <li
+                                  key={`${option.id}-${phase.id}-mobile-detail-procedure-${procedureIndex}`}
+                                  className="flex justify-between gap-3 border-t pt-1"
+                                >
+                                  <span>{procedure.name || "Custom Procedure"}</span>
+                                  <span className="font-semibold tabular-nums">
+                                    {formatCurrency(payable)}
+                                  </span>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </details>
+                ) : null}
+
+            <div className={isFinalized ? "hidden lg:block print:block" : ""}>
             {option.phases.map((phase, phaseIndex) => {
               const phaseTotal = phase.procedures.reduce(
                 (total, procedure) => {
@@ -3363,6 +3542,7 @@ export default function Home() {
                 </section>
               );
             })}
+            </div>
                 {isFinalized ? (
                   <section className="avoid-break rounded-2xl border-2 border-gray-300 bg-white p-4 sm:p-6">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -3748,6 +3928,54 @@ export default function Home() {
                       ))}
                     </tbody>
                   </table>
+                </div>
+              </section>
+            ) : null}
+
+
+            {isFinalized ? (
+              <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
+                <h2 className="text-xl font-bold">Patient Selected Option</h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  Please indicate which treatment option the patient chooses.
+                </p>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {treatmentOptions.map((option) => (
+                    <label
+                      key={option.id}
+                      className="flex items-start gap-3 rounded-xl border p-3"
+                    >
+                      <input
+                        type="radio"
+                        name="patient-selected-option"
+                        checked={patientSelectedOptionId === option.id}
+                        onChange={() => setPatientSelectedOptionId(option.id)}
+                        className="mt-1"
+                      />
+                      <span>
+                        <span className="font-semibold">
+                          {displayValue(option.title)}
+                        </span>
+                        {option.id === recommendedOptionId ? (
+                          <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
+                            Recommended
+                          </span>
+                        ) : null}
+                      </span>
+                    </label>
+                  ))}
+                  <label className="flex items-start gap-3 rounded-xl border p-3">
+                    <input
+                      type="radio"
+                      name="patient-selected-option"
+                      checked={patientSelectedOptionId === "discuss"}
+                      onChange={() => setPatientSelectedOptionId("discuss")}
+                      className="mt-1"
+                    />
+                    <span className="font-semibold">
+                      I would like to discuss further
+                    </span>
+                  </label>
                 </div>
               </section>
             ) : null}
