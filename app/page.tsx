@@ -1368,7 +1368,7 @@ function createProcedure(treatment: Treatment): Procedure {
     subsidyClaimQty: treatment.category === "General Treatment" ? 1 : 0,
     medisaveClaim: treatment.medisave,
     description: "",
-    gstApplicable: true,
+    gstApplicable: treatment.category !== "Implant Treatment",
   };
 }
 
