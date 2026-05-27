@@ -47,6 +47,8 @@ export type SigningQuotationSnapshot = {
   quotationDate?: string;
   preferredLanguage?: string;
   subsidyTier?: string;
+  recommendedOptionId?: number;
+  patientSelectedOptionId?: number | "discuss" | "";
   installmentPlan?: {
     id?: string;
     label?: string;
