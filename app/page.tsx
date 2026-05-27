@@ -133,6 +133,23 @@ type LanguageCopy = {
   estimatedMonthlyInstallment: string;
   inHouseInstallmentNote: string;
   interestFreeInstallments: string;
+  patientSummaryHeading: string;
+  patientSummaryIntro: string;
+  treatmentCostBeforeDeductions: string;
+  lessGovernmentSubsidy: string;
+  lessMedisave: string;
+  estimatedCashPayable: string;
+  recommended: string;
+  recommendedByDentist: string;
+  treatmentOptionsComparison: string;
+  treatmentOptionsComparisonIntro: string;
+  option: string;
+  descriptionLabel: string;
+  estimatedDuration: string;
+  patientSelectedOption: string;
+  patientSelectedOptionIntro: string;
+  needMoreTime: string;
+  viewDetailedPhases: string;
   atomePlan: string;
   grabPayPlan: string;
   cardPlan: string;
@@ -248,6 +265,26 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     inHouseInstallmentNote:
       "For in-house instalments, the GST amount linked to the Medisave claim is excluded from the instalment amount and collected in cash.",
     interestFreeInstallments: "Interest-Free Instalments",
+    patientSummaryHeading: "Patient Summary",
+    patientSummaryIntro:
+      "Key figures for each treatment option before reading the detailed procedures.",
+    treatmentCostBeforeDeductions: "Treatment cost before deductions",
+    lessGovernmentSubsidy: "Less government subsidy",
+    lessMedisave: "Less Medisave",
+    estimatedCashPayable: "Estimated cash payable",
+    recommended: "Recommended",
+    recommendedByDentist: "Recommended by dentist",
+    treatmentOptionsComparison: "Treatment Options Comparison",
+    treatmentOptionsComparisonIntro:
+      "Compare the treatment options after reviewing their detailed phases and procedures above.",
+    option: "Option",
+    descriptionLabel: "Description",
+    estimatedDuration: "Est. Duration",
+    patientSelectedOption: "Patient Selected Option",
+    patientSelectedOptionIntro:
+      "Please indicate which treatment option the patient chooses.",
+    needMoreTime: "I need more time to decide",
+    viewDetailedPhases: "View detailed phases and procedures",
     atomePlan: "Atome: 3 months interest-free",
     grabPayPlan: "GrabPay: 4 months interest-free",
     cardPlan: "UOB / OCBC Credit Card: 12 months interest-free instalment",
@@ -318,6 +355,26 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     inHouseInstallmentNote:
       "Untuk ansuran dalaman, jumlah GST berkaitan tuntutan Medisave tidak termasuk dalam jumlah ansuran dan perlu dibayar secara tunai.",
     interestFreeInstallments: "Ansuran Tanpa Faedah",
+    patientSummaryHeading: "Ringkasan Pesakit",
+    patientSummaryIntro:
+      "Angka utama bagi setiap pilihan rawatan sebelum membaca prosedur terperinci.",
+    treatmentCostBeforeDeductions: "Kos rawatan sebelum potongan",
+    lessGovernmentSubsidy: "Tolak subsidi kerajaan",
+    lessMedisave: "Tolak Medisave",
+    estimatedCashPayable: "Anggaran tunai perlu dibayar",
+    recommended: "Disyorkan",
+    recommendedByDentist: "Disyorkan oleh doktor gigi",
+    treatmentOptionsComparison: "Perbandingan Pilihan Rawatan",
+    treatmentOptionsComparisonIntro:
+      "Bandingkan pilihan rawatan selepas menyemak fasa dan prosedur terperinci di atas.",
+    option: "Pilihan",
+    descriptionLabel: "Penerangan",
+    estimatedDuration: "Anggaran Tempoh",
+    patientSelectedOption: "Pilihan Pesakit",
+    patientSelectedOptionIntro:
+      "Sila nyatakan pilihan rawatan yang dipilih oleh pesakit.",
+    needMoreTime: "Saya memerlukan lebih masa untuk membuat keputusan",
+    viewDetailedPhases: "Lihat fasa dan prosedur terperinci",
     atomePlan: "Atome: 3 bulan tanpa faedah",
     grabPayPlan: "GrabPay: 4 bulan tanpa faedah",
     cardPlan: "Kad Kredit UOB / OCBC: ansuran 12 bulan tanpa faedah",
@@ -394,6 +451,23 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     inHouseInstallmentNote:
       "如选择诊所内部分期付款，与保健储蓄索赔相关的消费税不包括在分期金额内，并需以现金支付。",
     interestFreeInstallments: "免息分期付款",
+    patientSummaryHeading: "患者摘要",
+    patientSummaryIntro: "在阅读详细程序前，先查看每个治疗选项的主要金额。",
+    treatmentCostBeforeDeductions: "扣除前治疗费用",
+    lessGovernmentSubsidy: "扣除政府补贴",
+    lessMedisave: "扣除保健储蓄",
+    estimatedCashPayable: "预计需付现金",
+    recommended: "推荐",
+    recommendedByDentist: "牙医推荐",
+    treatmentOptionsComparison: "治疗选项比较",
+    treatmentOptionsComparisonIntro: "请先查看以上详细阶段和程序，再比较治疗选项。",
+    option: "选项",
+    descriptionLabel: "说明",
+    estimatedDuration: "预计时长",
+    patientSelectedOption: "患者选择的选项",
+    patientSelectedOptionIntro: "请注明患者选择的治疗选项。",
+    needMoreTime: "我需要更多时间决定",
+    viewDetailedPhases: "查看详细阶段和程序",
     atomePlan: "Atome：3个月免息",
     grabPayPlan: "GrabPay：4个月免息",
     cardPlan: "UOB / OCBC 信用卡：12个月免息分期",
@@ -467,6 +541,26 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     inHouseInstallmentNote:
       "உள் தவணைகளுக்கு, Medisave கோரிக்கையுடன் தொடர்புடைய GST தொகை தவணைத் தொகையில் சேர்க்கப்படாது; அது ரொக்கமாக வசூலிக்கப்படும்.",
     interestFreeInstallments: "வட்டி இல்லா தவணைகள்",
+    patientSummaryHeading: "நோயாளர் சுருக்கம்",
+    patientSummaryIntro:
+      "விரிவான செயல்முறைகளைப் படிக்கும் முன் ஒவ்வொரு சிகிச்சை விருப்பத்திற்கான முக்கிய தொகைகள்.",
+    treatmentCostBeforeDeductions: "கழிவுகளுக்கு முன் சிகிச்சை செலவு",
+    lessGovernmentSubsidy: "அரசு மானியம் கழித்து",
+    lessMedisave: "Medisave கழித்து",
+    estimatedCashPayable: "மதிப்பிடப்பட்ட ரொக்கப் பணம்",
+    recommended: "பரிந்துரைக்கப்பட்டது",
+    recommendedByDentist: "பல் மருத்துவர் பரிந்துரை",
+    treatmentOptionsComparison: "சிகிச்சை விருப்ப ஒப்பீடு",
+    treatmentOptionsComparisonIntro:
+      "மேலுள்ள விரிவான கட்டங்கள் மற்றும் செயல்முறைகளைப் பார்த்த பிறகு சிகிச்சை விருப்பங்களை ஒப்பிடவும்.",
+    option: "விருப்பம்",
+    descriptionLabel: "விளக்கம்",
+    estimatedDuration: "மதிப்பிடப்பட்ட காலம்",
+    patientSelectedOption: "நோயாளர் தேர்ந்தெடுத்த விருப்பம்",
+    patientSelectedOptionIntro:
+      "நோயாளர் தேர்ந்தெடுக்கும் சிகிச்சை விருப்பத்தை குறிப்பிடவும்.",
+    needMoreTime: "முடிவு செய்ய எனக்கு மேலும் நேரம் தேவை",
+    viewDetailedPhases: "விரிவான கட்டங்கள் மற்றும் செயல்முறைகளைப் பார்க்கவும்",
     atomePlan: "Atome: 3 மாதங்கள் வட்டி இல்லாது",
     grabPayPlan: "GrabPay: 4 மாதங்கள் வட்டி இல்லாது",
     cardPlan: "UOB / OCBC கடன் அட்டை: 12 மாத வட்டி இல்லா தவணை",
@@ -547,6 +641,23 @@ const languageStringKeys = [
   "estimatedMonthlyInstallment",
   "inHouseInstallmentNote",
   "interestFreeInstallments",
+  "patientSummaryHeading",
+  "patientSummaryIntro",
+  "treatmentCostBeforeDeductions",
+  "lessGovernmentSubsidy",
+  "lessMedisave",
+  "estimatedCashPayable",
+  "recommended",
+  "recommendedByDentist",
+  "treatmentOptionsComparison",
+  "treatmentOptionsComparisonIntro",
+  "option",
+  "descriptionLabel",
+  "estimatedDuration",
+  "patientSelectedOption",
+  "patientSelectedOptionIntro",
+  "needMoreTime",
+  "viewDetailedPhases",
   "atomePlan",
   "grabPayPlan",
   "cardPlan",
@@ -2557,7 +2668,7 @@ export default function Home() {
                       {displayValue(option.title)}
                       {option.id === recommendedOptionId ? (
                         <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
-                          Recommended
+                          {selectedLanguageCopy.recommended}
                         </span>
                       ) : null}
                     </button>
@@ -2700,11 +2811,13 @@ export default function Home() {
               </p>
             </section>
 
-            {isFinalized ? (
+            {isFinalized && treatmentOptions.length > 1 ? (
               <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
-                <h2 className="text-xl font-bold">Patient Summary</h2>
+                <h2 className="text-xl font-bold">
+                  {selectedLanguageCopy.patientSummaryHeading}
+                </h2>
                 <p className="mt-1 text-sm text-gray-500">
-                  Key figures for each treatment option before reading the detailed procedures.
+                  {selectedLanguageCopy.patientSummaryIntro}
                 </p>
                 <div className="mt-4 grid gap-4 lg:grid-cols-2">
                   {comparisonRows.map((option) => {
@@ -2724,7 +2837,7 @@ export default function Home() {
                           <h3 className="font-bold">{option.title}</h3>
                           {Number(option.id) === recommendedOptionId ? (
                             <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-800">
-                              Recommended
+                              {selectedLanguageCopy.recommended}
                             </span>
                           ) : null}
                         </div>
@@ -2735,25 +2848,27 @@ export default function Home() {
                         ) : null}
                         <div className="mt-3 space-y-2 text-sm">
                           <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3">
-                            <span>Treatment cost before deductions</span>
+                            <span>
+                              {selectedLanguageCopy.treatmentCostBeforeDeductions}
+                            </span>
                             <span className="font-semibold tabular-nums">
                               {formatCurrency(totalBeforeDeductions)}
                             </span>
                           </div>
                           <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 text-green-700">
-                            <span>Less government subsidy</span>
+                            <span>{selectedLanguageCopy.lessGovernmentSubsidy}</span>
                             <span className="font-semibold tabular-nums">
                               {formatDeduction(option.totals.subsidy)}
                             </span>
                           </div>
                           <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 text-green-700">
-                            <span>Less Medisave</span>
+                            <span>{selectedLanguageCopy.lessMedisave}</span>
                             <span className="font-semibold tabular-nums">
                               {formatDeduction(option.totals.medisave)}
                             </span>
                           </div>
                           <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 border-t pt-2 text-lg font-bold">
-                            <span>Estimated cash payable</span>
+                            <span>{selectedLanguageCopy.estimatedCashPayable}</span>
                             <span className="tabular-nums">
                               {formatCurrency(option.totals.payable)}
                             </span>
@@ -2798,7 +2913,7 @@ export default function Home() {
                         </h2>
                         {option.id === recommendedOptionId ? (
                           <span className="print-exact rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-800">
-                            Recommended by dentist
+                            {selectedLanguageCopy.recommendedByDentist}
                           </span>
                         ) : null}
                       </div>
@@ -2823,7 +2938,7 @@ export default function Home() {
                 {isFinalized ? (
                   <details className="rounded-2xl border bg-white p-3 lg:hidden print:hidden">
                     <summary className="cursor-pointer font-semibold">
-                      View detailed phases and procedures
+                      {selectedLanguageCopy.viewDetailedPhases}
                     </summary>
                     <div className="mt-3 space-y-3">
                       {option.phases.map((phase) => (
@@ -3870,11 +3985,10 @@ export default function Home() {
               <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
                 <div>
                   <h2 className="text-xl font-bold">
-                    Treatment Options Comparison
+                    {selectedLanguageCopy.treatmentOptionsComparison}
                   </h2>
                   <p className="mt-1 text-sm text-gray-500">
-                    Compare the treatment options after reviewing their detailed
-                    phases and procedures above.
+                    {selectedLanguageCopy.treatmentOptionsComparisonIntro}
                   </p>
                 </div>
 
@@ -3883,22 +3997,22 @@ export default function Home() {
                     <thead className="bg-gray-100 text-gray-700">
                       <tr>
                         <th className="w-[18%] px-3 py-2 text-left font-semibold">
-                          Option
+                          {selectedLanguageCopy.option}
                         </th>
                         <th className="w-[26%] px-3 py-2 text-left font-semibold">
-                          Description
+                          {selectedLanguageCopy.descriptionLabel}
                         </th>
                         <th className="w-[16%] px-3 py-2 text-left font-semibold">
-                          Est. Duration
+                          {selectedLanguageCopy.estimatedDuration}
                         </th>
                         <th className="w-[13%] px-3 py-2 text-right font-semibold">
-                          Subsidies
+                          {selectedLanguageCopy.totalSubsidiesUsed}
                         </th>
                         <th className="w-[13%] px-3 py-2 text-right font-semibold">
-                          Medisave
+                          {selectedLanguageCopy.totalMedisaveUsed}
                         </th>
                         <th className="w-[14%] px-3 py-2 text-right font-semibold">
-                          Cash Payable
+                          {selectedLanguageCopy.cashPayable}
                         </th>
                       </tr>
                     </thead>
@@ -3935,9 +4049,11 @@ export default function Home() {
 
             {isFinalized ? (
               <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
-                <h2 className="text-xl font-bold">Patient Selected Option</h2>
+                <h2 className="text-xl font-bold">
+                  {selectedLanguageCopy.patientSelectedOption}
+                </h2>
                 <p className="mt-1 text-sm text-gray-500">
-                  Please indicate which treatment option the patient chooses.
+                  {selectedLanguageCopy.patientSelectedOptionIntro}
                 </p>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
                   {treatmentOptions.map((option) => (
@@ -3958,7 +4074,7 @@ export default function Home() {
                         </span>
                         {option.id === recommendedOptionId ? (
                           <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
-                            Recommended
+                            {selectedLanguageCopy.recommended}
                           </span>
                         ) : null}
                       </span>
@@ -3973,7 +4089,7 @@ export default function Home() {
                       className="mt-1"
                     />
                     <span className="font-semibold">
-                      I would like to discuss further
+                      {selectedLanguageCopy.needMoreTime}
                     </span>
                   </label>
                 </div>
