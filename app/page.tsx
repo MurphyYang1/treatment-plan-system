@@ -51,6 +51,7 @@ type Treatment = {
 type Procedure = Treatment & {
   quantity: number;
   subsidyClaimQty: number;
+  subsidyAmount: number;
   medisaveClaim: number;
   description: string;
   gstApplicable: boolean;
@@ -1455,7 +1456,10 @@ const treatmentCategories = Array.from(
 );
 
 
-function getSubsidyAmount(treatment: Procedure, subsidyTier: SubsidyTier) {
+function getTreatmentSubsidyAmount(
+  treatment: Treatment,
+  subsidyTier: SubsidyTier,
+) {
   switch (subsidyTier) {
     case "CHAS Blue":
       return treatment.subsidies.chasBlue;
@@ -1470,13 +1474,16 @@ function getSubsidyAmount(treatment: Procedure, subsidyTier: SubsidyTier) {
   }
 }
 
-
-function createProcedure(treatment: Treatment): Procedure {
+function createProcedure(
+  treatment: Treatment,
+  subsidyTier: SubsidyTier,
+): Procedure {
   return {
     ...treatment,
     name: treatment.isCustom ? "" : treatment.name,
     quantity: 1,
     subsidyClaimQty: treatment.category === "General Treatment" ? 1 : 0,
+    subsidyAmount: getTreatmentSubsidyAmount(treatment, subsidyTier),
     medisaveClaim: treatment.medisave,
     description: "",
     gstApplicable: treatment.category !== "Implant Treatment",
@@ -1507,10 +1514,7 @@ function createTreatmentOption(index: number): TreatmentOption {
   };
 }
 
-function calculateTotalsForPhases(
-  phases: Phase[],
-  subsidyTier: SubsidyTier,
-) {
+function calculateTotalsForPhases(phases: Phase[]) {
   let subtotal = 0;
   let gst = 0;
   let subsidy = 0;
@@ -1523,9 +1527,7 @@ function calculateTotalsForPhases(
 
       subtotal += rowSubtotal;
       gst += rowGst;
-      subsidy +=
-        getSubsidyAmount(procedure, subsidyTier) *
-        procedure.subsidyClaimQty;
+      subsidy += procedure.subsidyAmount * procedure.subsidyClaimQty;
       medisave += procedure.medisaveClaim;
     });
   });
@@ -1896,7 +1898,7 @@ export default function Home() {
         index === phaseIndex
           ? {
               ...phase,
-              procedures: [...phase.procedures, createProcedure(found)],
+              procedures: [...phase.procedures, createProcedure(found, subsidyTier)],
             }
           : phase,
       ),
@@ -2003,14 +2005,14 @@ export default function Home() {
       new Map(
         treatmentOptions.map((option) => [
           option.id,
-          calculateTotalsForPhases(option.phases, subsidyTier),
+          calculateTotalsForPhases(option.phases),
         ]),
       ),
-    [subsidyTier, treatmentOptions],
+    [treatmentOptions],
   );
   const totals =
     optionTotals.get(activeOption?.id ?? 0) ??
-    calculateTotalsForPhases(phases, subsidyTier);
+    calculateTotalsForPhases(phases);
 
 
   const installmentBreakdown = useMemo(() => {
@@ -2046,7 +2048,7 @@ export default function Home() {
     estimatedDuration: option.estimatedDuration,
     totals:
       optionTotals.get(option.id) ??
-      calculateTotalsForPhases(option.phases, subsidyTier),
+      calculateTotalsForPhases(option.phases),
   }));
 
 
@@ -2095,15 +2097,14 @@ export default function Home() {
         procedures: phase.procedures.map((procedure) => {
           const rowSubtotal = procedure.fee * procedure.quantity;
           const gst = procedure.gstApplicable ? rowSubtotal * GST_RATE : 0;
-          const subsidy =
-            getSubsidyAmount(procedure, subsidyTier) *
-            procedure.subsidyClaimQty;
+          const subsidy = procedure.subsidyAmount * procedure.subsidyClaimQty;
 
           return {
             category: procedure.category,
             name: procedure.name,
             quantity: procedure.quantity,
             subsidyClaimQty: procedure.subsidyClaimQty,
+            subsidyAmount: procedure.subsidyAmount,
             fee: procedure.fee,
             gstApplicable: procedure.gstApplicable,
             gst,
@@ -2122,15 +2123,14 @@ export default function Home() {
       procedures: phase.procedures.map((procedure) => {
         const rowSubtotal = procedure.fee * procedure.quantity;
         const gst = procedure.gstApplicable ? rowSubtotal * GST_RATE : 0;
-        const subsidy =
-          getSubsidyAmount(procedure, subsidyTier) *
-          procedure.subsidyClaimQty;
+        const subsidy = procedure.subsidyAmount * procedure.subsidyClaimQty;
 
         return {
           category: procedure.category,
           name: procedure.name,
           quantity: procedure.quantity,
           subsidyClaimQty: procedure.subsidyClaimQty,
+          subsidyAmount: procedure.subsidyAmount,
           fee: procedure.fee,
           gstApplicable: procedure.gstApplicable,
           gst,
@@ -2890,7 +2890,7 @@ export default function Home() {
             ).map((option) => {
               const optionSummary =
                 optionTotals.get(option.id) ??
-                calculateTotalsForPhases(option.phases, subsidyTier);
+                calculateTotalsForPhases(option.phases);
 
               return (
               <div
@@ -2957,7 +2957,7 @@ export default function Home() {
                                 ? subtotal * GST_RATE
                                 : 0;
                               const subsidy =
-                                getSubsidyAmount(procedure, subsidyTier) *
+                                procedure.subsidyAmount *
                                 procedure.subsidyClaimQty;
                               const payable =
                                 subtotal +
@@ -2991,8 +2991,7 @@ export default function Home() {
                   const subtotal = procedure.fee * procedure.quantity;
                   const gst = procedure.gstApplicable ? subtotal * GST_RATE : 0;
                   const subsidy =
-                    getSubsidyAmount(procedure, subsidyTier) *
-                    procedure.subsidyClaimQty;
+                    procedure.subsidyAmount * procedure.subsidyClaimQty;
 
 
                   return (
@@ -3153,7 +3152,7 @@ export default function Home() {
                             ? subtotal * GST_RATE
                             : 0;
                           const subsidy =
-                            getSubsidyAmount(procedure, subsidyTier) *
+                            procedure.subsidyAmount *
                             procedure.subsidyClaimQty;
                           const payable =
                             subtotal + gst - subsidy - procedure.medisaveClaim;
@@ -3308,7 +3307,7 @@ export default function Home() {
                               ? subtotal * GST_RATE
                               : 0;
                             const subsidy =
-                              getSubsidyAmount(procedure, subsidyTier) *
+                              procedure.subsidyAmount *
                               procedure.subsidyClaimQty;
                             const payable =
                               subtotal + gst - subsidy - procedure.medisaveClaim;
@@ -3379,8 +3378,7 @@ export default function Home() {
                       const subtotal = procedure.fee * procedure.quantity;
                       const gst = procedure.gstApplicable ? subtotal * GST_RATE : 0;
                       const subsidy =
-                        getSubsidyAmount(procedure, subsidyTier) *
-                        procedure.subsidyClaimQty;
+                        procedure.subsidyAmount * procedure.subsidyClaimQty;
                       const payable =
                         subtotal + gst - subsidy - procedure.medisaveClaim;
                       const hasRemarks = procedure.description.trim().length > 0;
@@ -3557,15 +3555,35 @@ export default function Home() {
                               <label className={costLabelClass(isFinalized)}>
                                 Subsidy Deducted
                               </label>
-                              <div
-                                className={compactClass(
-                                  isFinalized,
-                                  "mt-2 rounded-xl border bg-white px-4 py-3 text-right tabular-nums",
-                                  "mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums",
-                                )}
-                              >
-                                ${subsidy.toFixed(2)}
-                              </div>
+                              {isFinalized ? (
+                                <div className="mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums">
+                                  {formatDeduction(subsidy)}
+                                </div>
+                              ) : (
+                                <input
+                                  type="number"
+                                  min="0"
+                                  value={procedure.subsidyAmount}
+                                  onChange={(event) =>
+                                    updateProcedure(
+                                      phaseIndex,
+                                      procedureIndex,
+                                      "subsidyAmount",
+                                      Number(event.target.value),
+                                    )
+                                  }
+                                  className="mt-2 w-full rounded-xl border bg-white px-4 py-3 text-right tabular-nums"
+                                />
+                              )}
+                              {!isFinalized ? (
+                                <p className="mt-1 text-xs text-gray-500">
+                                  Per claim unit. Total:{" "}
+                                  {formatDeduction(
+                                    procedure.subsidyAmount *
+                                      procedure.subsidyClaimQty,
+                                  )}
+                                </p>
+                              ) : null}
                             </div>
 
 
@@ -3748,7 +3766,7 @@ export default function Home() {
                   {treatmentOptions.map((option) => {
                     const summary =
                       optionTotals.get(option.id) ??
-                      calculateTotalsForPhases(option.phases, subsidyTier);
+                      calculateTotalsForPhases(option.phases);
 
                     return (
                       <div
