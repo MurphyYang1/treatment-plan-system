@@ -53,6 +53,7 @@ type Procedure = Treatment & {
   subsidyClaimQty: number;
   medisaveClaim: number;
   description: string;
+  gstApplicable: boolean;
 };
 
 
@@ -1364,9 +1365,10 @@ function createProcedure(treatment: Treatment): Procedure {
     ...treatment,
     name: treatment.isCustom ? "" : treatment.name,
     quantity: 1,
-    subsidyClaimQty: 1,
+    subsidyClaimQty: treatment.category === "General Treatment" ? 1 : 0,
     medisaveClaim: treatment.medisave,
     description: "",
+    gstApplicable: true,
   };
 }
 
@@ -1406,9 +1408,10 @@ function calculateTotalsForPhases(
   phases.forEach((phase) => {
     phase.procedures.forEach((procedure) => {
       const rowSubtotal = procedure.fee * procedure.quantity;
+      const rowGst = procedure.gstApplicable ? rowSubtotal * GST_RATE : 0;
 
       subtotal += rowSubtotal;
-      gst += rowSubtotal * GST_RATE;
+      gst += rowGst;
       subsidy +=
         getSubsidyAmount(procedure, subsidyTier) *
         procedure.subsidyClaimQty;
@@ -1964,7 +1967,7 @@ export default function Home() {
         duration: phase.duration,
         procedures: phase.procedures.map((procedure) => {
           const rowSubtotal = procedure.fee * procedure.quantity;
-          const gst = rowSubtotal * GST_RATE;
+          const gst = procedure.gstApplicable ? rowSubtotal * GST_RATE : 0;
           const subsidy =
             getSubsidyAmount(procedure, subsidyTier) *
             procedure.subsidyClaimQty;
@@ -1975,6 +1978,7 @@ export default function Home() {
             quantity: procedure.quantity,
             subsidyClaimQty: procedure.subsidyClaimQty,
             fee: procedure.fee,
+            gstApplicable: procedure.gstApplicable,
             gst,
             subsidy,
             medisaveClaim: procedure.medisaveClaim,
@@ -1990,7 +1994,7 @@ export default function Home() {
       duration: phase.duration,
       procedures: phase.procedures.map((procedure) => {
         const rowSubtotal = procedure.fee * procedure.quantity;
-        const gst = rowSubtotal * GST_RATE;
+        const gst = procedure.gstApplicable ? rowSubtotal * GST_RATE : 0;
         const subsidy =
           getSubsidyAmount(procedure, subsidyTier) *
           procedure.subsidyClaimQty;
@@ -2001,6 +2005,7 @@ export default function Home() {
           quantity: procedure.quantity,
           subsidyClaimQty: procedure.subsidyClaimQty,
           fee: procedure.fee,
+          gstApplicable: procedure.gstApplicable,
           gst,
           subsidy,
           medisaveClaim: procedure.medisaveClaim,
@@ -2690,7 +2695,7 @@ export default function Home() {
               const phaseTotal = phase.procedures.reduce(
                 (total, procedure) => {
                   const subtotal = procedure.fee * procedure.quantity;
-                  const gst = subtotal * GST_RATE;
+                  const gst = procedure.gstApplicable ? subtotal * GST_RATE : 0;
                   const subsidy =
                     getSubsidyAmount(procedure, subsidyTier) *
                     procedure.subsidyClaimQty;
@@ -2850,7 +2855,9 @@ export default function Home() {
                       <div className="mt-3 space-y-3 lg:hidden print:hidden">
                         {phase.procedures.map((procedure, procedureIndex) => {
                           const subtotal = procedure.fee * procedure.quantity;
-                          const gst = subtotal * GST_RATE;
+                          const gst = procedure.gstApplicable
+                            ? subtotal * GST_RATE
+                            : 0;
                           const subsidy =
                             getSubsidyAmount(procedure, subsidyTier) *
                             procedure.subsidyClaimQty;
@@ -2910,7 +2917,9 @@ export default function Home() {
                                     {selectedLanguageCopy.gst}
                                   </dt>
                                   <dd className="text-right tabular-nums">
-                                    {formatCurrency(gst)}
+                                    {procedure.gstApplicable
+                                      ? formatCurrency(gst)
+                                      : "N/A"}
                                   </dd>
                                 </div>
 
@@ -3001,7 +3010,9 @@ export default function Home() {
                           {phase.procedures.map((procedure, procedureIndex) => {
                             const subtotal =
                               procedure.fee * procedure.quantity;
-                            const gst = subtotal * GST_RATE;
+                            const gst = procedure.gstApplicable
+                              ? subtotal * GST_RATE
+                              : 0;
                             const subsidy =
                               getSubsidyAmount(procedure, subsidyTier) *
                               procedure.subsidyClaimQty;
@@ -3048,7 +3059,9 @@ export default function Home() {
                                     {formatCurrency(procedure.fee)}
                                   </td>
                                   <td className="px-2 py-2 text-right tabular-nums">
-                                    {formatCurrency(gst)}
+                                    {procedure.gstApplicable
+                                      ? formatCurrency(gst)
+                                      : "N/A"}
                                   </td>
                                   <td className="px-2 py-2 text-right tabular-nums">
                                     {formatDeduction(subsidy)}
@@ -3070,7 +3083,7 @@ export default function Home() {
                     <div className="mt-6 space-y-4">
                     {phase.procedures.map((procedure, procedureIndex) => {
                       const subtotal = procedure.fee * procedure.quantity;
-                      const gst = subtotal * GST_RATE;
+                      const gst = procedure.gstApplicable ? subtotal * GST_RATE : 0;
                       const subsidy =
                         getSubsidyAmount(procedure, subsidyTier) *
                         procedure.subsidyClaimQty;
@@ -3213,6 +3226,24 @@ export default function Home() {
                               <label className={costLabelClass(isFinalized)}>
                                 GST (9%)
                               </label>
+                              {!isFinalized ? (
+                                <label className="mt-2 flex items-center gap-2 rounded-xl border bg-white px-3 py-3 text-sm">
+                                  <input
+                                    type="checkbox"
+                                    checked={procedure.gstApplicable}
+                                    onChange={(event) =>
+                                      updateProcedure(
+                                        phaseIndex,
+                                        procedureIndex,
+                                        "gstApplicable",
+                                        event.target.checked,
+                                      )
+                                    }
+                                    className="h-4 w-4"
+                                  />
+                                  Apply GST
+                                </label>
+                              ) : (
                               <div
                                 className={compactClass(
                                   isFinalized,
@@ -3220,8 +3251,11 @@ export default function Home() {
                                   "mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums",
                                 )}
                               >
-                                ${gst.toFixed(2)}
+                                {procedure.gstApplicable
+                                  ? formatCurrency(gst)
+                                  : "N/A"}
                               </div>
+                              )}
                             </div>
 
 
