@@ -24,6 +24,7 @@ export type SigningQuotationProcedure = {
   quantity?: number;
   subsidyClaimQty?: number;
   fee?: number;
+  gstApplicable?: boolean;
   gst?: number;
   subsidy?: number;
   medisaveClaim?: number;
