@@ -2,14 +2,16 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
   serverTimestamp,
   setDoc,
+  Timestamp,
   type DocumentData,
   type DocumentReference,
-  type Timestamp,
 } from "firebase/firestore";
 import { db } from "./firebase";
 
+export const DRAFT_QUOTATIONS_COLLECTION = "draftQuotations";
 export const SIGNING_SESSIONS_COLLECTION = "signingSessions";
 export const SIGNED_QUOTATIONS_COLLECTION = "signedQuotations";
 export const SIGNED_QUOTATION_RETENTION_DAYS = 45;
@@ -95,6 +97,16 @@ export type SigningSessionRecord = {
   expiresAt?: Timestamp;
 };
 
+export type DraftQuotationState = Record<string, unknown>;
+
+export type DraftQuotationRecord = {
+  status?: "draft";
+  draft?: DraftQuotationState | null;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
+  expiresAt?: Timestamp;
+};
+
 export type SubmitSignedQuotationInput = {
   sessionId: string;
   quotation: SigningQuotationSnapshot | null;
@@ -123,15 +135,56 @@ export function getSigningSessionRef(sessionId: string): DocumentReference<Docum
   return doc(getDb(), SIGNING_SESSIONS_COLLECTION, sessionId);
 }
 
+export function getDraftQuotationRef(draftId: string): DocumentReference<DocumentData> {
+  return doc(getDb(), DRAFT_QUOTATIONS_COLLECTION, draftId);
+}
+
 export async function createSigningSession(quotation: SigningQuotationSnapshot) {
   const documentRef = await addDoc(collection(getDb(), SIGNING_SESSIONS_COLLECTION), {
     status: "pending",
     quotation: removeUndefinedValues(quotation),
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
+    expiresAt: Timestamp.fromDate(getSignedQuotationExpiryDate()),
   });
 
   return documentRef.id;
+}
+
+export async function createDraftQuotation(draft: DraftQuotationState) {
+  const documentRef = await addDoc(collection(getDb(), DRAFT_QUOTATIONS_COLLECTION), {
+    status: "draft",
+    draft: removeUndefinedValues(draft),
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+    expiresAt: Timestamp.fromDate(getSignedQuotationExpiryDate()),
+  });
+
+  return documentRef.id;
+}
+
+export async function getDraftQuotation(draftId: string) {
+  const snapshot = await getDoc(getDraftQuotationRef(draftId));
+
+  if (!snapshot.exists()) {
+    return null;
+  }
+
+  return snapshot.data() as DraftQuotationRecord;
+}
+
+export async function updateDraftQuotation(
+  draftId: string,
+  draft: DraftQuotationState,
+) {
+  await setDoc(
+    getDraftQuotationRef(draftId),
+    {
+      draft: removeUndefinedValues(draft),
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true },
+  );
 }
 
 export async function updateSigningSessionQuotation(

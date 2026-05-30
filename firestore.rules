@@ -17,7 +17,8 @@ service cloud.firestore {
           'status',
           'quotation',
           'createdAt',
-          'updatedAt'
+          'updatedAt',
+          'expiresAt'
         ])
         && request.resource.data.status == 'pending';
 
@@ -27,10 +28,40 @@ service cloud.firestore {
           'status',
           'quotation',
           'createdAt',
-          'updatedAt'
+          'updatedAt',
+          'expiresAt'
         ])
         && changedOnlyKeys([
           'quotation',
+          'updatedAt'
+        ]);
+
+      allow delete: if false;
+    }
+
+    match /draftQuotations/{draftId} {
+      allow read: if true;
+
+      allow create: if hasOnlyKeys([
+          'status',
+          'draft',
+          'createdAt',
+          'updatedAt',
+          'expiresAt'
+        ])
+        && request.resource.data.status == 'draft';
+
+      allow update: if resource.data.status == 'draft'
+        && request.resource.data.status == 'draft'
+        && request.resource.data.keys().hasOnly([
+          'status',
+          'draft',
+          'createdAt',
+          'updatedAt',
+          'expiresAt'
+        ])
+        && changedOnlyKeys([
+          'draft',
           'updatedAt'
         ]);
 

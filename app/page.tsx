@@ -8,11 +8,15 @@ import SignatureCanvas from "react-signature-canvas";
 import { onSnapshot } from "firebase/firestore";
 import { isFirebaseConfigured } from "../lib/firebase";
 import {
+  createDraftQuotation,
   createSigningSession,
+  getDraftQuotation,
   getSigningSessionRef,
   SIGNED_QUOTATION_RETENTION_DAYS,
   submitSignedQuotation,
+  updateDraftQuotation,
   updateSigningSessionQuotation,
+  type DraftQuotationState,
   type SigningQuotationSnapshot,
   type SigningSessionRecord,
 } from "../lib/signingSessions";
@@ -1667,13 +1671,26 @@ function translateInstallmentPlan(plan: InstallmentPlan, copy: LanguageCopy) {
   }
 }
 
+function isTreatmentOptionArray(value: unknown): value is TreatmentOption[] {
+  return Array.isArray(value) && value.length > 0;
+}
+
 
 export default function Home() {
   const signatureRef = useRef<SignatureCanvas | null>(null);
   const liveSignatureLoadedRef = useRef<string | null>(null);
   const signingSessionStartedRef = useRef(false);
   const quotationSnapshotRef = useRef<SigningQuotationSnapshot | null>(null);
+  const draftSaveStartedRef = useRef(false);
   const [isFinalized, setIsFinalized] = useState(false);
+  const [isDraftReady, setIsDraftReady] = useState(!isFirebaseConfigured);
+  const [draftQuotationId, setDraftQuotationId] = useState("");
+  const [draftStatusMessage, setDraftStatusMessage] = useState(
+    isFirebaseConfigured
+      ? "Starting draft autosave..."
+      : "Draft autosave is disabled until Firebase environment variables are added.",
+  );
+  const [draftErrorMessage, setDraftErrorMessage] = useState("");
   const [clinicBranch, setClinicBranch] = useState("");
   const [dentistName, setDentistName] = useState("");
   const [patientName, setPatientName] = useState("");
@@ -1820,6 +1837,92 @@ export default function Home() {
 
   const printQuotation = () => {
     window.print();
+  };
+
+  const copyDraftLink = async () => {
+    if (!draftQuotationId) {
+      setDraftErrorMessage("Draft link is still being prepared.");
+      return;
+    }
+
+    const draftUrl = `${window.location.origin}${window.location.pathname}?quote=${encodeURIComponent(draftQuotationId)}`;
+
+    try {
+      await navigator.clipboard.writeText(draftUrl);
+      setDraftStatusMessage("Draft link copied.");
+      setDraftErrorMessage("");
+    } catch {
+      setDraftErrorMessage(draftUrl);
+    }
+  };
+
+  const applyDraftQuotation = (draft: DraftQuotationState) => {
+    setClinicBranch(typeof draft.clinicBranch === "string" ? draft.clinicBranch : "");
+    setDentistName(typeof draft.dentistName === "string" ? draft.dentistName : "");
+    setPatientName(typeof draft.patientName === "string" ? draft.patientName : "");
+    setPatientId(typeof draft.patientId === "string" ? draft.patientId : "");
+    setQuotationDate(typeof draft.quotationDate === "string" ? draft.quotationDate : "");
+    setDateSigned(typeof draft.dateSigned === "string" ? draft.dateSigned : "");
+    setSignatureDataUrl(
+      typeof draft.signatureDataUrl === "string" ? draft.signatureDataUrl : "",
+    );
+    setSigningSessionId(
+      typeof draft.signingSessionId === "string" ? draft.signingSessionId : "",
+    );
+    if (typeof draft.signingSessionId === "string" && draft.signingSessionId) {
+      setSignatureUrl(`${window.location.origin}/sign/${draft.signingSessionId}`);
+      signingSessionStartedRef.current = true;
+    }
+    setSubsidyTier(
+      typeof draft.subsidyTier === "string"
+        ? (draft.subsidyTier as SubsidyTier)
+        : "Private",
+    );
+    setPreferredLanguage(
+      typeof draft.preferredLanguage === "string"
+        ? (draft.preferredLanguage as PreferredLanguage)
+        : "English",
+    );
+    setPrintLanguageMode(
+      typeof draft.printLanguageMode === "string"
+        ? (draft.printLanguageMode as PrintLanguageMode)
+        : "english",
+    );
+    setSelectedInstallmentPlan(
+      typeof draft.selectedInstallmentPlan === "string"
+        ? (draft.selectedInstallmentPlan as InstallmentPlanId)
+        : "none",
+    );
+    setSelectedCategory(
+      typeof draft.selectedCategory === "string"
+        ? draft.selectedCategory
+        : treatmentCategories[0] ?? "",
+    );
+    setSelectedTreatment(
+      typeof draft.selectedTreatment === "string" ? draft.selectedTreatment : "",
+    );
+
+    if (isTreatmentOptionArray(draft.treatmentOptions)) {
+      setTreatmentOptions(draft.treatmentOptions);
+      const nextActiveOptionId =
+        typeof draft.activeOptionId === "number"
+          ? draft.activeOptionId
+          : draft.treatmentOptions[0]?.id ?? 0;
+      setActiveOptionId(nextActiveOptionId);
+      setRecommendedOptionId(
+        typeof draft.recommendedOptionId === "number"
+          ? draft.recommendedOptionId
+          : draft.treatmentOptions[0]?.id ?? 0,
+      );
+    }
+
+    if (
+      typeof draft.patientSelectedOptionId === "number" ||
+      draft.patientSelectedOptionId === "discuss" ||
+      draft.patientSelectedOptionId === ""
+    ) {
+      setPatientSelectedOptionId(draft.patientSelectedOptionId);
+    }
   };
 
 
@@ -2051,6 +2154,28 @@ export default function Home() {
       calculateTotalsForPhases(option.phases),
   }));
 
+  const draftQuotationState: DraftQuotationState = {
+    clinicBranch,
+    dentistName,
+    patientName,
+    patientId,
+    quotationDate,
+    dateSigned,
+    signatureDataUrl,
+    signingSessionId,
+    subsidyTier,
+    preferredLanguage,
+    printLanguageMode,
+    selectedInstallmentPlan,
+    selectedCategory,
+    selectedTreatment,
+    treatmentOptions,
+    activeOptionId,
+    recommendedOptionId,
+    patientSelectedOptionId,
+  };
+  const draftQuotationStateJson = JSON.stringify(draftQuotationState);
+
 
   const selectedSnapshotPlan = installmentPlans.find(
     (item) => item.id === selectedInstallmentPlan,
@@ -2153,7 +2278,61 @@ export default function Home() {
 
 
   useEffect(() => {
-    if (!isFirebaseConfigured || signingSessionStartedRef.current) {
+    if (!isFirebaseConfigured) {
+      return;
+    }
+
+    const draftId = new URLSearchParams(window.location.search).get("quote");
+
+    if (!draftId) {
+      const animationFrame = window.requestAnimationFrame(() => {
+        setIsDraftReady(true);
+      });
+
+      return () => window.cancelAnimationFrame(animationFrame);
+    }
+
+    const animationFrame = window.requestAnimationFrame(() => {
+      setDraftQuotationId(draftId);
+      setDraftStatusMessage("Loading saved draft...");
+    });
+
+    getDraftQuotation(draftId)
+      .then((draftRecord) => {
+        if (!draftRecord?.draft) {
+          setDraftErrorMessage("Draft quotation was not found.");
+          return;
+        }
+
+        if (
+          draftRecord.expiresAt?.toDate &&
+          draftRecord.expiresAt.toDate().getTime() < Date.now()
+        ) {
+          setDraftErrorMessage("This draft quotation has expired.");
+          return;
+        }
+
+        applyDraftQuotation(draftRecord.draft);
+        setDraftStatusMessage("Draft loaded. Changes save automatically.");
+      })
+      .catch((error) => {
+        setDraftErrorMessage(getErrorMessage(error));
+      })
+      .finally(() => {
+        setIsDraftReady(true);
+      });
+
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, []);
+
+
+  useEffect(() => {
+    if (
+      !isFirebaseConfigured ||
+      !isDraftReady ||
+      signingSessionStartedRef.current ||
+      signingSessionId
+    ) {
       return;
     }
 
@@ -2185,7 +2364,51 @@ export default function Home() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [isDraftReady, signingSessionId]);
+
+
+  useEffect(() => {
+    if (!isFirebaseConfigured || !isDraftReady) {
+      return;
+    }
+
+    const saveTimer = window.setTimeout(() => {
+      const nextDraft = JSON.parse(draftQuotationStateJson) as DraftQuotationState;
+
+      if (draftQuotationId) {
+        updateDraftQuotation(draftQuotationId, nextDraft)
+          .then(() => {
+            setDraftStatusMessage("Draft saved automatically.");
+            setDraftErrorMessage("");
+          })
+          .catch((error) => {
+            setDraftErrorMessage(getErrorMessage(error));
+          });
+        return;
+      }
+
+      if (draftSaveStartedRef.current) {
+        return;
+      }
+
+      draftSaveStartedRef.current = true;
+      createDraftQuotation(nextDraft)
+        .then((draftId) => {
+          setDraftQuotationId(draftId);
+          const nextUrl = new URL(window.location.href);
+          nextUrl.searchParams.set("quote", draftId);
+          window.history.replaceState(null, "", nextUrl.toString());
+          setDraftStatusMessage("Draft link created. Changes save automatically.");
+          setDraftErrorMessage("");
+        })
+        .catch((error) => {
+          draftSaveStartedRef.current = false;
+          setDraftErrorMessage(getErrorMessage(error));
+        });
+    }, 1000);
+
+    return () => window.clearTimeout(saveTimer);
+  }, [draftQuotationId, draftQuotationStateJson, isDraftReady]);
 
 
   useEffect(() => {
@@ -2342,6 +2565,22 @@ export default function Home() {
                   Print
                 </button>
               ) : null}
+              <button
+                type="button"
+                onClick={copyDraftLink}
+                disabled={!draftQuotationId || !isFirebaseConfigured}
+                className="w-full rounded-xl border px-5 py-3 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:py-2"
+              >
+                Copy Draft Link
+              </button>
+              <div className="max-w-xs text-xs text-gray-500 sm:text-right">
+                <p>{draftStatusMessage}</p>
+                {draftErrorMessage ? (
+                  <p className="mt-1 break-words text-red-600">
+                    {draftErrorMessage}
+                  </p>
+                ) : null}
+              </div>
             </div>
           </div>
         </header>
