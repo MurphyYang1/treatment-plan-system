@@ -98,6 +98,8 @@ type InstallmentPlan = {
 
 type PreferredLanguage = "English" | "Malay" | "Simplified Chinese" | "Tamil";
 type PrintLanguageMode = "english" | "bilingual";
+type QuotationStatus = "draft" | "estimated" | "final";
+type FinancialSummaryDisplayMode = "full" | "cashOnly" | "hidden";
 
 type LanguageCopy = {
   label: string;
@@ -170,6 +172,20 @@ type LanguageCopy = {
   scanQrText: string;
   patientSummary: string;
   acknowledgement: string;
+  quotationStatus: string;
+  draftStatus: string;
+  estimatedStatus: string;
+  finalStatus: string;
+  draftStatusMessage: string;
+  estimatedStatusMessage: string;
+  finalStatusMessage: string;
+  draftAcknowledgement: string;
+  estimatedAcknowledgement: string;
+  finalAcknowledgement: string;
+  financialSummaryDisplay: string;
+  fullFinancialSummary: string;
+  cashPayableOnly: string;
+  hideFinancialSummary: string;
   englishClinicalNote: string;
   categoryTranslations: Record<string, string>;
 };
@@ -314,6 +330,26 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "This quotation explains the proposed treatment, estimated fees, subsidies, Medisave claims, and cash portion payable.",
     acknowledgement:
       "I acknowledge that the proposed treatment, estimated fees, subsidies, Medisave claims, risks and alternative options have been explained clearly to me.",
+    quotationStatus: "Quotation Status",
+    draftStatus: "Draft / For Discussion",
+    estimatedStatus: "Estimated Quotation",
+    finalStatus: "Final Quotation",
+    draftStatusMessage:
+      "DRAFT / FOR DISCUSSION — This quotation is for discussion only and may change after clinical review, patient choices, eligibility checks, or changes in treatment plan.",
+    estimatedStatusMessage:
+      "ESTIMATE ONLY — This quotation is an estimate and remains subject to clinical findings, patient eligibility, and final treatment selection.",
+    finalStatusMessage:
+      "FINAL QUOTATION — This quotation is prepared for patient review and acknowledgement.",
+    draftAcknowledgement:
+      "I acknowledge that this draft treatment discussion has been explained to me and may be subject to change.",
+    estimatedAcknowledgement:
+      "I acknowledge that this estimated quotation has been explained to me and may be subject to change.",
+    finalAcknowledgement:
+      "I acknowledge that the proposed treatment, estimated fees, subsidies, Medisave claims, risks and alternative options have been explained clearly to me.",
+    financialSummaryDisplay: "Financial Summary Display",
+    fullFinancialSummary: "Full financial summary",
+    cashPayableOnly: "Cash payable only",
+    hideFinancialSummary: "Hide financial summary",
     englishClinicalNote:
       "Treatment names and clinical terms may remain in English for clinical accuracy.",
     categoryTranslations: {},
@@ -404,6 +440,26 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "Ringkasan untuk pesakit: Sebut harga ini menerangkan rawatan yang dicadangkan, anggaran bayaran, subsidi, tuntutan Medisave dan jumlah tunai yang perlu dibayar.",
     acknowledgement:
       "Saya mengakui bahawa rawatan yang dicadangkan, anggaran bayaran, subsidi, tuntutan Medisave, risiko dan pilihan rawatan lain telah diterangkan dengan jelas kepada saya.",
+    quotationStatus: "Status Sebut Harga",
+    draftStatus: "Draf / Untuk Perbincangan",
+    estimatedStatus: "Sebut Harga Anggaran",
+    finalStatus: "Sebut Harga Muktamad",
+    draftStatusMessage:
+      "DRAF / UNTUK PERBINCANGAN — Sebut harga ini adalah untuk perbincangan sahaja dan mungkin berubah selepas semakan klinikal, pilihan pesakit, semakan kelayakan atau perubahan pelan rawatan.",
+    estimatedStatusMessage:
+      "ANGGARAN SAHAJA — Sebut harga ini adalah anggaran dan tertakluk kepada penemuan klinikal, kelayakan pesakit dan pilihan rawatan akhir.",
+    finalStatusMessage:
+      "SEBUT HARGA MUKTAMAD — Sebut harga ini disediakan untuk semakan dan pengakuan pesakit.",
+    draftAcknowledgement:
+      "Saya mengakui bahawa perbincangan rawatan draf ini telah diterangkan kepada saya dan mungkin tertakluk kepada perubahan.",
+    estimatedAcknowledgement:
+      "Saya mengakui bahawa sebut harga anggaran ini telah diterangkan kepada saya dan mungkin tertakluk kepada perubahan.",
+    finalAcknowledgement:
+      "Saya mengakui bahawa rawatan yang dicadangkan, anggaran bayaran, subsidi, tuntutan Medisave, risiko dan pilihan rawatan lain telah diterangkan dengan jelas kepada saya.",
+    financialSummaryDisplay: "Paparan Ringkasan Kewangan",
+    fullFinancialSummary: "Ringkasan kewangan penuh",
+    cashPayableOnly: "Tunai perlu dibayar sahaja",
+    hideFinancialSummary: "Sembunyikan ringkasan kewangan",
     englishClinicalNote:
       "Nama rawatan dan istilah klinikal mungkin dikekalkan dalam Bahasa Inggeris untuk ketepatan klinikal.",
     categoryTranslations: {
@@ -495,6 +551,25 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "患者摘要：本报价说明建议的治疗、预计费用、补贴、保健储蓄索赔以及需要以现金支付的金额。",
     acknowledgement:
       "我确认牙医已向我清楚说明建议的治疗、预计费用、补贴、保健储蓄索赔、风险以及其他治疗选择。",
+    quotationStatus: "报价状态",
+    draftStatus: "草稿 / 讨论用",
+    estimatedStatus: "估算报价",
+    finalStatus: "最终报价",
+    draftStatusMessage:
+      "草稿 / 讨论用 — 此报价仅供讨论，可能会因临床检查、患者选择、资格审核或治疗计划更改而改变。",
+    estimatedStatusMessage:
+      "仅为估算 — 此报价仍取决于临床发现、患者资格和最终治疗选择。",
+    finalStatusMessage: "最终报价 — 此报价供患者审阅和确认。",
+    draftAcknowledgement:
+      "我确认牙医已向我说明此治疗讨论草稿，并了解内容可能会更改。",
+    estimatedAcknowledgement:
+      "我确认牙医已向我说明此估算报价，并了解内容可能会更改。",
+    finalAcknowledgement:
+      "我确认牙医已向我清楚说明建议的治疗、预计费用、补贴、保健储蓄索赔、风险以及其他治疗选择。",
+    financialSummaryDisplay: "费用摘要显示",
+    fullFinancialSummary: "完整费用摘要",
+    cashPayableOnly: "仅显示需付现金",
+    hideFinancialSummary: "隐藏费用摘要",
     englishClinicalNote: "为确保临床准确性，治疗名称和临床术语可能保留英文。",
     categoryTranslations: {
       "General Treatment": "一般治疗",
@@ -590,6 +665,26 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "நோயாளர் சுருக்கம்: இந்த மேற்கோள் பரிந்துரைக்கப்பட்ட சிகிச்சை, மதிப்பிடப்பட்ட கட்டணங்கள், மானியங்கள், Medisave கோரிக்கைகள் மற்றும் ரொக்கமாக செலுத்த வேண்டிய தொகையை விளக்குகிறது.",
     acknowledgement:
       "பரிந்துரைக்கப்பட்ட சிகிச்சை, மதிப்பிடப்பட்ட கட்டணங்கள், மானியங்கள், Medisave கோரிக்கைகள், அபாயங்கள் மற்றும் மாற்று சிகிச்சை விருப்பங்கள் எனக்கு தெளிவாக விளக்கப்பட்டுள்ளன என்பதை நான் ஒப்புக்கொள்கிறேன்.",
+    quotationStatus: "மேற்கோள் நிலை",
+    draftStatus: "வரைவு / கலந்துரையாடலுக்காக",
+    estimatedStatus: "மதிப்பிடப்பட்ட மேற்கோள்",
+    finalStatus: "இறுதி மேற்கோள்",
+    draftStatusMessage:
+      "வரைவு / கலந்துரையாடலுக்காக — இந்த மேற்கோள் கலந்துரையாடலுக்காக மட்டுமே; மருத்துவ மதிப்பாய்வு, நோயாளர் தேர்வு, தகுதி சோதனை அல்லது சிகிச்சைத் திட்ட மாற்றங்களின் பின்னர் மாறலாம்.",
+    estimatedStatusMessage:
+      "மதிப்பீடு மட்டும் — இந்த மேற்கோள் மருத்துவ கண்டுபிடிப்புகள், நோயாளர் தகுதி மற்றும் இறுதி சிகிச்சைத் தேர்வுக்கு உட்பட்டது.",
+    finalStatusMessage:
+      "இறுதி மேற்கோள் — இந்த மேற்கோள் நோயாளர் மதிப்பாய்வு மற்றும் ஒப்புதலுக்காக தயாரிக்கப்பட்டுள்ளது.",
+    draftAcknowledgement:
+      "இந்த வரைவு சிகிச்சை கலந்துரையாடல் எனக்கு விளக்கப்பட்டுள்ளதையும் அது மாறக்கூடும் என்பதையும் நான் ஒப்புக்கொள்கிறேன்.",
+    estimatedAcknowledgement:
+      "இந்த மதிப்பிடப்பட்ட மேற்கோள் எனக்கு விளக்கப்பட்டுள்ளதையும் அது மாறக்கூடும் என்பதையும் நான் ஒப்புக்கொள்கிறேன்.",
+    finalAcknowledgement:
+      "பரிந்துரைக்கப்பட்ட சிகிச்சை, மதிப்பிடப்பட்ட கட்டணங்கள், மானியங்கள், Medisave கோரிக்கைகள், அபாயங்கள் மற்றும் மாற்று சிகிச்சை விருப்பங்கள் எனக்கு தெளிவாக விளக்கப்பட்டுள்ளன என்பதை நான் ஒப்புக்கொள்கிறேன்.",
+    financialSummaryDisplay: "நிதி சுருக்கக் காட்சி",
+    fullFinancialSummary: "முழு நிதி சுருக்கம்",
+    cashPayableOnly: "ரொக்கப் பணம் மட்டும்",
+    hideFinancialSummary: "நிதி சுருக்கத்தை மறைக்கவும்",
     englishClinicalNote:
       "மருத்துவத் துல்லியத்திற்காக சிகிச்சை பெயர்கள் மற்றும் மருத்துவ சொற்கள் ஆங்கிலத்தில் இருக்கலாம்.",
     categoryTranslations: {
@@ -677,6 +772,20 @@ const languageStringKeys = [
   "scanQrText",
   "patientSummary",
   "acknowledgement",
+  "quotationStatus",
+  "draftStatus",
+  "estimatedStatus",
+  "finalStatus",
+  "draftStatusMessage",
+  "estimatedStatusMessage",
+  "finalStatusMessage",
+  "draftAcknowledgement",
+  "estimatedAcknowledgement",
+  "finalAcknowledgement",
+  "financialSummaryDisplay",
+  "fullFinancialSummary",
+  "cashPayableOnly",
+  "hideFinancialSummary",
   "englishClinicalNote",
 ] as const satisfies ReadonlyArray<
   keyof Omit<LanguageCopy, "disclaimerItems" | "categoryTranslations">
@@ -1671,6 +1780,42 @@ function translateInstallmentPlan(plan: InstallmentPlan, copy: LanguageCopy) {
   }
 }
 
+function getQuotationStatusLabel(status: QuotationStatus, copy: LanguageCopy) {
+  if (status === "draft") {
+    return copy.draftStatus;
+  }
+
+  if (status === "final") {
+    return copy.finalStatus;
+  }
+
+  return copy.estimatedStatus;
+}
+
+function getQuotationStatusMessage(status: QuotationStatus, copy: LanguageCopy) {
+  if (status === "draft") {
+    return copy.draftStatusMessage;
+  }
+
+  if (status === "final") {
+    return copy.finalStatusMessage;
+  }
+
+  return copy.estimatedStatusMessage;
+}
+
+function getQuotationAcknowledgement(status: QuotationStatus, copy: LanguageCopy) {
+  if (status === "draft") {
+    return copy.draftAcknowledgement;
+  }
+
+  if (status === "final") {
+    return copy.finalAcknowledgement;
+  }
+
+  return copy.estimatedAcknowledgement;
+}
+
 function isTreatmentOptionArray(value: unknown): value is TreatmentOption[] {
   return Array.isArray(value) && value.length > 0;
 }
@@ -1709,6 +1854,10 @@ export default function Home() {
   const [isSavingSignature, setIsSavingSignature] = useState(false);
   const [hasSignedQuotation, setHasSignedQuotation] = useState(false);
   const [subsidyTier, setSubsidyTier] = useState<SubsidyTier>("Private");
+  const [quotationStatus, setQuotationStatus] =
+    useState<QuotationStatus>("estimated");
+  const [financialSummaryDisplay, setFinancialSummaryDisplay] =
+    useState<FinancialSummaryDisplayMode>("full");
   const [preferredLanguage, setPreferredLanguage] =
     useState<PreferredLanguage>("English");
   const [printLanguageMode, setPrintLanguageMode] =
@@ -1740,6 +1889,8 @@ export default function Home() {
     preferredLanguage,
     printLanguageMode,
   );
+  const showFinancialSummary = financialSummaryDisplay !== "hidden";
+  const showFullFinancialSummary = financialSummaryDisplay === "full";
   const activeOption =
     treatmentOptions.find((option) => option.id === activeOptionId) ??
     treatmentOptions[0];
@@ -1877,6 +2028,16 @@ export default function Home() {
       typeof draft.subsidyTier === "string"
         ? (draft.subsidyTier as SubsidyTier)
         : "Private",
+    );
+    setQuotationStatus(
+      typeof draft.quotationStatus === "string"
+        ? (draft.quotationStatus as QuotationStatus)
+        : "estimated",
+    );
+    setFinancialSummaryDisplay(
+      typeof draft.financialSummaryDisplay === "string"
+        ? (draft.financialSummaryDisplay as FinancialSummaryDisplayMode)
+        : "full",
     );
     setPreferredLanguage(
       typeof draft.preferredLanguage === "string"
@@ -2164,6 +2325,8 @@ export default function Home() {
     signatureDataUrl,
     signingSessionId,
     subsidyTier,
+    quotationStatus,
+    financialSummaryDisplay,
     preferredLanguage,
     printLanguageMode,
     selectedInstallmentPlan,
@@ -2188,6 +2351,8 @@ export default function Home() {
     quotationDate,
     preferredLanguage,
     subsidyTier,
+    quotationStatus,
+    financialSummaryDisplay,
     recommendedOptionId,
     patientSelectedOptionId,
     installmentPlan: selectedSnapshotPlan
@@ -2723,6 +2888,44 @@ export default function Home() {
                   </select>
 
                   <select
+                    value={quotationStatus}
+                    onChange={(event) =>
+                      setQuotationStatus(event.target.value as QuotationStatus)
+                    }
+                    className="w-full rounded-xl border px-4 py-3"
+                  >
+                    <option value="draft">
+                      Quotation Status: Draft / For Discussion
+                    </option>
+                    <option value="estimated">
+                      Quotation Status: Estimated Quotation
+                    </option>
+                    <option value="final">
+                      Quotation Status: Final Quotation
+                    </option>
+                  </select>
+
+                  <select
+                    value={financialSummaryDisplay}
+                    onChange={(event) =>
+                      setFinancialSummaryDisplay(
+                        event.target.value as FinancialSummaryDisplayMode,
+                      )
+                    }
+                    className="w-full rounded-xl border px-4 py-3"
+                  >
+                    <option value="full">
+                      Financial Summary: Full Summary
+                    </option>
+                    <option value="cashOnly">
+                      Financial Summary: Cash Payable Only
+                    </option>
+                    <option value="hidden">
+                      Financial Summary: Hidden
+                    </option>
+                  </select>
+
+                  <select
                     value={preferredLanguage}
                     onChange={(event) =>
                       setPreferredLanguage(
@@ -2757,6 +2960,26 @@ export default function Home() {
                 </div>
               )}
             </section>
+
+            {isFinalized ? (
+              <section className="avoid-break rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 text-amber-950 sm:p-6">
+                <p className="text-xs font-semibold uppercase tracking-wide">
+                  {selectedLanguageCopy.quotationStatus}
+                </p>
+                <h2 className="mt-1 text-xl font-bold">
+                  {getQuotationStatusLabel(
+                    quotationStatus,
+                    selectedLanguageCopy,
+                  )}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed">
+                  {getQuotationStatusMessage(
+                    quotationStatus,
+                    selectedLanguageCopy,
+                  )}
+                </p>
+              </section>
+            ) : null}
 
 
             {!isFinalized ? (
@@ -3050,7 +3273,7 @@ export default function Home() {
               </p>
             </section>
 
-            {isFinalized && treatmentOptions.length > 1 ? (
+            {isFinalized && treatmentOptions.length > 1 && showFinancialSummary ? (
               <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
                 <h2 className="text-xl font-bold">
                   {selectedLanguageCopy.patientSummaryHeading}
@@ -3086,26 +3309,30 @@ export default function Home() {
                           </p>
                         ) : null}
                         <div className="mt-3 space-y-2 text-sm">
-                          <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3">
-                            <span>
-                              {selectedLanguageCopy.treatmentCostBeforeDeductions}
-                            </span>
-                            <span className="font-semibold tabular-nums">
-                              {formatCurrency(totalBeforeDeductions)}
-                            </span>
-                          </div>
-                          <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 text-green-700">
-                            <span>{selectedLanguageCopy.lessGovernmentSubsidy}</span>
-                            <span className="font-semibold tabular-nums">
-                              {formatDeduction(option.totals.subsidy)}
-                            </span>
-                          </div>
-                          <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 text-green-700">
-                            <span>{selectedLanguageCopy.lessMedisave}</span>
-                            <span className="font-semibold tabular-nums">
-                              {formatDeduction(option.totals.medisave)}
-                            </span>
-                          </div>
+                          {showFullFinancialSummary ? (
+                            <>
+                              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3">
+                                <span>
+                                  {selectedLanguageCopy.treatmentCostBeforeDeductions}
+                                </span>
+                                <span className="font-semibold tabular-nums">
+                                  {formatCurrency(totalBeforeDeductions)}
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 text-green-700">
+                                <span>{selectedLanguageCopy.lessGovernmentSubsidy}</span>
+                                <span className="font-semibold tabular-nums">
+                                  {formatDeduction(option.totals.subsidy)}
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 text-green-700">
+                                <span>{selectedLanguageCopy.lessMedisave}</span>
+                                <span className="font-semibold tabular-nums">
+                                  {formatDeduction(option.totals.medisave)}
+                                </span>
+                              </div>
+                            </>
+                          ) : null}
                           <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 border-t pt-2 text-lg font-bold">
                             <span>{selectedLanguageCopy.estimatedCashPayable}</span>
                             <span className="tabular-nums">
@@ -3140,7 +3367,7 @@ export default function Home() {
                   "space-y-4",
                 )}
               >
-                {isFinalized ? (
+                {isFinalized && showFinancialSummary ? (
                   <section className="avoid-break overflow-hidden rounded-2xl border bg-white shadow-sm">
                     <div className="print-exact bg-black px-4 py-3 text-white print:bg-black print:text-white sm:px-6">
                       <p className="text-xs font-semibold uppercase tracking-wide text-gray-300 print:text-gray-300">
@@ -3936,48 +4163,50 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="mt-4 grid gap-2 border-t pt-4 text-sm sm:grid-cols-2 lg:grid-cols-5">
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                          {selectedLanguageCopy.treatmentSubtotal}
-                        </p>
-                        <p className="font-semibold tabular-nums">
-                          {formatCurrency(optionSummary.subtotal)}
-                        </p>
+                    {showFullFinancialSummary ? (
+                      <div className="mt-4 grid gap-2 border-t pt-4 text-sm sm:grid-cols-2 lg:grid-cols-5">
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                            {selectedLanguageCopy.treatmentSubtotal}
+                          </p>
+                          <p className="font-semibold tabular-nums">
+                            {formatCurrency(optionSummary.subtotal)}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                            {selectedLanguageCopy.gst}
+                          </p>
+                          <p className="font-semibold tabular-nums">
+                            {formatCurrency(optionSummary.gst)}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                            {selectedLanguageCopy.totalSubsidiesUsed}
+                          </p>
+                          <p className="font-semibold tabular-nums">
+                            {formatDeduction(optionSummary.subsidy)}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                            {selectedLanguageCopy.totalMedisaveUsed}
+                          </p>
+                          <p className="font-semibold tabular-nums">
+                            {formatDeduction(optionSummary.medisave)}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                            {selectedLanguageCopy.cashPortion}
+                          </p>
+                          <p className="text-lg font-bold tabular-nums">
+                            {formatCurrency(optionSummary.payable)}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                          {selectedLanguageCopy.gst}
-                        </p>
-                        <p className="font-semibold tabular-nums">
-                          {formatCurrency(optionSummary.gst)}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                          {selectedLanguageCopy.totalSubsidiesUsed}
-                        </p>
-                        <p className="font-semibold tabular-nums">
-                          {formatDeduction(optionSummary.subsidy)}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                          {selectedLanguageCopy.totalMedisaveUsed}
-                        </p>
-                        <p className="font-semibold tabular-nums">
-                          {formatDeduction(optionSummary.medisave)}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                          {selectedLanguageCopy.cashPortion}
-                        </p>
-                        <p className="text-lg font-bold tabular-nums">
-                          {formatCurrency(optionSummary.payable)}
-                        </p>
-                      </div>
-                    </div>
+                    ) : null}
                   </section>
                 ) : null}
               </div>
@@ -3985,7 +4214,8 @@ export default function Home() {
             })}
 
 
-            {!(isFinalized && treatmentOptions.length > 1) ? (
+            {!isFinalized ||
+            (showFinancialSummary && treatmentOptions.length <= 1) ? (
             <section
               className={compactClass(
                 isFinalized,
@@ -4063,50 +4293,54 @@ export default function Home() {
                 </div>
               ) : (
               <div className={compactClass(isFinalized, "space-y-4", "space-y-2 text-sm")}>
-                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                  <span className="min-w-0 break-words">
-                    {isFinalized
-                      ? selectedLanguageCopy.treatmentSubtotal
-                      : "Treatment Subtotal"}
-                  </span>
-                  <span className="whitespace-nowrap text-right tabular-nums">
-                    ${totals.subtotal.toFixed(2)}
-                  </span>
-                </div>
+                {showFullFinancialSummary ? (
+                  <>
+                    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                      <span className="min-w-0 break-words">
+                        {isFinalized
+                          ? selectedLanguageCopy.treatmentSubtotal
+                          : "Treatment Subtotal"}
+                      </span>
+                      <span className="whitespace-nowrap text-right tabular-nums">
+                        ${totals.subtotal.toFixed(2)}
+                      </span>
+                    </div>
 
 
-                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                  <span className="min-w-0 break-words">
-                    {isFinalized ? selectedLanguageCopy.gst : "GST (9%)"}
-                  </span>
-                  <span className="whitespace-nowrap text-right tabular-nums">
-                    ${totals.gst.toFixed(2)}
-                  </span>
-                </div>
+                    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                      <span className="min-w-0 break-words">
+                        {isFinalized ? selectedLanguageCopy.gst : "GST (9%)"}
+                      </span>
+                      <span className="whitespace-nowrap text-right tabular-nums">
+                        ${totals.gst.toFixed(2)}
+                      </span>
+                    </div>
 
 
-                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                  <span className="min-w-0 break-words">
-                    {isFinalized
-                      ? selectedLanguageCopy.totalSubsidiesUsed
-                      : "Total Subsidies USED"}
-                  </span>
-                  <span className="whitespace-nowrap text-right tabular-nums">
-                    ${totals.subsidy.toFixed(2)}
-                  </span>
-                </div>
+                    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                      <span className="min-w-0 break-words">
+                        {isFinalized
+                          ? selectedLanguageCopy.totalSubsidiesUsed
+                          : "Total Subsidies USED"}
+                      </span>
+                      <span className="whitespace-nowrap text-right tabular-nums">
+                        ${totals.subsidy.toFixed(2)}
+                      </span>
+                    </div>
 
 
-                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                  <span className="min-w-0 break-words">
-                    {isFinalized
-                      ? selectedLanguageCopy.totalMedisaveUsed
-                      : "Total Medisave USED"}
-                  </span>
-                  <span className="whitespace-nowrap text-right tabular-nums">
-                    ${totals.medisave.toFixed(2)}
-                  </span>
-                </div>
+                    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                      <span className="min-w-0 break-words">
+                        {isFinalized
+                          ? selectedLanguageCopy.totalMedisaveUsed
+                          : "Total Medisave USED"}
+                      </span>
+                      <span className="whitespace-nowrap text-right tabular-nums">
+                        ${totals.medisave.toFixed(2)}
+                      </span>
+                    </div>
+                  </>
+                ) : null}
 
 
                 <div
@@ -4262,15 +4496,21 @@ export default function Home() {
                         <th className="w-[16%] px-3 py-2 text-left font-semibold">
                           {selectedLanguageCopy.estimatedDuration}
                         </th>
-                        <th className="w-[13%] px-3 py-2 text-right font-semibold">
-                          {selectedLanguageCopy.totalSubsidiesUsed}
-                        </th>
-                        <th className="w-[13%] px-3 py-2 text-right font-semibold">
-                          {selectedLanguageCopy.totalMedisaveUsed}
-                        </th>
-                        <th className="w-[14%] px-3 py-2 text-right font-semibold">
-                          {selectedLanguageCopy.cashPayable}
-                        </th>
+                        {showFullFinancialSummary ? (
+                          <>
+                            <th className="w-[13%] px-3 py-2 text-right font-semibold">
+                              {selectedLanguageCopy.totalSubsidiesUsed}
+                            </th>
+                            <th className="w-[13%] px-3 py-2 text-right font-semibold">
+                              {selectedLanguageCopy.totalMedisaveUsed}
+                            </th>
+                          </>
+                        ) : null}
+                        {showFinancialSummary ? (
+                          <th className="w-[14%] px-3 py-2 text-right font-semibold">
+                            {selectedLanguageCopy.cashPayable}
+                          </th>
+                        ) : null}
                       </tr>
                     </thead>
 
@@ -4286,15 +4526,21 @@ export default function Home() {
                           <td className="whitespace-pre-wrap break-words px-3 py-2">
                             {displayValue(option.estimatedDuration)}
                           </td>
-                          <td className="px-3 py-2 text-right tabular-nums">
-                            {formatDeduction(option.totals.subsidy)}
-                          </td>
-                          <td className="px-3 py-2 text-right tabular-nums">
-                            {formatDeduction(option.totals.medisave)}
-                          </td>
-                          <td className="px-3 py-2 text-right font-bold tabular-nums">
-                            {formatCurrency(option.totals.payable)}
-                          </td>
+                          {showFullFinancialSummary ? (
+                            <>
+                              <td className="px-3 py-2 text-right tabular-nums">
+                                {formatDeduction(option.totals.subsidy)}
+                              </td>
+                              <td className="px-3 py-2 text-right tabular-nums">
+                                {formatDeduction(option.totals.medisave)}
+                              </td>
+                            </>
+                          ) : null}
+                          {showFinancialSummary ? (
+                            <td className="px-3 py-2 text-right font-bold tabular-nums">
+                              {formatCurrency(option.totals.payable)}
+                            </td>
+                          ) : null}
                         </tr>
                       ))}
                     </tbody>
@@ -4482,7 +4728,10 @@ export default function Home() {
                       )}
                     >
                       {isFinalized
-                        ? selectedLanguageCopy.acknowledgement
+                        ? getQuotationAcknowledgement(
+                            quotationStatus,
+                            selectedLanguageCopy,
+                          )
                         : "I acknowledge that the proposed treatment, estimated fees, subsidies, Medisave claims, risks and alternative options have been explained clearly to me."}
                     </p>
 
