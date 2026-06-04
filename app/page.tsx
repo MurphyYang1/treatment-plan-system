@@ -346,10 +346,10 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "I acknowledge that this estimated quotation has been explained to me and may be subject to change.",
     finalAcknowledgement:
       "I acknowledge that the proposed treatment, estimated fees, subsidies, Medisave claims, risks and alternative options have been explained clearly to me.",
-    financialSummaryDisplay: "Financial Summary Display",
-    fullFinancialSummary: "Full financial summary",
-    cashPayableOnly: "Cash payable only",
-    hideFinancialSummary: "Hide financial summary",
+    financialSummaryDisplay: "Cost Presentation",
+    fullFinancialSummary: "Detailed cost breakdown",
+    cashPayableOnly: "Simple cash payable",
+    hideFinancialSummary: "Hide cost summary",
     englishClinicalNote:
       "Treatment names and clinical terms may remain in English for clinical accuracy.",
     categoryTranslations: {},
@@ -456,10 +456,10 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "Saya mengakui bahawa sebut harga anggaran ini telah diterangkan kepada saya dan mungkin tertakluk kepada perubahan.",
     finalAcknowledgement:
       "Saya mengakui bahawa rawatan yang dicadangkan, anggaran bayaran, subsidi, tuntutan Medisave, risiko dan pilihan rawatan lain telah diterangkan dengan jelas kepada saya.",
-    financialSummaryDisplay: "Paparan Ringkasan Kewangan",
-    fullFinancialSummary: "Ringkasan kewangan penuh",
+    financialSummaryDisplay: "Paparan Kos",
+    fullFinancialSummary: "Pecahan kos terperinci",
     cashPayableOnly: "Tunai perlu dibayar sahaja",
-    hideFinancialSummary: "Sembunyikan ringkasan kewangan",
+    hideFinancialSummary: "Sembunyikan ringkasan kos",
     englishClinicalNote:
       "Nama rawatan dan istilah klinikal mungkin dikekalkan dalam Bahasa Inggeris untuk ketepatan klinikal.",
     categoryTranslations: {
@@ -566,9 +566,9 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "我确认牙医已向我说明此估算报价，并了解内容可能会更改。",
     finalAcknowledgement:
       "我确认牙医已向我清楚说明建议的治疗、预计费用、补贴、保健储蓄索赔、风险以及其他治疗选择。",
-    financialSummaryDisplay: "费用摘要显示",
-    fullFinancialSummary: "完整费用摘要",
-    cashPayableOnly: "仅显示需付现金",
+    financialSummaryDisplay: "费用显示方式",
+    fullFinancialSummary: "详细费用明细",
+    cashPayableOnly: "简单显示需付现金",
     hideFinancialSummary: "隐藏费用摘要",
     englishClinicalNote: "为确保临床准确性，治疗名称和临床术语可能保留英文。",
     categoryTranslations: {
@@ -681,10 +681,10 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "இந்த மதிப்பிடப்பட்ட மேற்கோள் எனக்கு விளக்கப்பட்டுள்ளதையும் அது மாறக்கூடும் என்பதையும் நான் ஒப்புக்கொள்கிறேன்.",
     finalAcknowledgement:
       "பரிந்துரைக்கப்பட்ட சிகிச்சை, மதிப்பிடப்பட்ட கட்டணங்கள், மானியங்கள், Medisave கோரிக்கைகள், அபாயங்கள் மற்றும் மாற்று சிகிச்சை விருப்பங்கள் எனக்கு தெளிவாக விளக்கப்பட்டுள்ளன என்பதை நான் ஒப்புக்கொள்கிறேன்.",
-    financialSummaryDisplay: "நிதி சுருக்கக் காட்சி",
-    fullFinancialSummary: "முழு நிதி சுருக்கம்",
+    financialSummaryDisplay: "செலவு காட்சி முறை",
+    fullFinancialSummary: "விரிவான செலவு பிரிவு",
     cashPayableOnly: "ரொக்கப் பணம் மட்டும்",
-    hideFinancialSummary: "நிதி சுருக்கத்தை மறைக்கவும்",
+    hideFinancialSummary: "செலவு சுருக்கத்தை மறைக்கவும்",
     englishClinicalNote:
       "மருத்துவத் துல்லியத்திற்காக சிகிச்சை பெயர்கள் மற்றும் மருத்துவ சொற்கள் ஆங்கிலத்தில் இருக்கலாம்.",
     categoryTranslations: {
@@ -1816,6 +1816,20 @@ function getQuotationAcknowledgement(status: QuotationStatus, copy: LanguageCopy
   return copy.estimatedAcknowledgement;
 }
 
+function getDefaultFinancialDisplayForStatus(
+  status: QuotationStatus,
+): FinancialSummaryDisplayMode {
+  if (status === "draft") {
+    return "hidden";
+  }
+
+  if (status === "final") {
+    return "full";
+  }
+
+  return "cashOnly";
+}
+
 function isTreatmentOptionArray(value: unknown): value is TreatmentOption[] {
   return Array.isArray(value) && value.length > 0;
 }
@@ -2889,19 +2903,26 @@ export default function Home() {
 
                   <select
                     value={quotationStatus}
-                    onChange={(event) =>
-                      setQuotationStatus(event.target.value as QuotationStatus)
-                    }
+                    onChange={(event) => {
+                      const nextStatus = event.target.value as QuotationStatus;
+                      setQuotationStatus(nextStatus);
+                      setFinancialSummaryDisplay(
+                        getDefaultFinancialDisplayForStatus(nextStatus),
+                      );
+                    }}
                     className="w-full rounded-xl border px-4 py-3"
                   >
                     <option value="draft">
-                      Quotation Status: Draft / For Discussion
+                      {selectedLanguageCopy.quotationStatus}:{" "}
+                      {selectedLanguageCopy.draftStatus}
                     </option>
                     <option value="estimated">
-                      Quotation Status: Estimated Quotation
+                      {selectedLanguageCopy.quotationStatus}:{" "}
+                      {selectedLanguageCopy.estimatedStatus}
                     </option>
                     <option value="final">
-                      Quotation Status: Final Quotation
+                      {selectedLanguageCopy.quotationStatus}:{" "}
+                      {selectedLanguageCopy.finalStatus}
                     </option>
                   </select>
 
@@ -2915,13 +2936,16 @@ export default function Home() {
                     className="w-full rounded-xl border px-4 py-3"
                   >
                     <option value="full">
-                      Financial Summary: Full Summary
+                      {selectedLanguageCopy.financialSummaryDisplay}:{" "}
+                      {selectedLanguageCopy.fullFinancialSummary}
                     </option>
                     <option value="cashOnly">
-                      Financial Summary: Cash Payable Only
+                      {selectedLanguageCopy.financialSummaryDisplay}:{" "}
+                      {selectedLanguageCopy.cashPayableOnly}
                     </option>
                     <option value="hidden">
-                      Financial Summary: Hidden
+                      {selectedLanguageCopy.financialSummaryDisplay}:{" "}
+                      {selectedLanguageCopy.hideFinancialSummary}
                     </option>
                   </select>
 
