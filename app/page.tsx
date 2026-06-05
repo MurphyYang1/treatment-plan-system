@@ -2688,7 +2688,7 @@ export default function Home() {
         : signatureRef.current?.toDataURL("image/png") ?? signatureDataUrl;
       const ratio = Math.max(window.devicePixelRatio || 1, 1);
       const width = Math.max(Math.floor(container.clientWidth), 1);
-      const height = isFinalized ? 160 : 224;
+      const height = 224;
 
       canvas.width = Math.floor(width * ratio);
       canvas.height = Math.floor(height * ratio);
