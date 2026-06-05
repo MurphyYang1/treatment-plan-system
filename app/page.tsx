@@ -1837,6 +1837,7 @@ function isTreatmentOptionArray(value: unknown): value is TreatmentOption[] {
 
 export default function Home() {
   const signatureRef = useRef<SignatureCanvas | null>(null);
+  const signatureContainerRef = useRef<HTMLDivElement | null>(null);
   const liveSignatureLoadedRef = useRef<string | null>(null);
   const signingSessionStartedRef = useRef(false);
   const quotationSnapshotRef = useRef<SigningQuotationSnapshot | null>(null);
@@ -2665,6 +2666,55 @@ export default function Home() {
     });
 
     return () => window.cancelAnimationFrame(animationFrame);
+  }, [isFinalized, signatureDataUrl]);
+
+
+  useEffect(() => {
+    const container = signatureContainerRef.current;
+
+    if (!container) {
+      return;
+    }
+
+    const resizeCanvas = () => {
+      const canvas = signatureRef.current?.getCanvas();
+
+      if (!canvas) {
+        return;
+      }
+
+      const existingSignature = signatureRef.current?.isEmpty()
+        ? signatureDataUrl
+        : signatureRef.current?.toDataURL("image/png") ?? signatureDataUrl;
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      const width = Math.max(Math.floor(container.clientWidth), 1);
+      const height = isFinalized ? 160 : 224;
+
+      canvas.width = Math.floor(width * ratio);
+      canvas.height = Math.floor(height * ratio);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+
+      const context = canvas.getContext("2d");
+      context?.setTransform(ratio, 0, 0, ratio, 0, 0);
+      signatureRef.current?.clear();
+
+      if (existingSignature) {
+        signatureRef.current?.fromDataURL(existingSignature);
+        liveSignatureLoadedRef.current = existingSignature;
+      }
+    };
+
+    resizeCanvas();
+
+    const resizeObserver = new ResizeObserver(resizeCanvas);
+    resizeObserver.observe(container);
+    window.addEventListener("orientationchange", resizeCanvas);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("orientationchange", resizeCanvas);
+    };
   }, [isFinalized, signatureDataUrl]);
 
 
@@ -4761,6 +4811,7 @@ export default function Home() {
 
 
                     <div
+                      ref={signatureContainerRef}
                       className={compactClass(
                         isFinalized,
                         "mx-auto max-w-2xl overflow-hidden rounded-2xl border-2 border-dashed bg-white",
@@ -4773,9 +4824,9 @@ export default function Home() {
                         onEnd={markSignatureComplete}
                         clearOnResize={false}
                         canvasProps={{
-                          width: 900,
-                          height: 220,
-                          className: "h-40 w-full bg-white sm:h-56",
+                          width: 1,
+                          height: 224,
+                          className: "block bg-white",
                         }}
                       />
                     </div>

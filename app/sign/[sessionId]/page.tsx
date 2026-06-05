@@ -490,6 +490,8 @@ export default function SignQuotationPage() {
       ? "This signing link is missing its session ID."
       : "";
   const signatureRef = useRef<SignatureCanvas | null>(null);
+  const signatureContainerRef = useRef<HTMLDivElement | null>(null);
+  const signatureDataUrlRef = useRef("");
   const didPrefillNameRef = useRef(false);
   const [session, setSession] = useState<SigningSessionRecord | null>(null);
   const [patientName, setPatientName] = useState("");
@@ -536,7 +538,56 @@ export default function SignQuotationPage() {
 
   const clearSignature = () => {
     signatureRef.current?.clear();
+    signatureDataUrlRef.current = "";
   };
+
+  useEffect(() => {
+    const container = signatureContainerRef.current;
+
+    if (!container) {
+      return;
+    }
+
+    const resizeCanvas = () => {
+      const canvas = signatureRef.current?.getCanvas();
+
+      if (!canvas) {
+        return;
+      }
+
+      const existingSignature = signatureRef.current?.isEmpty()
+        ? signatureDataUrlRef.current
+        : signatureRef.current?.toDataURL("image/png") ?? "";
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      const width = Math.max(Math.floor(container.clientWidth), 1);
+      const height = 260;
+
+      canvas.width = Math.floor(width * ratio);
+      canvas.height = Math.floor(height * ratio);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+
+      const context = canvas.getContext("2d");
+      context?.setTransform(ratio, 0, 0, ratio, 0, 0);
+      signatureRef.current?.clear();
+
+      if (existingSignature) {
+        signatureRef.current?.fromDataURL(existingSignature);
+        signatureDataUrlRef.current = existingSignature;
+      }
+    };
+
+    resizeCanvas();
+
+    const resizeObserver = new ResizeObserver(resizeCanvas);
+    resizeObserver.observe(container);
+    window.addEventListener("orientationchange", resizeCanvas);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("orientationchange", resizeCanvas);
+    };
+  }, []);
 
   const submitSignature = async () => {
     if (!sessionId || !session) {
@@ -614,14 +665,22 @@ export default function SignQuotationPage() {
             {getAcknowledgement(session?.quotation, copy)}
           </p>
 
-          <div className="mt-4 overflow-hidden rounded-xl border-2 border-dashed bg-white">
+          <div
+            ref={signatureContainerRef}
+            className="mt-4 overflow-hidden rounded-xl border-2 border-dashed bg-white"
+          >
             <SignatureCanvas
               ref={signatureRef}
               penColor="black"
+              onEnd={() => {
+                signatureDataUrlRef.current =
+                  signatureRef.current?.toDataURL("image/png") ?? "";
+              }}
+              clearOnResize={false}
               canvasProps={{
-                width: 720,
+                width: 1,
                 height: 260,
-                className: "h-56 w-full bg-white",
+                className: "block bg-white",
               }}
             />
           </div>
