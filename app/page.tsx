@@ -1700,6 +1700,28 @@ function calculateTotalsForPhases(phases: Phase[]) {
   };
 }
 
+function getInstallmentBreakdownForTotals(
+  plan: InstallmentPlan | undefined,
+  totals: ReturnType<typeof calculateTotalsForPhases>,
+) {
+  if (!plan) {
+    return null;
+  }
+
+  const cashPortion = Math.max(totals.payable, 0);
+  const medisaveGstCash = plan.isInHouse
+    ? Math.min(totals.medisave * GST_RATE, cashPortion)
+    : 0;
+  const installmentAmount = Math.max(cashPortion - medisaveGstCash, 0);
+
+  return {
+    plan,
+    medisaveGstCash,
+    installmentAmount,
+    monthlyAmount: installmentAmount / plan.months,
+  };
+}
+
 
 function getDateInputValue(date: Date) {
   return date.toISOString().slice(0, 10);
@@ -2345,25 +2367,7 @@ export default function Home() {
       (item) => item.id === selectedInstallmentPlan,
     );
 
-
-    if (!plan) {
-      return null;
-    }
-
-
-    const cashPortion = Math.max(totals.payable, 0);
-    const medisaveGstCash = plan.isInHouse
-      ? Math.min(totals.medisave * GST_RATE, cashPortion)
-      : 0;
-    const installmentAmount = Math.max(cashPortion - medisaveGstCash, 0);
-
-
-    return {
-      plan,
-      medisaveGstCash,
-      installmentAmount,
-      monthlyAmount: installmentAmount / plan.months,
-    };
+    return getInstallmentBreakdownForTotals(plan, totals);
   }, [selectedInstallmentPlan, totals]);
 
   const comparisonRows = treatmentOptions.map((option) => ({
@@ -2766,6 +2770,79 @@ export default function Home() {
       window.removeEventListener("orientationchange", resizeCanvas);
     };
   }, [isFinalized, signatureDataUrl]);
+
+  const renderInstallmentBreakdown = (
+    breakdown: NonNullable<typeof installmentBreakdown>,
+  ) => (
+    <div className="rounded-xl border bg-white p-3 text-sm sm:p-4">
+      <div className="flex flex-col gap-1 font-semibold sm:flex-row sm:justify-between sm:gap-4">
+        <span>
+          {isFinalized
+            ? selectedLanguageCopy.selectedInstallmentPlan
+            : "Selected Instalment Plan"}
+        </span>
+        <span className="sm:text-right">
+          {isFinalized
+            ? translateInstallmentPlan(breakdown.plan, selectedLanguageCopy)
+            : breakdown.plan.label}
+        </span>
+      </div>
+
+      {breakdown.plan.isInHouse ? (
+        <div className="mt-3 space-y-2">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+            <span className="min-w-0 break-words">
+              {isFinalized
+                ? selectedLanguageCopy.upfrontMedisaveGstCash
+                : "Upfront cash payment (GST on Medisave portion)"}
+            </span>
+            <span className="whitespace-nowrap text-right tabular-nums">
+              {formatCurrency(breakdown.medisaveGstCash)}
+            </span>
+          </div>
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+            <span className="min-w-0 break-words">
+              {isFinalized
+                ? selectedLanguageCopy.amountUnderInHouse
+                : "Amount under in-house instalments"}
+            </span>
+            <span className="whitespace-nowrap text-right tabular-nums">
+              {formatCurrency(breakdown.installmentAmount)}
+            </span>
+          </div>
+          <p className="text-xs leading-relaxed text-gray-600">
+            {isFinalized
+              ? selectedLanguageCopy.inHouseInstallmentNote
+              : "For in-house instalments, the GST amount linked to the Medisave claim is excluded from the instalment amount and collected in cash."}
+          </p>
+        </div>
+      ) : (
+        <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+          <span className="min-w-0 break-words">
+            {isFinalized
+              ? selectedLanguageCopy.amountUnderInstallments
+              : "Amount under instalments"}
+          </span>
+          <span className="whitespace-nowrap text-right tabular-nums">
+            {formatCurrency(breakdown.installmentAmount)}
+          </span>
+        </div>
+      )}
+
+      <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 border-t pt-3 font-bold">
+        <span className="min-w-0 break-words">
+          {isFinalized
+            ? selectedLanguageCopy.estimatedMonthlyInstallment
+            : "Estimated monthly instalment"}{" "}
+          ({breakdown.plan.months}{" "}
+          {isFinalized ? selectedLanguageCopy.months : "months"})
+        </span>
+        <span className="whitespace-nowrap text-right tabular-nums">
+          {formatCurrency(breakdown.monthlyAmount)}
+        </span>
+      </div>
+    </div>
+  );
 
 
   return (
@@ -4352,6 +4429,24 @@ export default function Home() {
                         </div>
                       </div>
                     ) : null}
+                    {selectedInstallmentPlan !== "none"
+                      ? (() => {
+                          const selectedPlan = installmentPlans.find(
+                            (plan) => plan.id === selectedInstallmentPlan,
+                          );
+                          const optionInstallmentBreakdown =
+                            getInstallmentBreakdownForTotals(
+                              selectedPlan,
+                              optionSummary,
+                            );
+
+                          return optionInstallmentBreakdown ? (
+                            <div className="mt-4 border-t pt-4">
+                              {renderInstallmentBreakdown(optionInstallmentBreakdown)}
+                            </div>
+                          ) : null;
+                        })()
+                      : null}
                   </section>
                 ) : null}
               </div>
@@ -4530,86 +4625,7 @@ export default function Home() {
 
 
                 {installmentBreakdown ? (
-                  <div className="rounded-xl border bg-white p-3 text-sm sm:p-4">
-                    <div className="flex flex-col gap-1 font-semibold sm:flex-row sm:justify-between sm:gap-4">
-                      <span>
-                        {isFinalized
-                          ? selectedLanguageCopy.selectedInstallmentPlan
-                          : "Selected Instalment Plan"}
-                      </span>
-                      <span className="sm:text-right">
-                        {isFinalized
-                          ? translateInstallmentPlan(
-                              installmentBreakdown.plan,
-                              selectedLanguageCopy,
-                            )
-                          : installmentBreakdown.plan.label}
-                      </span>
-                    </div>
-
-
-                    {installmentBreakdown.plan.isInHouse ? (
-                      <div className="mt-3 space-y-2">
-                        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                          <span className="min-w-0 break-words">
-                            {isFinalized
-                              ? selectedLanguageCopy.upfrontMedisaveGstCash
-                              : "Upfront cash payment (GST on Medisave portion)"}
-                          </span>
-                          <span className="whitespace-nowrap text-right tabular-nums">
-                            {formatCurrency(
-                              installmentBreakdown.medisaveGstCash,
-                            )}
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                          <span className="min-w-0 break-words">
-                            {isFinalized
-                              ? selectedLanguageCopy.amountUnderInHouse
-                              : "Amount under in-house instalments"}
-                          </span>
-                          <span className="whitespace-nowrap text-right tabular-nums">
-                            {formatCurrency(
-                              installmentBreakdown.installmentAmount,
-                            )}
-                          </span>
-                        </div>
-                        <p className="text-xs leading-relaxed text-gray-600">
-                          {isFinalized
-                            ? selectedLanguageCopy.inHouseInstallmentNote
-                            : "For in-house instalments, the GST amount linked to the Medisave claim is excluded from the instalment amount and collected in cash."}
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                        <span className="min-w-0 break-words">
-                          {isFinalized
-                            ? selectedLanguageCopy.amountUnderInstallments
-                            : "Amount under instalments"}
-                        </span>
-                        <span className="whitespace-nowrap text-right tabular-nums">
-                          {formatCurrency(
-                            installmentBreakdown.installmentAmount,
-                          )}
-                        </span>
-                      </div>
-                    )}
-
-
-                    <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 border-t pt-3 font-bold">
-                      <span className="min-w-0 break-words">
-                        {isFinalized
-                          ? selectedLanguageCopy.estimatedMonthlyInstallment
-                          : "Estimated monthly instalment"}{" "}
-                        (
-                        {installmentBreakdown.plan.months}{" "}
-                        {isFinalized ? selectedLanguageCopy.months : "months"})
-                      </span>
-                      <span className="whitespace-nowrap text-right tabular-nums">
-                        {formatCurrency(installmentBreakdown.monthlyAmount)}
-                      </span>
-                    </div>
-                  </div>
+                  renderInstallmentBreakdown(installmentBreakdown)
                 ) : null}
               </div>
               )}
