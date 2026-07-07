@@ -56,6 +56,7 @@ type Procedure = Treatment & {
   quantity: number;
   subsidyClaimQty: number;
   subsidyAmount: number;
+  discountPercent: number;
   medisaveClaim: number;
   description: string;
   gstApplicable: boolean;
@@ -1597,10 +1598,55 @@ function createProcedure(
     quantity: 1,
     subsidyClaimQty: treatment.category === "General Treatment" ? 1 : 0,
     subsidyAmount: getTreatmentSubsidyAmount(treatment, subsidyTier),
+    discountPercent: 0,
     medisaveClaim: treatment.medisave,
     description: "",
     gstApplicable: treatment.category !== "Implant Treatment",
   };
+}
+
+function getDiscountPercent(procedure: Pick<Procedure, "discountPercent">) {
+  return Math.min(Math.max(Number(procedure.discountPercent) || 0, 0), 100);
+}
+
+function getRowSubtotal(procedure: Pick<Procedure, "fee" | "quantity">) {
+  return procedure.fee * procedure.quantity;
+}
+
+function getDiscountAmount(
+  procedure: Pick<Procedure, "fee" | "quantity" | "discountPercent">,
+) {
+  return getRowSubtotal(procedure) * (getDiscountPercent(procedure) / 100);
+}
+
+function getDiscountedSubtotal(
+  procedure: Pick<Procedure, "fee" | "quantity" | "discountPercent">,
+) {
+  return Math.max(getRowSubtotal(procedure) - getDiscountAmount(procedure), 0);
+}
+
+function getProcedureGst(
+  procedure: Pick<
+    Procedure,
+    "fee" | "quantity" | "discountPercent" | "gstApplicable"
+  >,
+) {
+  return procedure.gstApplicable ? getDiscountedSubtotal(procedure) * GST_RATE : 0;
+}
+
+function getProcedureSubsidyTotal(
+  procedure: Pick<Procedure, "subsidyAmount" | "subsidyClaimQty">,
+) {
+  return procedure.subsidyAmount * procedure.subsidyClaimQty;
+}
+
+function getProcedurePayable(procedure: Procedure) {
+  return (
+    getDiscountedSubtotal(procedure) +
+    getProcedureGst(procedure) -
+    getProcedureSubsidyTotal(procedure) -
+    procedure.medisaveClaim
+  );
 }
 
 function createInitialPhase(): Phase {
@@ -1635,12 +1681,12 @@ function calculateTotalsForPhases(phases: Phase[]) {
 
   phases.forEach((phase) => {
     phase.procedures.forEach((procedure) => {
-      const rowSubtotal = procedure.fee * procedure.quantity;
-      const rowGst = procedure.gstApplicable ? rowSubtotal * GST_RATE : 0;
+      const rowSubtotal = getDiscountedSubtotal(procedure);
+      const rowGst = getProcedureGst(procedure);
 
       subtotal += rowSubtotal;
       gst += rowGst;
-      subsidy += procedure.subsidyAmount * procedure.subsidyClaimQty;
+      subsidy += getProcedureSubsidyTotal(procedure);
       medisave += procedure.medisaveClaim;
     });
   });
@@ -2400,9 +2446,9 @@ export default function Home() {
         title: phase.title,
         duration: phase.duration,
         procedures: phase.procedures.map((procedure) => {
-          const rowSubtotal = procedure.fee * procedure.quantity;
-          const gst = procedure.gstApplicable ? rowSubtotal * GST_RATE : 0;
-          const subsidy = procedure.subsidyAmount * procedure.subsidyClaimQty;
+          const gst = getProcedureGst(procedure);
+          const subsidy = getProcedureSubsidyTotal(procedure);
+          const discountAmount = getDiscountAmount(procedure);
 
           return {
             category: procedure.category,
@@ -2410,12 +2456,14 @@ export default function Home() {
             quantity: procedure.quantity,
             subsidyClaimQty: procedure.subsidyClaimQty,
             subsidyAmount: procedure.subsidyAmount,
+            discountPercent: getDiscountPercent(procedure),
+            discountAmount,
             fee: procedure.fee,
             gstApplicable: procedure.gstApplicable,
             gst,
             subsidy,
             medisaveClaim: procedure.medisaveClaim,
-            cashPayable: rowSubtotal + gst - subsidy - procedure.medisaveClaim,
+            cashPayable: getProcedurePayable(procedure),
             description: procedure.description,
           };
         }),
@@ -2426,9 +2474,9 @@ export default function Home() {
       title: phase.title,
       duration: phase.duration,
       procedures: phase.procedures.map((procedure) => {
-        const rowSubtotal = procedure.fee * procedure.quantity;
-        const gst = procedure.gstApplicable ? rowSubtotal * GST_RATE : 0;
-        const subsidy = procedure.subsidyAmount * procedure.subsidyClaimQty;
+        const gst = getProcedureGst(procedure);
+        const subsidy = getProcedureSubsidyTotal(procedure);
+        const discountAmount = getDiscountAmount(procedure);
 
         return {
           category: procedure.category,
@@ -2436,12 +2484,14 @@ export default function Home() {
           quantity: procedure.quantity,
           subsidyClaimQty: procedure.subsidyClaimQty,
           subsidyAmount: procedure.subsidyAmount,
+          discountPercent: getDiscountPercent(procedure),
+          discountAmount,
           fee: procedure.fee,
           gstApplicable: procedure.gstApplicable,
           gst,
           subsidy,
           medisaveClaim: procedure.medisaveClaim,
-          cashPayable: rowSubtotal + gst - subsidy - procedure.medisaveClaim,
+          cashPayable: getProcedurePayable(procedure),
           description: procedure.description,
         };
       }),
@@ -3491,19 +3541,7 @@ export default function Home() {
                           ) : null}
                           <ul className="mt-2 space-y-1 text-sm">
                             {phase.procedures.map((procedure, procedureIndex) => {
-                              const subtotal =
-                                procedure.fee * procedure.quantity;
-                              const gst = procedure.gstApplicable
-                                ? subtotal * GST_RATE
-                                : 0;
-                              const subsidy =
-                                procedure.subsidyAmount *
-                                procedure.subsidyClaimQty;
-                              const payable =
-                                subtotal +
-                                gst -
-                                subsidy -
-                                procedure.medisaveClaim;
+                              const payable = getProcedurePayable(procedure);
 
                               return (
                                 <li
@@ -3528,21 +3566,12 @@ export default function Home() {
             {option.phases.map((phase, phaseIndex) => {
               const phaseTotal = phase.procedures.reduce(
                 (total, procedure) => {
-                  const subtotal = procedure.fee * procedure.quantity;
-                  const gst = procedure.gstApplicable ? subtotal * GST_RATE : 0;
-                  const subsidy =
-                    procedure.subsidyAmount * procedure.subsidyClaimQty;
-
-
-                  return (
-                    total +
-                    subtotal +
-                    gst -
-                    subsidy -
-                    procedure.medisaveClaim
-                  );
+                  return total + getProcedurePayable(procedure);
                 },
                 0,
+              );
+              const phaseHasDiscount = phase.procedures.some(
+                (procedure) => getDiscountPercent(procedure) > 0,
               );
 
 
@@ -3687,15 +3716,11 @@ export default function Home() {
                     <>
                       <div className="mt-3 space-y-3 lg:hidden print:hidden">
                         {phase.procedures.map((procedure, procedureIndex) => {
-                          const subtotal = procedure.fee * procedure.quantity;
-                          const gst = procedure.gstApplicable
-                            ? subtotal * GST_RATE
-                            : 0;
-                          const subsidy =
-                            procedure.subsidyAmount *
-                            procedure.subsidyClaimQty;
-                          const payable =
-                            subtotal + gst - subsidy - procedure.medisaveClaim;
+                          const gst = getProcedureGst(procedure);
+                          const subsidy = getProcedureSubsidyTotal(procedure);
+                          const payable = getProcedurePayable(procedure);
+                          const discountPercent = getDiscountPercent(procedure);
+                          const discountAmount = getDiscountAmount(procedure);
                           const hasRemarks =
                             procedure.description.trim().length > 0;
 
@@ -3755,6 +3780,18 @@ export default function Home() {
                                       : "N/A"}
                                   </dd>
                                 </div>
+
+                                {discountPercent > 0 ? (
+                                  <div>
+                                    <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+                                      Discount
+                                    </dt>
+                                    <dd className="text-right tabular-nums">
+                                      {discountPercent}% (
+                                      {formatDeduction(discountAmount)})
+                                    </dd>
+                                  </div>
+                                ) : null}
 
                                 <div>
                                   <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
@@ -3820,6 +3857,11 @@ export default function Home() {
                             <th className="w-[10%] px-2 py-2 text-right font-semibold tabular-nums">
                               {selectedLanguageCopy.gst}
                             </th>
+                            {phaseHasDiscount ? (
+                              <th className="w-[10%] px-2 py-2 text-right font-semibold tabular-nums">
+                                Discount
+                              </th>
+                            ) : null}
                             <th className="w-[12%] px-2 py-2 text-right font-semibold tabular-nums">
                               {selectedLanguageCopy.subsidy}
                               <span className="block text-[9px] font-normal">
@@ -3841,16 +3883,11 @@ export default function Home() {
 
                         <tbody>
                           {phase.procedures.map((procedure, procedureIndex) => {
-                            const subtotal =
-                              procedure.fee * procedure.quantity;
-                            const gst = procedure.gstApplicable
-                              ? subtotal * GST_RATE
-                              : 0;
-                            const subsidy =
-                              procedure.subsidyAmount *
-                              procedure.subsidyClaimQty;
-                            const payable =
-                              subtotal + gst - subsidy - procedure.medisaveClaim;
+                            const gst = getProcedureGst(procedure);
+                            const subsidy = getProcedureSubsidyTotal(procedure);
+                            const payable = getProcedurePayable(procedure);
+                            const discountPercent = getDiscountPercent(procedure);
+                            const discountAmount = getDiscountAmount(procedure);
                             const hasRemarks =
                               procedure.description.trim().length > 0;
 
@@ -3896,6 +3933,13 @@ export default function Home() {
                                       ? formatCurrency(gst)
                                       : "N/A"}
                                   </td>
+                                  {phaseHasDiscount ? (
+                                    <td className="px-2 py-2 text-right tabular-nums">
+                                      {discountPercent > 0
+                                        ? `${discountPercent}% (${formatDeduction(discountAmount)})`
+                                        : "—"}
+                                    </td>
+                                  ) : null}
                                   <td className="px-2 py-2 text-right tabular-nums">
                                     {formatDeduction(subsidy)}
                                   </td>
@@ -3915,12 +3959,9 @@ export default function Home() {
                   ) : (
                     <div className="mt-6 space-y-4">
                     {phase.procedures.map((procedure, procedureIndex) => {
-                      const subtotal = procedure.fee * procedure.quantity;
-                      const gst = procedure.gstApplicable ? subtotal * GST_RATE : 0;
-                      const subsidy =
-                        procedure.subsidyAmount * procedure.subsidyClaimQty;
-                      const payable =
-                        subtotal + gst - subsidy - procedure.medisaveClaim;
+                      const gst = getProcedureGst(procedure);
+                      const subsidy = getProcedureSubsidyTotal(procedure);
+                      const payable = getProcedurePayable(procedure);
                       const hasRemarks = procedure.description.trim().length > 0;
 
 
@@ -4050,6 +4091,36 @@ export default function Home() {
                                   }
                                   className="mt-2 w-full rounded-xl border px-4 py-3 text-right tabular-nums"
                                 />
+                              )}
+                            </div>
+
+
+                            <div>
+                              <label className={costLabelClass(isFinalized)}>
+                                Discount %
+                              </label>
+                              {!isFinalized ? (
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max="100"
+                                  value={procedure.discountPercent}
+                                  onChange={(event) =>
+                                    updateProcedure(
+                                      phaseIndex,
+                                      procedureIndex,
+                                      "discountPercent",
+                                      Number(event.target.value),
+                                    )
+                                  }
+                                  className="mt-2 w-full rounded-xl border px-4 py-3 text-right tabular-nums"
+                                />
+                              ) : (
+                                <div className="mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums">
+                                  {getDiscountPercent(procedure) > 0
+                                    ? `${getDiscountPercent(procedure)}%`
+                                    : "—"}
+                                </div>
                               )}
                             </div>
 
