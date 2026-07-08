@@ -333,18 +333,18 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "I acknowledge that the proposed treatment, estimated fees, subsidies, Medisave claims, risks and alternative options have been explained clearly to me.",
     quotationStatus: "Quotation Status",
     draftStatus: "Draft / For Discussion",
-    estimatedStatus: "Estimated Quotation",
+    estimatedStatus: "Goodwill / Revised Plan",
     finalStatus: "Final Quotation",
     draftStatusMessage:
       "DRAFT / FOR DISCUSSION — This quotation is for discussion only and may change after clinical review, patient choices, eligibility checks, or changes in treatment plan.",
     estimatedStatusMessage:
-      "ESTIMATE ONLY — This quotation is an estimate and remains subject to clinical findings, patient eligibility, and final treatment selection.",
+      "GOODWILL / REVISED PLAN — This quotation reflects a revised treatment plan and/or goodwill adjustment for an existing patient. It is prepared based on the current clinical situation, prior treatment history, and agreed adjustments.",
     finalStatusMessage:
       "FINAL QUOTATION — This quotation is prepared for patient review and acknowledgement.",
     draftAcknowledgement:
       "I acknowledge that this draft treatment discussion has been explained to me and may be subject to change.",
     estimatedAcknowledgement:
-      "I acknowledge that this estimated quotation has been explained to me and may be subject to change.",
+      "I acknowledge that this revised treatment plan and/or goodwill adjustment has been explained to me, including the updated treatment plan, fees, deductions, and any agreed adjustments.",
     finalAcknowledgement:
       "I acknowledge that the proposed treatment, estimated fees, subsidies, Medisave claims, risks and alternative options have been explained clearly to me.",
     financialSummaryDisplay: "Cost Presentation",
@@ -443,18 +443,18 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "Saya mengakui bahawa rawatan yang dicadangkan, anggaran bayaran, subsidi, tuntutan Medisave, risiko dan pilihan rawatan lain telah diterangkan dengan jelas kepada saya.",
     quotationStatus: "Status Sebut Harga",
     draftStatus: "Draf / Untuk Perbincangan",
-    estimatedStatus: "Sebut Harga Anggaran",
+    estimatedStatus: "Pelan Disemak / Goodwill",
     finalStatus: "Sebut Harga Muktamad",
     draftStatusMessage:
       "DRAF / UNTUK PERBINCANGAN — Sebut harga ini adalah untuk perbincangan sahaja dan mungkin berubah selepas semakan klinikal, pilihan pesakit, semakan kelayakan atau perubahan pelan rawatan.",
     estimatedStatusMessage:
-      "ANGGARAN SAHAJA — Sebut harga ini adalah anggaran dan tertakluk kepada penemuan klinikal, kelayakan pesakit dan pilihan rawatan akhir.",
+      "PELAN DISEMAK / GOODWILL — Sebut harga ini mencerminkan pelan rawatan yang disemak dan/atau pelarasan goodwill untuk pesakit sedia ada. Ia disediakan berdasarkan keadaan klinikal semasa, sejarah rawatan terdahulu dan pelarasan yang dipersetujui.",
     finalStatusMessage:
       "SEBUT HARGA MUKTAMAD — Sebut harga ini disediakan untuk semakan dan pengakuan pesakit.",
     draftAcknowledgement:
       "Saya mengakui bahawa perbincangan rawatan draf ini telah diterangkan kepada saya dan mungkin tertakluk kepada perubahan.",
     estimatedAcknowledgement:
-      "Saya mengakui bahawa sebut harga anggaran ini telah diterangkan kepada saya dan mungkin tertakluk kepada perubahan.",
+      "Saya mengakui bahawa pelan rawatan yang disemak dan/atau pelarasan goodwill ini telah diterangkan kepada saya, termasuk pelan rawatan yang dikemas kini, bayaran, potongan dan sebarang pelarasan yang dipersetujui.",
     finalAcknowledgement:
       "Saya mengakui bahawa rawatan yang dicadangkan, anggaran bayaran, subsidi, tuntutan Medisave, risiko dan pilihan rawatan lain telah diterangkan dengan jelas kepada saya.",
     financialSummaryDisplay: "Paparan Kos",
@@ -554,17 +554,17 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "我确认牙医已向我清楚说明建议的治疗、预计费用、补贴、保健储蓄索赔、风险以及其他治疗选择。",
     quotationStatus: "报价状态",
     draftStatus: "草稿 / 讨论用",
-    estimatedStatus: "估算报价",
+    estimatedStatus: "善意调整 / 修订方案",
     finalStatus: "最终报价",
     draftStatusMessage:
       "草稿 / 讨论用 — 此报价仅供讨论，可能会因临床检查、患者选择、资格审核或治疗计划更改而改变。",
     estimatedStatusMessage:
-      "仅为估算 — 此报价仍取决于临床发现、患者资格和最终治疗选择。",
+      "善意调整 / 修订方案 — 此报价反映现有患者的修订治疗方案和/或善意调整，并根据当前临床情况、既往治疗记录及双方同意的调整而制定。",
     finalStatusMessage: "最终报价 — 此报价供患者审阅和确认。",
     draftAcknowledgement:
       "我确认牙医已向我说明此治疗讨论草稿，并了解内容可能会更改。",
     estimatedAcknowledgement:
-      "我确认牙医已向我说明此估算报价，并了解内容可能会更改。",
+      "我确认牙医已向我说明此修订治疗方案和/或善意调整，包括更新后的治疗方案、费用、扣除项目以及双方同意的任何调整。",
     finalAcknowledgement:
       "我确认牙医已向我清楚说明建议的治疗、预计费用、补贴、保健储蓄索赔、风险以及其他治疗选择。",
     financialSummaryDisplay: "费用显示方式",
@@ -668,18 +668,18 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "பரிந்துரைக்கப்பட்ட சிகிச்சை, மதிப்பிடப்பட்ட கட்டணங்கள், மானியங்கள், Medisave கோரிக்கைகள், அபாயங்கள் மற்றும் மாற்று சிகிச்சை விருப்பங்கள் எனக்கு தெளிவாக விளக்கப்பட்டுள்ளன என்பதை நான் ஒப்புக்கொள்கிறேன்.",
     quotationStatus: "மேற்கோள் நிலை",
     draftStatus: "வரைவு / கலந்துரையாடலுக்காக",
-    estimatedStatus: "மதிப்பிடப்பட்ட மேற்கோள்",
+    estimatedStatus: "Goodwill / திருத்தப்பட்ட திட்டம்",
     finalStatus: "இறுதி மேற்கோள்",
     draftStatusMessage:
       "வரைவு / கலந்துரையாடலுக்காக — இந்த மேற்கோள் கலந்துரையாடலுக்காக மட்டுமே; மருத்துவ மதிப்பாய்வு, நோயாளர் தேர்வு, தகுதி சோதனை அல்லது சிகிச்சைத் திட்ட மாற்றங்களின் பின்னர் மாறலாம்.",
     estimatedStatusMessage:
-      "மதிப்பீடு மட்டும் — இந்த மேற்கோள் மருத்துவ கண்டுபிடிப்புகள், நோயாளர் தகுதி மற்றும் இறுதி சிகிச்சைத் தேர்வுக்கு உட்பட்டது.",
+      "Goodwill / திருத்தப்பட்ட திட்டம் — இந்த மேற்கோள் ஏற்கனவே உள்ள நோயாளிக்கான திருத்தப்பட்ட சிகிச்சைத் திட்டம் மற்றும்/அல்லது goodwill சரிசெய்தலை பிரதிபலிக்கிறது. இது தற்போதைய மருத்துவ நிலை, முந்தைய சிகிச்சை வரலாறு மற்றும் ஒப்புக்கொள்ளப்பட்ட மாற்றங்களை அடிப்படையாகக் கொண்டு தயாரிக்கப்பட்டது.",
     finalStatusMessage:
       "இறுதி மேற்கோள் — இந்த மேற்கோள் நோயாளர் மதிப்பாய்வு மற்றும் ஒப்புதலுக்காக தயாரிக்கப்பட்டுள்ளது.",
     draftAcknowledgement:
       "இந்த வரைவு சிகிச்சை கலந்துரையாடல் எனக்கு விளக்கப்பட்டுள்ளதையும் அது மாறக்கூடும் என்பதையும் நான் ஒப்புக்கொள்கிறேன்.",
     estimatedAcknowledgement:
-      "இந்த மதிப்பிடப்பட்ட மேற்கோள் எனக்கு விளக்கப்பட்டுள்ளதையும் அது மாறக்கூடும் என்பதையும் நான் ஒப்புக்கொள்கிறேன்.",
+      "இந்த திருத்தப்பட்ட சிகிச்சைத் திட்டம் மற்றும்/அல்லது goodwill சரிசெய்தல் எனக்கு விளக்கப்பட்டுள்ளதை, புதுப்பிக்கப்பட்ட சிகிச்சைத் திட்டம், கட்டணங்கள், கழிவுகள் மற்றும் ஒப்புக்கொள்ளப்பட்ட மாற்றங்கள் உட்பட, நான் ஒப்புக்கொள்கிறேன்.",
     finalAcknowledgement:
       "பரிந்துரைக்கப்பட்ட சிகிச்சை, மதிப்பிடப்பட்ட கட்டணங்கள், மானியங்கள், Medisave கோரிக்கைகள், அபாயங்கள் மற்றும் மாற்று சிகிச்சை விருப்பங்கள் எனக்கு தெளிவாக விளக்கப்பட்டுள்ளன என்பதை நான் ஒப்புக்கொள்கிறேன்.",
     financialSummaryDisplay: "செலவு காட்சி முறை",

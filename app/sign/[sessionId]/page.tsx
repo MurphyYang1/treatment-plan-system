@@ -90,7 +90,7 @@ const signPageCopy: Record<SignLanguage, SignPageCopy> = {
     option: "Option",
     estimatedDuration: "Est. Duration",
     draftStatus: "Draft / For Discussion",
-    estimatedStatus: "Estimated Quotation",
+    estimatedStatus: "Goodwill / Revised Plan",
     finalStatus: "Final Quotation",
     treatmentOptions: "Treatment Options",
     treatmentPhases: "Treatment phases",
@@ -108,7 +108,7 @@ const signPageCopy: Record<SignLanguage, SignPageCopy> = {
     draftAcknowledgement:
       "I acknowledge that this draft treatment discussion has been explained to me and may be subject to change.",
     estimatedAcknowledgement:
-      "I acknowledge that this estimated quotation has been explained to me and may be subject to change.",
+      "I acknowledge that this revised treatment plan and/or goodwill adjustment has been explained to me, including the updated treatment plan, fees, deductions, and any agreed adjustments.",
     finalAcknowledgement:
       "I acknowledge that the proposed treatment, estimated fees, subsidies, Medisave claims, risks and alternative options have been explained clearly to me.",
     patientName: "Patient Name",
@@ -134,7 +134,7 @@ const signPageCopy: Record<SignLanguage, SignPageCopy> = {
     option: "Pilihan",
     estimatedDuration: "Anggaran Tempoh",
     draftStatus: "Draf / Untuk Perbincangan",
-    estimatedStatus: "Sebut Harga Anggaran",
+    estimatedStatus: "Pelan Disemak / Goodwill",
     finalStatus: "Sebut Harga Muktamad",
     treatmentOptions: "Pilihan Rawatan",
     treatmentPhases: "Fasa rawatan",
@@ -152,7 +152,7 @@ const signPageCopy: Record<SignLanguage, SignPageCopy> = {
     draftAcknowledgement:
       "Saya mengakui bahawa perbincangan rawatan draf ini telah diterangkan kepada saya dan mungkin tertakluk kepada perubahan.",
     estimatedAcknowledgement:
-      "Saya mengakui bahawa sebut harga anggaran ini telah diterangkan kepada saya dan mungkin tertakluk kepada perubahan.",
+      "Saya mengakui bahawa pelan rawatan yang disemak dan/atau pelarasan goodwill ini telah diterangkan kepada saya, termasuk pelan rawatan yang dikemas kini, bayaran, potongan dan sebarang pelarasan yang dipersetujui.",
     finalAcknowledgement:
       "Saya mengakui bahawa rawatan yang dicadangkan, anggaran bayaran, subsidi, tuntutan Medisave, risiko dan pilihan rawatan lain telah diterangkan dengan jelas kepada saya.",
     patientName: "Nama Pesakit",
@@ -178,7 +178,7 @@ const signPageCopy: Record<SignLanguage, SignPageCopy> = {
     option: "选项",
     estimatedDuration: "预计时长",
     draftStatus: "草稿 / 讨论用",
-    estimatedStatus: "估算报价",
+    estimatedStatus: "善意调整 / 修订方案",
     finalStatus: "最终报价",
     treatmentOptions: "治疗选项",
     treatmentPhases: "治疗阶段",
@@ -196,7 +196,7 @@ const signPageCopy: Record<SignLanguage, SignPageCopy> = {
     draftAcknowledgement:
       "我确认牙医已向我说明此治疗讨论草稿，并了解内容可能会更改。",
     estimatedAcknowledgement:
-      "我确认牙医已向我说明此估算报价，并了解内容可能会更改。",
+      "我确认牙医已向我说明此修订治疗方案和/或善意调整，包括更新后的治疗方案、费用、扣除项目以及双方同意的任何调整。",
     finalAcknowledgement:
       "我确认牙医已向我清楚说明建议的治疗、预计费用、补贴、保健储蓄索赔、风险以及其他治疗选择。",
     patientName: "患者姓名",
@@ -221,7 +221,7 @@ const signPageCopy: Record<SignLanguage, SignPageCopy> = {
     option: "விருப்பம்",
     estimatedDuration: "மதிப்பிடப்பட்ட காலம்",
     draftStatus: "வரைவு / கலந்துரையாடலுக்காக",
-    estimatedStatus: "மதிப்பிடப்பட்ட மேற்கோள்",
+    estimatedStatus: "Goodwill / திருத்தப்பட்ட திட்டம்",
     finalStatus: "இறுதி மேற்கோள்",
     treatmentOptions: "சிகிச்சை விருப்பங்கள்",
     treatmentPhases: "சிகிச்சை கட்டங்கள்",
@@ -239,7 +239,7 @@ const signPageCopy: Record<SignLanguage, SignPageCopy> = {
     draftAcknowledgement:
       "இந்த வரைவு சிகிச்சை கலந்துரையாடல் எனக்கு விளக்கப்பட்டுள்ளதையும் அது மாறக்கூடும் என்பதையும் நான் ஒப்புக்கொள்கிறேன்.",
     estimatedAcknowledgement:
-      "இந்த மதிப்பிடப்பட்ட மேற்கோள் எனக்கு விளக்கப்பட்டுள்ளதையும் அது மாறக்கூடும் என்பதையும் நான் ஒப்புக்கொள்கிறேன்.",
+      "இந்த திருத்தப்பட்ட சிகிச்சைத் திட்டம் மற்றும்/அல்லது goodwill சரிசெய்தல் எனக்கு விளக்கப்பட்டுள்ளதை, புதுப்பிக்கப்பட்ட சிகிச்சைத் திட்டம், கட்டணங்கள், கழிவுகள் மற்றும் ஒப்புக்கொள்ளப்பட்ட மாற்றங்கள் உட்பட, நான் ஒப்புக்கொள்கிறேன்.",
     finalAcknowledgement:
       "பரிந்துரைக்கப்பட்ட சிகிச்சை, மதிப்பிடப்பட்ட கட்டணங்கள், மானியங்கள், Medisave கோரிக்கைகள், அபாயங்கள் மற்றும் மாற்று சிகிச்சை விருப்பங்கள் எனக்கு தெளிவாக விளக்கப்பட்டுள்ளன என்பதை நான் ஒப்புக்கொள்கிறேன்.",
     patientName: "நோயாளர் பெயர்",
