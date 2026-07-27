@@ -48,6 +48,10 @@ input[type="date"]::-webkit-date-and-time-value {
     display: none !important;
   }
 
+  .print-only {
+    display: block !important;
+  }
+
   .print-page {
     width: 100%;
   }

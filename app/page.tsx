@@ -1925,6 +1925,7 @@ export default function Home() {
   const [patientId, setPatientId] = useState("");
   const [quotationDate, setQuotationDate] = useState("");
   const [dateSigned, setDateSigned] = useState("");
+  const [printTimestamp, setPrintTimestamp] = useState("");
   const [signatureDataUrl, setSignatureDataUrl] = useState("");
   const [signatureUrl, setSignatureUrl] = useState("#signature");
   const [signingSessionId, setSigningSessionId] = useState("");
@@ -2071,19 +2072,32 @@ export default function Home() {
 
   const printQuotation = () => {
     const originalUrl = window.location.href;
+    const originalTitle = document.title;
     const sanitizedUrl = `${window.location.origin}${window.location.pathname}${window.location.hash}`;
+    const nextPrintTimestamp = new Intl.DateTimeFormat("en-SG", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    }).format(new Date());
 
     const restoreUrl = () => {
       window.history.replaceState(null, "", originalUrl);
+      document.title = originalTitle;
       window.removeEventListener("afterprint", restoreUrl);
     };
+
+    setPrintTimestamp(nextPrintTimestamp);
+    document.title = `Printed ${nextPrintTimestamp}`;
 
     if (originalUrl !== sanitizedUrl) {
       window.history.replaceState(null, "", sanitizedUrl);
       window.addEventListener("afterprint", restoreUrl);
+    } else {
+      window.addEventListener("afterprint", restoreUrl);
     }
 
-    window.print();
+    window.setTimeout(() => {
+      window.print();
+    }, 0);
   };
 
   const copyDraftLink = async () => {
@@ -2953,6 +2967,12 @@ export default function Home() {
             </div>
           </div>
         </header>
+
+        {printTimestamp ? (
+          <div className="print-only hidden border-b px-4 py-2 text-right text-xs text-gray-600">
+            Printed on {printTimestamp}
+          </div>
+        ) : null}
 
 
         <div
