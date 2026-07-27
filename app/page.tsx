@@ -2070,6 +2070,19 @@ export default function Home() {
 
 
   const printQuotation = () => {
+    const originalUrl = window.location.href;
+    const sanitizedUrl = `${window.location.origin}${window.location.pathname}${window.location.hash}`;
+
+    const restoreUrl = () => {
+      window.history.replaceState(null, "", originalUrl);
+      window.removeEventListener("afterprint", restoreUrl);
+    };
+
+    if (originalUrl !== sanitizedUrl) {
+      window.history.replaceState(null, "", sanitizedUrl);
+      window.addEventListener("afterprint", restoreUrl);
+    }
+
     window.print();
   };
 
