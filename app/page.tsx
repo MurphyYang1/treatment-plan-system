@@ -1795,18 +1795,6 @@ function displayValue(value: string) {
   return value.trim() || "—";
 }
 
-function getOptionNumberLabel(index: number, copy: LanguageCopy) {
-  return `${copy.option} ${index + 1}`;
-}
-
-function getOptionHeading(
-  option: Pick<TreatmentOption, "title">,
-  index: number,
-  copy: LanguageCopy,
-) {
-  return `${getOptionNumberLabel(index, copy)}: ${displayValue(option.title)}`;
-}
-
 function formatAttendedBy(value: string) {
   const trimmed = value.trim();
 
@@ -2441,9 +2429,8 @@ export default function Home() {
     return getInstallmentBreakdownForTotals(plan, totals);
   }, [selectedInstallmentPlan, totals]);
 
-  const comparisonRows = treatmentOptions.map((option, index) => ({
+  const comparisonRows = treatmentOptions.map((option) => ({
     id: String(option.id),
-    index,
     title: displayValue(option.title),
     description: option.description,
     estimatedDuration: option.estimatedDuration,
@@ -3417,7 +3404,7 @@ export default function Home() {
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {treatmentOptions.map((option, optionIndex) => (
+                  {treatmentOptions.map((option) => (
                     <button
                       key={option.id}
                       type="button"
@@ -3429,9 +3416,8 @@ export default function Home() {
                       }`}
                     >
                       <span className="font-semibold">
-                        {getOptionNumberLabel(optionIndex, selectedLanguageCopy)}
+                        {displayValue(option.title)}
                       </span>
-                      <span className="ml-1">{displayValue(option.title)}</span>
                       {option.id === recommendedOptionId ? (
                         <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
                           {selectedLanguageCopy.recommended}
@@ -3624,7 +3610,7 @@ export default function Home() {
                       >
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <h3 className="font-bold">
-                            {`${getOptionNumberLabel(option.index, selectedLanguageCopy)}: ${option.title}`}
+                            {option.title}
                           </h3>
                           {Number(option.id) === recommendedOptionId ? (
                             <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-800">
@@ -3689,7 +3675,7 @@ export default function Home() {
               : activeOption
                 ? [activeOption]
                 : []
-            ).map((option, optionIndex) => {
+            ).map((option) => {
               const optionSummary =
                 optionTotals.get(option.id) ??
                 calculateTotalsForPhases(option.phases);
@@ -3707,7 +3693,7 @@ export default function Home() {
                   <section className="avoid-break overflow-hidden rounded-2xl border-2 border-gray-300 bg-white shadow-sm">
                     <div className="print-exact bg-black px-4 py-3 text-white print:bg-black print:text-white sm:px-6">
                       <p className="text-xs font-semibold uppercase tracking-wide text-gray-300 print:text-gray-300">
-                        {getOptionNumberLabel(optionIndex, selectedLanguageCopy)}
+                        {selectedLanguageCopy.option}
                       </p>
                       <div className="flex flex-wrap items-center gap-2">
                         <h2 className="text-xl font-bold">
@@ -4512,11 +4498,7 @@ export default function Home() {
                           {selectedLanguageCopy.financialSummary}
                         </p>
                         <h3 className="text-lg font-bold">
-                          {getOptionHeading(
-                            option,
-                            optionIndex,
-                            selectedLanguageCopy,
-                          )}
+                          {displayValue(option.title)}
                         </h3>
                         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-600">
                           {selectedLanguageCopy.patientCostExplanationText}
@@ -4840,7 +4822,7 @@ export default function Home() {
                         <tr key={option.id} className="border-t align-top">
                           <td className="px-3 py-2 font-semibold">
                             <div>
-                              {`${getOptionNumberLabel(option.index, selectedLanguageCopy)}: ${option.title}`}
+                              {option.title}
                             </div>
                             {Number(option.id) === recommendedOptionId ? (
                               <div className="mt-1 inline-flex rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-800">
@@ -4892,7 +4874,7 @@ export default function Home() {
                   {selectedLanguageCopy.patientSelectedOptionIntro}
                 </p>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {treatmentOptions.map((option, optionIndex) => (
+                  {treatmentOptions.map((option) => (
                     <label
                       key={option.id}
                       className="flex items-start gap-3 rounded-xl border p-3"
@@ -4906,11 +4888,7 @@ export default function Home() {
                       />
                       <span>
                         <span className="font-semibold">
-                          {getOptionHeading(
-                            option,
-                            optionIndex,
-                            selectedLanguageCopy,
-                          )}
+                          {displayValue(option.title)}
                         </span>
                         {option.id === recommendedOptionId ? (
                           <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
