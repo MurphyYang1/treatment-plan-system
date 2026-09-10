@@ -147,8 +147,13 @@ type LanguageCopy = {
   lessGovernmentSubsidy: string;
   lessMedisave: string;
   estimatedCashPayable: string;
+  patientCostExplanationHeading: string;
+  patientCostExplanationText: string;
+  patientPaysAfterDeductions: string;
   recommended: string;
   recommendedByDentist: string;
+  recommendedOption: string;
+  patientSelectedBadge: string;
   treatmentOptionsComparison: string;
   treatmentOptionsComparisonIntro: string;
   option: string;
@@ -157,6 +162,8 @@ type LanguageCopy = {
   patientSelectedOption: string;
   patientSelectedOptionIntro: string;
   needMoreTime: string;
+  selfFilledOption: string;
+  enterSelectedOption: string;
   viewDetailedPhases: string;
   atomePlan: string;
   grabPayPlan: string;
@@ -294,8 +301,14 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     lessGovernmentSubsidy: "Less government subsidy",
     lessMedisave: "Less Medisave",
     estimatedCashPayable: "Estimated cash payable",
+    patientCostExplanationHeading: "What the patient pays",
+    patientCostExplanationText:
+      "Cash payable is the estimated amount after GST, subsidy, Medisave and any discount have been applied.",
+    patientPaysAfterDeductions: "Patient pays after deductions",
     recommended: "Recommended",
     recommendedByDentist: "Recommended by dentist",
+    recommendedOption: "Recommended Option",
+    patientSelectedBadge: "Patient Selected",
     treatmentOptionsComparison: "Treatment Options Comparison",
     treatmentOptionsComparisonIntro:
       "Compare the treatment options after reviewing their detailed phases and procedures above.",
@@ -306,6 +319,8 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOptionIntro:
       "Please indicate which treatment option the patient chooses.",
     needMoreTime: "I need more time to decide",
+    selfFilledOption: "Self-filled option",
+    enterSelectedOption: "Write selected option",
     viewDetailedPhases: "View detailed phases and procedures",
     atomePlan: "Atome: 3 months interest-free",
     grabPayPlan: "GrabPay: 4 months interest-free",
@@ -404,8 +419,14 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     lessGovernmentSubsidy: "Tolak subsidi kerajaan",
     lessMedisave: "Tolak Medisave",
     estimatedCashPayable: "Anggaran tunai perlu dibayar",
+    patientCostExplanationHeading: "Jumlah yang pesakit bayar",
+    patientCostExplanationText:
+      "Tunai perlu dibayar ialah anggaran jumlah selepas GST, subsidi, Medisave dan sebarang diskaun digunakan.",
+    patientPaysAfterDeductions: "Pesakit bayar selepas potongan",
     recommended: "Disyorkan",
     recommendedByDentist: "Disyorkan oleh doktor gigi",
+    recommendedOption: "Pilihan Disyorkan",
+    patientSelectedBadge: "Dipilih Pesakit",
     treatmentOptionsComparison: "Perbandingan Pilihan Rawatan",
     treatmentOptionsComparisonIntro:
       "Bandingkan pilihan rawatan selepas menyemak fasa dan prosedur terperinci di atas.",
@@ -416,6 +437,8 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOptionIntro:
       "Sila nyatakan pilihan rawatan yang dipilih oleh pesakit.",
     needMoreTime: "Saya memerlukan lebih masa untuk membuat keputusan",
+    selfFilledOption: "Pilihan diisi sendiri",
+    enterSelectedOption: "Tulis pilihan yang dipilih",
     viewDetailedPhases: "Lihat fasa dan prosedur terperinci",
     atomePlan: "Atome: 3 bulan tanpa faedah",
     grabPayPlan: "GrabPay: 4 bulan tanpa faedah",
@@ -519,8 +542,14 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     lessGovernmentSubsidy: "扣除政府补贴",
     lessMedisave: "扣除保健储蓄",
     estimatedCashPayable: "预计需付现金",
+    patientCostExplanationHeading: "患者需支付金额",
+    patientCostExplanationText:
+      "需付现金是计入消费税，并扣除补贴、保健储蓄及任何折扣后的预计金额。",
+    patientPaysAfterDeductions: "扣除后患者需付",
     recommended: "推荐",
     recommendedByDentist: "牙医推荐",
+    recommendedOption: "推荐选项",
+    patientSelectedBadge: "患者已选择",
     treatmentOptionsComparison: "治疗选项比较",
     treatmentOptionsComparisonIntro: "请先查看以上详细阶段和程序，再比较治疗选项。",
     option: "选项",
@@ -529,6 +558,8 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOption: "患者选择的选项",
     patientSelectedOptionIntro: "请注明患者选择的治疗选项。",
     needMoreTime: "我需要更多时间决定",
+    selfFilledOption: "自行填写选项",
+    enterSelectedOption: "填写所选选项",
     viewDetailedPhases: "查看详细阶段和程序",
     atomePlan: "Atome：3个月免息",
     grabPayPlan: "GrabPay：4个月免息",
@@ -629,8 +660,15 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     lessGovernmentSubsidy: "அரசு மானியம் கழித்து",
     lessMedisave: "Medisave கழித்து",
     estimatedCashPayable: "மதிப்பிடப்பட்ட ரொக்கப் பணம்",
+    patientCostExplanationHeading: "நோயாளர் செலுத்த வேண்டிய தொகை",
+    patientCostExplanationText:
+      "செலுத்த வேண்டிய ரொக்கம் என்பது GST சேர்த்து, மானியம், Medisave மற்றும் ஏதேனும் தள்ளுபடி கழித்த பின் மதிப்பிடப்பட்ட தொகை.",
+    patientPaysAfterDeductions:
+      "கழிவுகளுக்குப் பிறகு நோயாளர் செலுத்துவது",
     recommended: "பரிந்துரைக்கப்பட்டது",
     recommendedByDentist: "பல் மருத்துவர் பரிந்துரை",
+    recommendedOption: "பரிந்துரைக்கப்பட்ட விருப்பம்",
+    patientSelectedBadge: "நோயாளர் தேர்வு",
     treatmentOptionsComparison: "சிகிச்சை விருப்ப ஒப்பீடு",
     treatmentOptionsComparisonIntro:
       "மேலுள்ள விரிவான கட்டங்கள் மற்றும் செயல்முறைகளைப் பார்த்த பிறகு சிகிச்சை விருப்பங்களை ஒப்பிடவும்.",
@@ -641,6 +679,8 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOptionIntro:
       "நோயாளர் தேர்ந்தெடுக்கும் சிகிச்சை விருப்பத்தை குறிப்பிடவும்.",
     needMoreTime: "முடிவு செய்ய எனக்கு மேலும் நேரம் தேவை",
+    selfFilledOption: "சுயமாக நிரப்பும் விருப்பம்",
+    enterSelectedOption: "தேர்ந்தெடுத்த விருப்பத்தை எழுதவும்",
     viewDetailedPhases: "விரிவான கட்டங்கள் மற்றும் செயல்முறைகளைப் பார்க்கவும்",
     atomePlan: "Atome: 3 மாதங்கள் வட்டி இல்லாது",
     grabPayPlan: "GrabPay: 4 மாதங்கள் வட்டி இல்லாது",
@@ -748,8 +788,13 @@ const languageStringKeys = [
   "lessGovernmentSubsidy",
   "lessMedisave",
   "estimatedCashPayable",
+  "patientCostExplanationHeading",
+  "patientCostExplanationText",
+  "patientPaysAfterDeductions",
   "recommended",
   "recommendedByDentist",
+  "recommendedOption",
+  "patientSelectedBadge",
   "treatmentOptionsComparison",
   "treatmentOptionsComparisonIntro",
   "option",
@@ -758,6 +803,8 @@ const languageStringKeys = [
   "patientSelectedOption",
   "patientSelectedOptionIntro",
   "needMoreTime",
+  "selfFilledOption",
+  "enterSelectedOption",
   "viewDetailedPhases",
   "atomePlan",
   "grabPayPlan",
@@ -1760,6 +1807,18 @@ function displayValue(value: string) {
   return value.trim() || "—";
 }
 
+function getOptionNumberLabel(index: number, copy: LanguageCopy) {
+  return `${copy.option} ${index + 1}`;
+}
+
+function getOptionHeading(
+  option: Pick<TreatmentOption, "title">,
+  index: number,
+  copy: LanguageCopy,
+) {
+  return `${getOptionNumberLabel(index, copy)}: ${displayValue(option.title)}`;
+}
+
 function formatAttendedBy(value: string) {
   const trimmed = value.trim();
 
@@ -1962,8 +2021,10 @@ export default function Home() {
     () => treatmentOptions[0]?.id ?? 0,
   );
   const [patientSelectedOptionId, setPatientSelectedOptionId] = useState<
-    number | "discuss" | ""
+    number | "discuss" | "custom" | ""
   >("");
+  const [patientSelectedCustomOption, setPatientSelectedCustomOption] =
+    useState("");
 
 
   const filteredTreatments = availableTreatments.filter(
@@ -2072,7 +2133,6 @@ export default function Home() {
 
   const printQuotation = () => {
     const originalUrl = window.location.href;
-    const originalTitle = document.title;
     const sanitizedUrl = `${window.location.origin}${window.location.pathname}${window.location.hash}`;
     const nextPrintTimestamp = new Intl.DateTimeFormat("en-SG", {
       dateStyle: "medium",
@@ -2081,12 +2141,10 @@ export default function Home() {
 
     const restoreUrl = () => {
       window.history.replaceState(null, "", originalUrl);
-      document.title = originalTitle;
       window.removeEventListener("afterprint", restoreUrl);
     };
 
     setPrintTimestamp(nextPrintTimestamp);
-    document.title = `Printed ${nextPrintTimestamp}`;
 
     if (originalUrl !== sanitizedUrl) {
       window.history.replaceState(null, "", sanitizedUrl);
@@ -2190,10 +2248,17 @@ export default function Home() {
     if (
       typeof draft.patientSelectedOptionId === "number" ||
       draft.patientSelectedOptionId === "discuss" ||
+      draft.patientSelectedOptionId === "custom" ||
       draft.patientSelectedOptionId === ""
     ) {
       setPatientSelectedOptionId(draft.patientSelectedOptionId);
     }
+
+    setPatientSelectedCustomOption(
+      typeof draft.patientSelectedCustomOption === "string"
+        ? draft.patientSelectedCustomOption
+        : "",
+    );
   };
 
 
@@ -2397,8 +2462,9 @@ export default function Home() {
     return getInstallmentBreakdownForTotals(plan, totals);
   }, [selectedInstallmentPlan, totals]);
 
-  const comparisonRows = treatmentOptions.map((option) => ({
+  const comparisonRows = treatmentOptions.map((option, index) => ({
     id: String(option.id),
+    index,
     title: displayValue(option.title),
     description: option.description,
     estimatedDuration: option.estimatedDuration,
@@ -2428,6 +2494,7 @@ export default function Home() {
     activeOptionId,
     recommendedOptionId,
     patientSelectedOptionId,
+    patientSelectedCustomOption,
   };
   const draftQuotationStateJson = JSON.stringify(draftQuotationState);
 
@@ -2447,6 +2514,7 @@ export default function Home() {
     financialSummaryDisplay,
     recommendedOptionId,
     patientSelectedOptionId,
+    patientSelectedCustomOption,
     installmentPlan: selectedSnapshotPlan
       ? {
           id: selectedSnapshotPlan.id,
@@ -2928,6 +2996,26 @@ export default function Home() {
             </div>
             </div>
 
+            {isFinalized ? (
+              <div className="print-only hidden text-right text-xs leading-relaxed text-gray-700">
+                <p className="font-bold uppercase tracking-wide text-black">
+                  {getQuotationStatusLabel(quotationStatus, selectedLanguageCopy)}
+                </p>
+                <p>
+                  {selectedLanguageCopy.patientName}:{" "}
+                  <span className="font-semibold">
+                    {displayValue(patientName)}
+                  </span>
+                </p>
+                <p>
+                  {selectedLanguageCopy.quotationDate}:{" "}
+                  <span className="font-semibold">
+                    {displayValue(quotationDate)}
+                  </span>
+                </p>
+              </div>
+            ) : null}
+
 
             <div className="no-print flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap">
               <button
@@ -3350,7 +3438,7 @@ export default function Home() {
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {treatmentOptions.map((option) => (
+                  {treatmentOptions.map((option, optionIndex) => (
                     <button
                       key={option.id}
                       type="button"
@@ -3361,7 +3449,10 @@ export default function Home() {
                           : "hover:bg-gray-100"
                       }`}
                     >
-                      {displayValue(option.title)}
+                      <span className="font-semibold">
+                        {getOptionNumberLabel(optionIndex, selectedLanguageCopy)}
+                      </span>
+                      <span className="ml-1">{displayValue(option.title)}</span>
                       {option.id === recommendedOptionId ? (
                         <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
                           {selectedLanguageCopy.recommended}
@@ -3515,6 +3606,14 @@ export default function Home() {
                 <p className="mt-1 text-sm text-gray-500">
                   {selectedLanguageCopy.patientSummaryIntro}
                 </p>
+                <div className="mt-3 rounded-xl border border-blue-100 bg-blue-50 p-3 text-sm leading-relaxed text-blue-950">
+                  <p className="font-semibold">
+                    {selectedLanguageCopy.patientCostExplanationHeading}
+                  </p>
+                  <p className="mt-1">
+                    {selectedLanguageCopy.patientCostExplanationText}
+                  </p>
+                </div>
                 <div className="mt-4 grid gap-4 lg:grid-cols-2">
                   {comparisonRows.map((option) => {
                     const totalBeforeDeductions =
@@ -3530,10 +3629,17 @@ export default function Home() {
                         }`}
                       >
                         <div className="flex flex-wrap items-center justify-between gap-2">
-                          <h3 className="font-bold">{option.title}</h3>
+                          <h3 className="font-bold">
+                            {`${getOptionNumberLabel(option.index, selectedLanguageCopy)}: ${option.title}`}
+                          </h3>
                           {Number(option.id) === recommendedOptionId ? (
                             <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-800">
-                              {selectedLanguageCopy.recommended}
+                              {selectedLanguageCopy.recommendedOption}
+                            </span>
+                          ) : null}
+                          {patientSelectedOptionId === Number(option.id) ? (
+                            <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-800">
+                              {selectedLanguageCopy.patientSelectedBadge}
                             </span>
                           ) : null}
                         </div>
@@ -3567,8 +3673,10 @@ export default function Home() {
                               </div>
                             </>
                           ) : null}
-                          <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 border-t pt-2 text-lg font-bold">
-                            <span>{selectedLanguageCopy.estimatedCashPayable}</span>
+                          <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 rounded-xl bg-white px-3 py-2 text-lg font-bold">
+                            <span>
+                              {selectedLanguageCopy.patientPaysAfterDeductions}
+                            </span>
                             <span className="tabular-nums">
                               {formatCurrency(option.totals.payable)}
                             </span>
@@ -3587,7 +3695,7 @@ export default function Home() {
               : activeOption
                 ? [activeOption]
                 : []
-            ).map((option) => {
+            ).map((option, optionIndex) => {
               const optionSummary =
                 optionTotals.get(option.id) ??
                 calculateTotalsForPhases(option.phases);
@@ -3597,15 +3705,15 @@ export default function Home() {
                 key={option.id}
                 className={compactClass(
                   isFinalized,
-                  "space-y-4 rounded-[2rem] border-4 border-gray-300 bg-gray-100 p-3 shadow-sm sm:p-4 print:border-4 print:border-gray-400 print:bg-gray-100 print:p-3",
+                  "space-y-4 rounded-[2rem] border-4 border-gray-400 bg-gray-100 p-3 shadow-sm sm:p-4 print:border-4 print:border-gray-500 print:bg-gray-100 print:p-3",
                   "space-y-4",
                 )}
               >
-                {isFinalized && showFinancialSummary ? (
-                  <section className="avoid-break overflow-hidden rounded-2xl border bg-white shadow-sm">
+                {isFinalized ? (
+                  <section className="avoid-break overflow-hidden rounded-2xl border-2 border-gray-300 bg-white shadow-sm">
                     <div className="print-exact bg-black px-4 py-3 text-white print:bg-black print:text-white sm:px-6">
                       <p className="text-xs font-semibold uppercase tracking-wide text-gray-300 print:text-gray-300">
-                        Treatment Option
+                        {getOptionNumberLabel(optionIndex, selectedLanguageCopy)}
                       </p>
                       <div className="flex flex-wrap items-center gap-2">
                         <h2 className="text-xl font-bold">
@@ -3613,7 +3721,12 @@ export default function Home() {
                         </h2>
                         {option.id === recommendedOptionId ? (
                           <span className="print-exact rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-800">
-                            {selectedLanguageCopy.recommendedByDentist}
+                            {selectedLanguageCopy.recommendedOption}
+                          </span>
+                        ) : null}
+                        {patientSelectedOptionId === option.id ? (
+                          <span className="print-exact rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-800">
+                            {selectedLanguageCopy.patientSelectedBadge}
                           </span>
                         ) : null}
                       </div>
@@ -4397,7 +4510,7 @@ export default function Home() {
               );
             })}
             </div>
-                {isFinalized ? (
+                {isFinalized && showFinancialSummary ? (
                   <section className="avoid-break rounded-2xl border-2 border-gray-300 bg-white p-4 sm:p-6">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div>
@@ -4405,12 +4518,19 @@ export default function Home() {
                           {selectedLanguageCopy.financialSummary}
                         </p>
                         <h3 className="text-lg font-bold">
-                          {displayValue(option.title)}
+                          {getOptionHeading(
+                            option,
+                            optionIndex,
+                            selectedLanguageCopy,
+                          )}
                         </h3>
+                        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-600">
+                          {selectedLanguageCopy.patientCostExplanationText}
+                        </p>
                       </div>
                       <div className="text-left sm:text-right">
                         <p className="text-sm text-gray-500">
-                          {selectedLanguageCopy.cashPortion}
+                          {selectedLanguageCopy.patientPaysAfterDeductions}
                         </p>
                         <p className="text-2xl font-bold tabular-nums">
                           {formatCurrency(optionSummary.payable)}
@@ -4501,6 +4621,17 @@ export default function Home() {
                   ? selectedLanguageCopy.financialSummary
                   : "Financial Summary"}
               </h2>
+
+              {isFinalized ? (
+                <div className="mb-4 rounded-xl border border-blue-100 bg-blue-50 p-3 text-sm leading-relaxed text-blue-950">
+                  <p className="font-semibold">
+                    {selectedLanguageCopy.patientCostExplanationHeading}
+                  </p>
+                  <p className="mt-1">
+                    {selectedLanguageCopy.patientCostExplanationText}
+                  </p>
+                </div>
+              ) : null}
 
 
               {isFinalized && treatmentOptions.length > 1 ? (
@@ -4624,7 +4755,9 @@ export default function Home() {
                   )}
                 >
                   <span className="min-w-0 break-words">
-                    {isFinalized ? selectedLanguageCopy.cashPortion : "Cash Portion"}
+                    {isFinalized
+                      ? selectedLanguageCopy.patientPaysAfterDeductions
+                      : "Cash Portion"}
                   </span>
                   <span className="whitespace-nowrap text-right tabular-nums">
                     ${totals.payable.toFixed(2)}
@@ -4712,7 +4845,19 @@ export default function Home() {
                       {comparisonRows.map((option) => (
                         <tr key={option.id} className="border-t align-top">
                           <td className="px-3 py-2 font-semibold">
-                            {option.title}
+                            <div>
+                              {`${getOptionNumberLabel(option.index, selectedLanguageCopy)}: ${option.title}`}
+                            </div>
+                            {Number(option.id) === recommendedOptionId ? (
+                              <div className="mt-1 inline-flex rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-800">
+                                {selectedLanguageCopy.recommendedOption}
+                              </div>
+                            ) : null}
+                            {patientSelectedOptionId === Number(option.id) ? (
+                              <div className="mt-1 inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-800">
+                                {selectedLanguageCopy.patientSelectedBadge}
+                              </div>
+                            ) : null}
                           </td>
                           <td className="whitespace-pre-wrap break-words px-3 py-2">
                             {displayValue(option.description)}
@@ -4753,7 +4898,7 @@ export default function Home() {
                   {selectedLanguageCopy.patientSelectedOptionIntro}
                 </p>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {treatmentOptions.map((option) => (
+                  {treatmentOptions.map((option, optionIndex) => (
                     <label
                       key={option.id}
                       className="flex items-start gap-3 rounded-xl border p-3"
@@ -4767,16 +4912,49 @@ export default function Home() {
                       />
                       <span>
                         <span className="font-semibold">
-                          {displayValue(option.title)}
+                          {getOptionHeading(
+                            option,
+                            optionIndex,
+                            selectedLanguageCopy,
+                          )}
                         </span>
                         {option.id === recommendedOptionId ? (
                           <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
-                            {selectedLanguageCopy.recommended}
+                            {selectedLanguageCopy.recommendedOption}
+                          </span>
+                        ) : null}
+                        {patientSelectedOptionId === option.id ? (
+                          <span className="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-700">
+                            {selectedLanguageCopy.patientSelectedBadge}
                           </span>
                         ) : null}
                       </span>
                     </label>
                   ))}
+                  <label className="flex items-start gap-3 rounded-xl border p-3 sm:col-span-2">
+                    <input
+                      type="radio"
+                      name="patient-selected-option"
+                      checked={patientSelectedOptionId === "custom"}
+                      onChange={() => setPatientSelectedOptionId("custom")}
+                      className="mt-1"
+                    />
+                    <span className="min-w-0 flex-1">
+                      <span className="font-semibold">
+                        {selectedLanguageCopy.selfFilledOption}
+                      </span>
+                      <input
+                        type="text"
+                        value={patientSelectedCustomOption}
+                        onChange={(event) => {
+                          setPatientSelectedOptionId("custom");
+                          setPatientSelectedCustomOption(event.target.value);
+                        }}
+                        placeholder={selectedLanguageCopy.enterSelectedOption}
+                        className="mt-2 w-full rounded-lg border px-3 py-2 text-sm"
+                      />
+                    </span>
+                  </label>
                   <label className="flex items-start gap-3 rounded-xl border p-3">
                     <input
                       type="radio"
