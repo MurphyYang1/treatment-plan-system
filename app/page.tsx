@@ -162,8 +162,6 @@ type LanguageCopy = {
   patientSelectedOption: string;
   patientSelectedOptionIntro: string;
   needMoreTime: string;
-  selfFilledOption: string;
-  enterSelectedOption: string;
   viewDetailedPhases: string;
   atomePlan: string;
   grabPayPlan: string;
@@ -319,8 +317,6 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOptionIntro:
       "Please indicate which treatment option the patient chooses.",
     needMoreTime: "I need more time to decide",
-    selfFilledOption: "Self-filled option",
-    enterSelectedOption: "Write selected option",
     viewDetailedPhases: "View detailed phases and procedures",
     atomePlan: "Atome: 3 months interest-free",
     grabPayPlan: "GrabPay: 4 months interest-free",
@@ -437,8 +433,6 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOptionIntro:
       "Sila nyatakan pilihan rawatan yang dipilih oleh pesakit.",
     needMoreTime: "Saya memerlukan lebih masa untuk membuat keputusan",
-    selfFilledOption: "Pilihan diisi sendiri",
-    enterSelectedOption: "Tulis pilihan yang dipilih",
     viewDetailedPhases: "Lihat fasa dan prosedur terperinci",
     atomePlan: "Atome: 3 bulan tanpa faedah",
     grabPayPlan: "GrabPay: 4 bulan tanpa faedah",
@@ -558,8 +552,6 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOption: "患者选择的选项",
     patientSelectedOptionIntro: "请注明患者选择的治疗选项。",
     needMoreTime: "我需要更多时间决定",
-    selfFilledOption: "自行填写选项",
-    enterSelectedOption: "填写所选选项",
     viewDetailedPhases: "查看详细阶段和程序",
     atomePlan: "Atome：3个月免息",
     grabPayPlan: "GrabPay：4个月免息",
@@ -679,8 +671,6 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOptionIntro:
       "நோயாளர் தேர்ந்தெடுக்கும் சிகிச்சை விருப்பத்தை குறிப்பிடவும்.",
     needMoreTime: "முடிவு செய்ய எனக்கு மேலும் நேரம் தேவை",
-    selfFilledOption: "சுயமாக நிரப்பும் விருப்பம்",
-    enterSelectedOption: "தேர்ந்தெடுத்த விருப்பத்தை எழுதவும்",
     viewDetailedPhases: "விரிவான கட்டங்கள் மற்றும் செயல்முறைகளைப் பார்க்கவும்",
     atomePlan: "Atome: 3 மாதங்கள் வட்டி இல்லாது",
     grabPayPlan: "GrabPay: 4 மாதங்கள் வட்டி இல்லாது",
@@ -803,8 +793,6 @@ const languageStringKeys = [
   "patientSelectedOption",
   "patientSelectedOptionIntro",
   "needMoreTime",
-  "selfFilledOption",
-  "enterSelectedOption",
   "viewDetailedPhases",
   "atomePlan",
   "grabPayPlan",
@@ -2021,10 +2009,8 @@ export default function Home() {
     () => treatmentOptions[0]?.id ?? 0,
   );
   const [patientSelectedOptionId, setPatientSelectedOptionId] = useState<
-    number | "discuss" | "custom" | ""
+    number | "discuss" | ""
   >("");
-  const [patientSelectedCustomOption, setPatientSelectedCustomOption] =
-    useState("");
 
 
   const filteredTreatments = availableTreatments.filter(
@@ -2248,17 +2234,10 @@ export default function Home() {
     if (
       typeof draft.patientSelectedOptionId === "number" ||
       draft.patientSelectedOptionId === "discuss" ||
-      draft.patientSelectedOptionId === "custom" ||
       draft.patientSelectedOptionId === ""
     ) {
       setPatientSelectedOptionId(draft.patientSelectedOptionId);
     }
-
-    setPatientSelectedCustomOption(
-      typeof draft.patientSelectedCustomOption === "string"
-        ? draft.patientSelectedCustomOption
-        : "",
-    );
   };
 
 
@@ -2494,7 +2473,6 @@ export default function Home() {
     activeOptionId,
     recommendedOptionId,
     patientSelectedOptionId,
-    patientSelectedCustomOption,
   };
   const draftQuotationStateJson = JSON.stringify(draftQuotationState);
 
@@ -2514,7 +2492,6 @@ export default function Home() {
     financialSummaryDisplay,
     recommendedOptionId,
     patientSelectedOptionId,
-    patientSelectedCustomOption,
     installmentPlan: selectedSnapshotPlan
       ? {
           id: selectedSnapshotPlan.id,
@@ -3425,6 +3402,8 @@ export default function Home() {
                       Select one option below to edit its phases and procedures.
                       The finalized printout will show each option as a separate
                       section, then compare them at the end.
+                      Use the editable fields below to rename the selected
+                      option and add notes.
                     </p>
                   </div>
 
@@ -3465,51 +3444,66 @@ export default function Home() {
                 <div className="mt-4 space-y-4">
                   <div className="rounded-2xl border bg-gray-50 p-4">
                     <div className="grid gap-3 md:grid-cols-2">
-                      <input
-                        type="text"
-                        value={activeOption?.title ?? ""}
-                        onChange={(event) =>
-                          activeOption
-                            ? updateTreatmentOption(
-                                activeOption.id,
-                                "title",
-                                event.target.value,
-                              )
-                            : undefined
-                        }
-                        placeholder="Option title"
-                        className="w-full rounded-xl border bg-white px-4 py-3 font-semibold"
-                      />
-                      <input
-                        type="text"
-                        value={activeOption?.estimatedDuration ?? ""}
-                        onChange={(event) =>
-                          activeOption
-                            ? updateTreatmentOption(
-                                activeOption.id,
-                                "estimatedDuration",
-                                event.target.value,
-                              )
-                            : undefined
-                        }
-                        placeholder="Est. Duration"
-                        className="w-full rounded-xl border bg-white px-4 py-3"
-                      />
-                      <textarea
-                        value={activeOption?.description ?? ""}
-                        onChange={(event) =>
-                          activeOption
-                            ? updateTreatmentOption(
-                                activeOption.id,
-                                "description",
-                                event.target.value,
-                              )
-                            : undefined
-                        }
-                        rows={2}
-                        placeholder="Option description / clinical positioning"
-                        className="min-h-20 w-full resize-y rounded-xl border bg-white px-4 py-3 md:col-span-2"
-                      />
+                      <label className="block">
+                        <span className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+                          Treatment option name
+                        </span>
+                        <input
+                          type="text"
+                          value={activeOption?.title ?? ""}
+                          onChange={(event) =>
+                            activeOption
+                              ? updateTreatmentOption(
+                                  activeOption.id,
+                                  "title",
+                                  event.target.value,
+                                )
+                              : undefined
+                          }
+                          placeholder="e.g. Recommended Plan"
+                          className="mt-1 w-full rounded-xl border bg-white px-4 py-3 font-semibold"
+                        />
+                      </label>
+                      <label className="block">
+                        <span className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+                          Estimated duration
+                        </span>
+                        <input
+                          type="text"
+                          value={activeOption?.estimatedDuration ?? ""}
+                          onChange={(event) =>
+                            activeOption
+                              ? updateTreatmentOption(
+                                  activeOption.id,
+                                  "estimatedDuration",
+                                  event.target.value,
+                                )
+                              : undefined
+                          }
+                          placeholder="e.g. 3 to 6 months"
+                          className="mt-1 w-full rounded-xl border bg-white px-4 py-3"
+                        />
+                      </label>
+                      <label className="block md:col-span-2">
+                        <span className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+                          Option description / notes
+                        </span>
+                        <textarea
+                          value={activeOption?.description ?? ""}
+                          onChange={(event) =>
+                            activeOption
+                              ? updateTreatmentOption(
+                                  activeOption.id,
+                                  "description",
+                                  event.target.value,
+                                )
+                              : undefined
+                          }
+                          rows={2}
+                          placeholder="Explain how this option differs, e.g. faster, lower cost, more comprehensive, or staged treatment."
+                          className="mt-1 min-h-20 w-full resize-y rounded-xl border bg-white px-4 py-3"
+                        />
+                      </label>
                     </div>
                     <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-sm text-gray-500">
                       <p>
@@ -4931,30 +4925,6 @@ export default function Home() {
                       </span>
                     </label>
                   ))}
-                  <label className="flex items-start gap-3 rounded-xl border p-3 sm:col-span-2">
-                    <input
-                      type="radio"
-                      name="patient-selected-option"
-                      checked={patientSelectedOptionId === "custom"}
-                      onChange={() => setPatientSelectedOptionId("custom")}
-                      className="mt-1"
-                    />
-                    <span className="min-w-0 flex-1">
-                      <span className="font-semibold">
-                        {selectedLanguageCopy.selfFilledOption}
-                      </span>
-                      <input
-                        type="text"
-                        value={patientSelectedCustomOption}
-                        onChange={(event) => {
-                          setPatientSelectedOptionId("custom");
-                          setPatientSelectedCustomOption(event.target.value);
-                        }}
-                        placeholder={selectedLanguageCopy.enterSelectedOption}
-                        className="mt-2 w-full rounded-lg border px-3 py-2 text-sm"
-                      />
-                    </span>
-                  </label>
                   <label className="flex items-start gap-3 rounded-xl border p-3">
                     <input
                       type="radio"
