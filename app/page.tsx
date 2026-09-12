@@ -2429,27 +2429,6 @@ export default function Home() {
     return getInstallmentBreakdownForTotals(plan, totals);
   }, [selectedInstallmentPlan, totals]);
 
-  const recommendedOption =
-    treatmentOptions.find((option) => option.id === recommendedOptionId) ??
-    treatmentOptions[0];
-  const patientSelectedOption =
-    typeof patientSelectedOptionId === "number"
-      ? treatmentOptions.find((option) => option.id === patientSelectedOptionId)
-      : null;
-  const overviewOption =
-    patientSelectedOption ?? recommendedOption ?? activeOption;
-  const overviewTotals = overviewOption
-    ? optionTotals.get(overviewOption.id) ??
-      calculateTotalsForPhases(overviewOption.phases)
-    : totals;
-  const overviewCostBeforeDeductions =
-    overviewTotals.subtotal + overviewTotals.gst;
-  const patientSelectedLabel =
-    patientSelectedOption?.title ??
-    (patientSelectedOptionId === "discuss"
-      ? selectedLanguageCopy.needMoreTime
-      : "");
-
   const comparisonRows = treatmentOptions.map((option) => ({
     id: String(option.id),
     title: displayValue(option.title),
@@ -3398,102 +3377,6 @@ export default function Home() {
                     </li>
                   ))}
                 </ol>
-              </section>
-            ) : null}
-
-            {isFinalized && showFinancialSummary ? (
-              <section className="avoid-break overflow-hidden rounded-[2rem] border-2 border-gray-200 bg-gradient-to-br from-white via-blue-50 to-green-50 p-4 shadow-sm sm:p-6 print:rounded-2xl print:bg-white print:p-4">
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                  <div className="max-w-3xl">
-                    <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-700">
-                      {selectedLanguageCopy.patientSummaryHeading}
-                    </p>
-                    <h2 className="mt-2 text-2xl font-bold text-gray-950 sm:text-3xl">
-                      {selectedLanguageCopy.patientCostExplanationHeading}
-                    </h2>
-                    <p className="mt-2 text-sm leading-relaxed text-gray-600">
-                      {selectedLanguageCopy.patientCostExplanationText}
-                    </p>
-                  </div>
-
-                  <div className="print-exact rounded-3xl bg-gray-950 px-5 py-4 text-white shadow-sm lg:min-w-72 lg:text-right print:bg-gray-950 print:text-white">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-300">
-                      {selectedLanguageCopy.patientPaysAfterDeductions}
-                    </p>
-                    <p className="mt-1 text-3xl font-black tabular-nums">
-                      {formatCurrency(overviewTotals.payable)}
-                    </p>
-                  </div>
-                </div>
-
-                <dl className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                  <div className="rounded-2xl border border-white/70 bg-white/80 p-3 shadow-sm print:border-gray-200">
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                      {selectedLanguageCopy.patientName}
-                    </dt>
-                    <dd className="mt-1 font-bold text-gray-950">
-                      {displayValue(patientName)}
-                    </dd>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/70 bg-white/80 p-3 shadow-sm print:border-gray-200">
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                      {selectedLanguageCopy.dentist}
-                    </dt>
-                    <dd className="mt-1 font-bold text-gray-950">
-                      {formatAttendedBy(dentistName)}
-                    </dd>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/70 bg-white/80 p-3 shadow-sm print:border-gray-200">
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                      {selectedLanguageCopy.recommendedOption}
-                    </dt>
-                    <dd className="mt-1 font-bold text-gray-950">
-                      {displayValue(recommendedOption?.title ?? "")}
-                    </dd>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/70 bg-white/80 p-3 shadow-sm print:border-gray-200">
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                      {selectedLanguageCopy.patientSelectedOption}
-                    </dt>
-                    <dd className="mt-1 font-bold text-gray-950">
-                      {displayValue(patientSelectedLabel)}
-                    </dd>
-                  </div>
-                </dl>
-
-                {showFullFinancialSummary ? (
-                  <div className="mt-4 grid gap-3 text-sm md:grid-cols-3">
-                    <div className="rounded-2xl bg-white/80 p-3 print:border print:border-gray-200">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                        {selectedLanguageCopy.treatmentCostBeforeDeductions}
-                      </p>
-                      <p className="mt-1 text-lg font-bold tabular-nums">
-                        {formatCurrency(overviewCostBeforeDeductions)}
-                      </p>
-                    </div>
-
-                    <div className="rounded-2xl bg-green-50 p-3 text-green-800 print:border print:border-green-200">
-                      <p className="text-xs font-semibold uppercase tracking-wide">
-                        {selectedLanguageCopy.lessGovernmentSubsidy}
-                      </p>
-                      <p className="mt-1 text-lg font-bold tabular-nums">
-                        {formatDeduction(overviewTotals.subsidy)}
-                      </p>
-                    </div>
-
-                    <div className="rounded-2xl bg-green-50 p-3 text-green-800 print:border print:border-green-200">
-                      <p className="text-xs font-semibold uppercase tracking-wide">
-                        {selectedLanguageCopy.lessMedisave}
-                      </p>
-                      <p className="mt-1 text-lg font-bold tabular-nums">
-                        {formatDeduction(overviewTotals.medisave)}
-                      </p>
-                    </div>
-                  </div>
-                ) : null}
               </section>
             ) : null}
 
