@@ -330,7 +330,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     disclaimer: "Disclaimer",
     disclaimerItems: [
       "All treatment fees stated are inclusive of prevailing 9% GST.",
-      "Treatment fees discussed and agreed upon shall remain valid throughout the planned treatment duration unless unforeseen clinical complications arise.",
+      "This quotation remains valid provided the patient's oral condition and treatment plan remain unchanged. Fees may be reviewed if there is a change in clinical condition, attending dentist, treatment scope, or if additional or alternative treatment is required.",
       "Additional treatment procedures required due to complications, changes in clinical condition or patient requests may incur additional treatment charges.",
       "CHAS, Merdeka Generation, Pioneer Generation and Medisave claims remain subject to prevailing MOH regulations and patient eligibility.",
     ],
@@ -446,7 +446,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     disclaimer: "Penafian",
     disclaimerItems: [
       "Semua yuran rawatan yang dinyatakan termasuk GST 9% semasa.",
-      "Yuran rawatan yang dibincangkan dan dipersetujui akan kekal sah sepanjang tempoh rawatan yang dirancang kecuali berlaku komplikasi klinikal yang tidak dijangka.",
+      "Sebut harga ini kekal sah dengan syarat keadaan mulut pesakit dan pelan rawatan tidak berubah. Yuran mungkin disemak jika terdapat perubahan keadaan klinikal, doktor gigi yang merawat, skop rawatan, atau jika rawatan tambahan atau alternatif diperlukan.",
       "Prosedur rawatan tambahan yang diperlukan akibat komplikasi, perubahan keadaan klinikal atau permintaan pesakit mungkin dikenakan caj tambahan.",
       "Tuntutan CHAS, Generasi Merdeka, Generasi Perintis dan Medisave tertakluk kepada peraturan MOH semasa dan kelayakan pesakit.",
     ],
@@ -564,7 +564,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     disclaimer: "免责声明",
     disclaimerItems: [
       "所有列明的治疗费用均包含现行9%消费税。",
-      "已讨论并同意的治疗费用将在计划治疗期间保持有效，除非出现无法预见的临床并发症。",
+      "本报价在患者口腔状况和治疗计划保持不变的情况下有效。如临床状况、主诊牙医、治疗范围发生变化，或需要额外/替代治疗，费用可能会重新审核。",
       "因并发症、临床情况变化或患者要求而需要的额外治疗程序，可能会产生额外费用。",
       "CHAS、建国一代、乐龄一代及保健储蓄索赔须符合卫生部现行规定及患者资格。",
     ],
@@ -684,7 +684,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     disclaimer: "பொறுப்புத்துறப்பு",
     disclaimerItems: [
       "குறிப்பிடப்பட்ட அனைத்து சிகிச்சை கட்டணங்களும் நடைமுறையில் உள்ள 9% GST உட்படக் குறிப்பிடப்பட்டுள்ளன.",
-      "விவாதித்து ஒப்புக்கொள்ளப்பட்ட சிகிச்சை கட்டணங்கள், எதிர்பாராத மருத்துவ சிக்கல்கள் இல்லாவிட்டால், திட்டமிடப்பட்ட சிகிச்சை காலம் முழுவதும் செல்லுபடியாகும்.",
+      "நோயாளியின் வாய்நிலை மற்றும் சிகிச்சைத் திட்டம் மாறாமல் இருந்தால் இந்த மேற்கோள் செல்லுபடியாகும். மருத்துவ நிலை, சிகிச்சை அளிக்கும் பல் மருத்துவர், சிகிச்சை வரம்பு மாறினால் அல்லது கூடுதல்/மாற்று சிகிச்சை தேவைப்பட்டால் கட்டணங்கள் மறுபரிசீலனை செய்யப்படலாம்.",
       "சிக்கல்கள், மருத்துவ நிலை மாற்றங்கள் அல்லது நோயாளர் கோரிக்கைகள் காரணமாக தேவைப்படும் கூடுதல் சிகிச்சைகளுக்கு கூடுதல் கட்டணம் விதிக்கப்படலாம்.",
       "CHAS, Merdeka Generation, Pioneer Generation மற்றும் Medisave கோரிக்கைகள் MOH விதிமுறைகள் மற்றும் நோயாளர் தகுதிக்கு உட்பட்டவை.",
     ],
@@ -3326,9 +3326,11 @@ export default function Home() {
 
 
                     <p>
-                      Treatment fees discussed and agreed upon shall remain valid
-                      throughout the planned treatment duration unless unforeseen
-                      clinical complications arise.
+                      This quotation remains valid provided the patient&apos;s oral
+                      condition and treatment plan remain unchanged. Fees may be
+                      reviewed if there is a change in clinical condition,
+                      attending dentist, treatment scope, or if additional or
+                      alternative treatment is required.
                     </p>
 
 
@@ -3715,11 +3717,11 @@ export default function Home() {
                         </div>
 
                         {showFinancialSummary ? (
-                          <div className="rounded-2xl bg-white/10 px-4 py-3 sm:min-w-56 sm:text-right">
-                            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-300">
+                          <div className="print-exact rounded-2xl border border-white/40 bg-white px-4 py-3 text-slate-950 shadow-sm sm:min-w-56 sm:text-right print:bg-white print:text-slate-950">
+                            <p className="text-[11px] font-black uppercase tracking-wide text-slate-700">
                               {selectedLanguageCopy.patientPaysAfterDeductions}
                             </p>
-                            <p className="mt-1 text-2xl font-black tabular-nums">
+                            <p className="mt-1 text-3xl font-black tabular-nums">
                               {formatCurrency(optionSummary.payable)}
                             </p>
                           </div>
