@@ -81,7 +81,7 @@ type TreatmentOption = {
 type PatientEducationTopic = {
   id: string;
   title: string;
-  description: string;
+  descriptions: Record<PreferredLanguage, string>;
   imageSrc: string;
   matches: (treatment: Pick<Treatment, "category" | "name">) => boolean;
 };
@@ -170,6 +170,10 @@ type LanguageCopy = {
   patientSelectedOption: string;
   patientSelectedOptionIntro: string;
   needMoreTime: string;
+  smokingStatus: string;
+  patientSmokes: string;
+  smokingHealingHeading: string;
+  smokingHealingNote: string;
   viewDetailedPhases: string;
   atomePlan: string;
   grabPayPlan: string;
@@ -262,43 +266,92 @@ const patientEducationTopics: PatientEducationTopic[] = [
   {
     id: "root-canal-treatment",
     title: "Root Canal Treatment (RCT)",
-    description:
-      "Explains how an infected tooth is cleaned, filled and restored.",
+    descriptions: {
+      English: "Explains how an infected tooth is cleaned, filled and restored.",
+      Malay:
+        "Menerangkan bagaimana gigi yang dijangkiti dibersihkan, diisi dan dipulihkan.",
+      "Simplified Chinese": "说明受感染牙齿如何被清洁、填充和修复。",
+      Tamil:
+        "பாதிக்கப்பட்ட பல் எவ்வாறு சுத்தம் செய்யப்படுகிறது, நிரப்பப்படுகிறது மற்றும் மீளமைக்கப்படுகிறது என்பதை விளக்குகிறது.",
+    },
     imageSrc: "/patient-education/root-canal-treatment.jpg",
     matches: ({ name }) => /root canal|\brct\b/i.test(name),
   },
   {
     id: "sinus-lift",
     title: "Sinus Lift for Upper Dental Implants",
-    description:
-      "Explains why and how bone is added beneath the sinus for upper implants.",
+    descriptions: {
+      English:
+        "Explains why and how bone is added beneath the sinus for upper implants.",
+      Malay:
+        "Menerangkan mengapa dan bagaimana tulang ditambah di bawah sinus untuk implan atas.",
+      "Simplified Chinese": "说明为什么以及如何在上颌窦下方加骨以支持上颌种植牙。",
+      Tamil:
+        "மேல் இம்பிளாண்டுகளுக்காக சைனஸின் கீழ் எலும்பு ஏன் மற்றும் எவ்வாறு சேர்க்கப்படுகிறது என்பதை விளக்குகிறது.",
+    },
     imageSrc: "/patient-education/sinus-lift.jpg",
     matches: ({ name }) => /sinus lift/i.test(name),
   },
   {
     id: "all-on-x-implant-treatment",
     title: "All-on-X Implant Treatment",
-    description:
-      "Explains the temporary and final phases for full-arch implant treatment.",
+    descriptions: {
+      English:
+        "Explains the temporary and final phases for full-arch implant treatment.",
+      Malay:
+        "Menerangkan fasa sementara dan fasa akhir untuk rawatan implan seluruh lengkung.",
+      "Simplified Chinese": "说明全口种植治疗的临时阶段和最终修复阶段。",
+      Tamil:
+        "முழு வளைவு இம்பிளாண்ட் சிகிச்சையின் தற்காலிக மற்றும் இறுதி கட்டங்களை விளக்குகிறது.",
+    },
     imageSrc: "/patient-education/all-on-x-implant-treatment.jpg",
     matches: ({ name }) => /all[-\s]?on[-\s]?x|full arch/i.test(name),
   },
   {
     id: "temporary-dentures",
     title: "Temporary Dentures after Extraction / Implant Treatment",
-    description:
-      "Explains why temporary dentures may feel less fitted while gums heal.",
+    descriptions: {
+      English:
+        "Explains why temporary dentures may feel less fitted while gums heal.",
+      Malay:
+        "Menerangkan mengapa gigi palsu sementara mungkin terasa kurang sesuai semasa gusi sedang sembuh.",
+      "Simplified Chinese": "说明为什么牙龈愈合期间临时假牙可能会感觉不太贴合。",
+      Tamil:
+        "ஈறு ஆறிக்கொண்டிருக்கும்போது தற்காலிக பற்கள் ஏன் குறைவாக பொருந்தியதாக உணரப்படலாம் என்பதை விளக்குகிறது.",
+    },
     imageSrc: "/patient-education/temporary-dentures.jpg",
     matches: ({ name }) => /temporary denture|interim denture/i.test(name),
   },
   {
     id: "dental-implant-treatment",
     title: "Dental Implant Treatment",
-    description:
-      "Explains implant insertion, healing, abutment placement and final teeth options.",
+    descriptions: {
+      English:
+        "Explains implant insertion, healing, abutment placement and final teeth options.",
+      Malay:
+        "Menerangkan pemasangan implan, tempoh penyembuhan, pemasangan abutment dan pilihan gigi akhir.",
+      "Simplified Chinese": "说明种植体植入、愈合、基台安装和最终牙齿修复选择。",
+      Tamil:
+        "இம்பிளாண்ட் பொருத்துதல், ஆறுதல், அபட்மெண்ட் பொருத்துதல் மற்றும் இறுதி பல் விருப்பங்களை விளக்குகிறது.",
+    },
     imageSrc: "/patient-education/dental-implant-treatment.jpg",
     matches: ({ category, name }) =>
       /implant/i.test(category) || /implant|overdenture/i.test(name),
+  },
+  {
+    id: "smoking-healing",
+    title: "Smoking and Healing",
+    descriptions: {
+      English:
+        "Explains how smoking may slow gum healing and increase implant healing risks.",
+      Malay:
+        "Menerangkan bagaimana merokok boleh melambatkan penyembuhan gusi dan meningkatkan risiko penyembuhan implan.",
+      "Simplified Chinese": "说明吸烟如何减慢牙龈愈合，并增加种植体愈合风险。",
+      Tamil:
+        "புகைபிடித்தல் ஈறு ஆறுதலை மெதுவாக்கி, இம்பிளாண்ட் ஆறுதல் அபாயங்களை அதிகரிக்கக்கூடும் என்பதை விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/smoking-healing.jpg",
+    matches: () => false,
   },
 ];
 
@@ -369,6 +422,11 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOptionIntro:
       "Please indicate which treatment option the patient chooses.",
     needMoreTime: "I need more time to decide",
+    smokingStatus: "Smoking Status",
+    patientSmokes: "Patient is a smoker / smoking discussed",
+    smokingHealingHeading: "Smoking and Healing",
+    smokingHealingNote:
+      "Smoking may slow gum healing and increase the risk of infection, delayed healing and implant failure. Reducing or stopping smoking before and after treatment may improve healing.",
     viewDetailedPhases: "View detailed phases and procedures",
     atomePlan: "Atome: 3 months interest-free",
     grabPayPlan: "GrabPay: 4 months interest-free",
@@ -485,6 +543,11 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOptionIntro:
       "Sila nyatakan pilihan rawatan yang dipilih oleh pesakit.",
     needMoreTime: "Saya memerlukan lebih masa untuk membuat keputusan",
+    smokingStatus: "Status Merokok",
+    patientSmokes: "Pesakit merokok / merokok telah dibincangkan",
+    smokingHealingHeading: "Merokok dan Penyembuhan",
+    smokingHealingNote:
+      "Merokok boleh melambatkan penyembuhan gusi dan meningkatkan risiko jangkitan, penyembuhan lewat serta kegagalan implan. Mengurangkan atau berhenti merokok sebelum dan selepas rawatan boleh membantu penyembuhan.",
     viewDetailedPhases: "Lihat fasa dan prosedur terperinci",
     atomePlan: "Atome: 3 bulan tanpa faedah",
     grabPayPlan: "GrabPay: 4 bulan tanpa faedah",
@@ -604,6 +667,11 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOption: "患者选择的选项",
     patientSelectedOptionIntro: "请注明患者选择的治疗选项。",
     needMoreTime: "我需要更多时间决定",
+    smokingStatus: "吸烟状态",
+    patientSmokes: "患者吸烟 / 已讨论吸烟影响",
+    smokingHealingHeading: "吸烟与愈合",
+    smokingHealingNote:
+      "吸烟可能减慢牙龈愈合，并增加感染、延迟愈合及种植失败的风险。治疗前后减少或停止吸烟可能有助于愈合。",
     viewDetailedPhases: "查看详细阶段和程序",
     atomePlan: "Atome：3个月免息",
     grabPayPlan: "GrabPay：4个月免息",
@@ -723,6 +791,11 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOptionIntro:
       "நோயாளர் தேர்ந்தெடுக்கும் சிகிச்சை விருப்பத்தை குறிப்பிடவும்.",
     needMoreTime: "முடிவு செய்ய எனக்கு மேலும் நேரம் தேவை",
+    smokingStatus: "புகைபிடிக்கும் நிலை",
+    patientSmokes: "நோயாளர் புகைபிடிப்பவர் / புகைபிடித்தல் பற்றி பேசப்பட்டது",
+    smokingHealingHeading: "புகைபிடித்தல் மற்றும் ஆறுதல்",
+    smokingHealingNote:
+      "புகைபிடித்தல் ஈறு ஆறுதலை மெதுவாக்கி, தொற்று, தாமதமான ஆறுதல் மற்றும் இம்பிளாண்ட் தோல்வி அபாயத்தை அதிகரிக்கலாம். சிகிச்சைக்கு முன் மற்றும் பின் புகைபிடிப்பதை குறைப்பது அல்லது நிறுத்துவது ஆறுதலை மேம்படுத்தலாம்.",
     viewDetailedPhases: "விரிவான கட்டங்கள் மற்றும் செயல்முறைகளைப் பார்க்கவும்",
     atomePlan: "Atome: 3 மாதங்கள் வட்டி இல்லாது",
     grabPayPlan: "GrabPay: 4 மாதங்கள் வட்டி இல்லாது",
@@ -845,6 +918,10 @@ const languageStringKeys = [
   "patientSelectedOption",
   "patientSelectedOptionIntro",
   "needMoreTime",
+  "smokingStatus",
+  "patientSmokes",
+  "smokingHealingHeading",
+  "smokingHealingNote",
   "viewDetailedPhases",
   "atomePlan",
   "grabPayPlan",
@@ -1853,6 +1930,13 @@ function getPatientEducationTopic(
   return patientEducationTopics.find((topic) => topic.matches(treatment));
 }
 
+function getPatientEducationDescription(
+  topic: PatientEducationTopic,
+  preferredLanguage: PreferredLanguage,
+) {
+  return topic.descriptions[preferredLanguage] ?? topic.descriptions.English;
+}
+
 function formatAttendedBy(value: string) {
   const trimmed = value.trim();
 
@@ -2037,6 +2121,7 @@ export default function Home() {
     useState<FinancialSummaryDisplayMode>("full");
   const [showPatientEducationAnnex, setShowPatientEducationAnnex] =
     useState(true);
+  const [patientSmokes, setPatientSmokes] = useState(false);
   const [preferredLanguage, setPreferredLanguage] =
     useState<PreferredLanguage>("English");
   const [printLanguageMode, setPrintLanguageMode] =
@@ -2245,6 +2330,9 @@ export default function Home() {
       typeof draft.showPatientEducationAnnex === "boolean"
         ? draft.showPatientEducationAnnex
         : true,
+    );
+    setPatientSmokes(
+      typeof draft.patientSmokes === "boolean" ? draft.patientSmokes : false,
     );
     setPreferredLanguage(
       typeof draft.preferredLanguage === "string"
@@ -2522,11 +2610,21 @@ export default function Home() {
       });
     });
 
+    if (patientSmokes) {
+      const smokingTopic = patientEducationTopics.find(
+        (topic) => topic.id === "smoking-healing",
+      );
+
+      if (smokingTopic) {
+        matchedTopics.set(smokingTopic.id, smokingTopic);
+      }
+    }
+
     return Array.from(matchedTopics.values()).map((topic, index) => ({
       ...topic,
       reference: `A${index + 1}`,
     }));
-  }, [showPatientEducationAnnex, treatmentOptions]);
+  }, [patientSmokes, showPatientEducationAnnex, treatmentOptions]);
   const patientEducationReferenceByTopicId = useMemo(
     () =>
       new Map(
@@ -2534,6 +2632,8 @@ export default function Home() {
       ),
     [patientEducationAnnexItems],
   );
+  const smokingAnnexReference =
+    patientEducationReferenceByTopicId.get("smoking-healing");
 
   const draftQuotationState: DraftQuotationState = {
     clinicBranch,
@@ -2548,6 +2648,7 @@ export default function Home() {
     quotationStatus,
     financialSummaryDisplay,
     showPatientEducationAnnex,
+    patientSmokes,
     preferredLanguage,
     printLanguageMode,
     selectedInstallmentPlan,
@@ -3360,6 +3461,26 @@ export default function Home() {
                       </span>
                     </span>
                   </label>
+
+                  <label className="flex items-start gap-3 rounded-xl border bg-white px-4 py-3 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={patientSmokes}
+                      onChange={(event) =>
+                        setPatientSmokes(event.target.checked)
+                      }
+                      className="mt-1 h-4 w-4"
+                    />
+                    <span>
+                      <span className="font-semibold">
+                        {selectedLanguageCopy.patientSmokes}
+                      </span>
+                      <span className="mt-1 block text-xs leading-relaxed text-gray-500">
+                        Adds a smoking and healing note plus the smoking
+                        education annex when finalized.
+                      </span>
+                    </span>
+                  </label>
                 </div>
               )}
             </section>
@@ -3381,6 +3502,25 @@ export default function Home() {
                     selectedLanguageCopy,
                   )}
                 </p>
+              </section>
+            ) : null}
+
+            {isFinalized && patientSmokes ? (
+              <section className="avoid-break rounded-2xl border-2 border-orange-200 bg-orange-50 p-4 text-orange-950 sm:p-6">
+                <p className="text-xs font-semibold uppercase tracking-wide">
+                  {selectedLanguageCopy.smokingStatus}
+                </p>
+                <h2 className="mt-1 text-xl font-bold">
+                  {selectedLanguageCopy.smokingHealingHeading}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed">
+                  {selectedLanguageCopy.smokingHealingNote}
+                </p>
+                {smokingAnnexReference ? (
+                  <p className="mt-3 text-sm font-semibold">
+                    Patient education: See Annex {smokingAnnexReference}
+                  </p>
+                ) : null}
               </section>
             ) : null}
 
@@ -5363,7 +5503,10 @@ export default function Home() {
                         className="h-auto w-full rounded-xl border bg-white object-contain"
                       />
                       <p className="mt-3 text-sm leading-relaxed text-gray-600">
-                        {item.description}
+                        {getPatientEducationDescription(
+                          item,
+                          preferredLanguage,
+                        )}
                       </p>
                     </article>
                   ))}
