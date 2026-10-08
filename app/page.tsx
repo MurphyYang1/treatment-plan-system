@@ -303,7 +303,24 @@ const patientEducationTopics: PatientEducationTopic[] = [
         "மேல் இம்பிளாண்டுகளுக்காக சைனஸின் கீழ் எலும்பு ஏன் மற்றும் எவ்வாறு சேர்க்கப்படுகிறது என்பதை விளக்குகிறது.",
     },
     imageSrc: "/patient-education/sinus-lift.jpg",
-    matches: ({ name }) => /sinus lift/i.test(name),
+    matches: ({ name }) =>
+      /sinus lift/i.test(name) && !/crestal sinus lift/i.test(name),
+  },
+  {
+    id: "crestal-sinus-lift",
+    title: "Implant with Crestal Sinus Lift",
+    descriptions: {
+      English:
+        "Explains how a small sinus lift and bone graft may be done during single implant placement in the upper back teeth.",
+      Malay:
+        "Menerangkan bagaimana sinus lift kecil dan graf tulang boleh dilakukan semasa pemasangan implan tunggal pada gigi belakang atas.",
+      "Simplified Chinese":
+        "说明在上后牙区植入单颗种植牙时，如何同时进行小范围上颌窦提升和骨移植。",
+      Tamil:
+        "மேல் பின்புற பற்களில் ஒற்றை இம்பிளாண்ட் வைக்கும் போது சிறிய சைனஸ் லிஃப்ட் மற்றும் எலும்பு graft எவ்வாறு செய்யப்படலாம் என்பதை விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/crestal-sinus-lift.jpg",
+    matches: ({ name }) => /single implant.*crestal sinus lift/i.test(name),
   },
   {
     id: "all-on-x-implant-treatment",
