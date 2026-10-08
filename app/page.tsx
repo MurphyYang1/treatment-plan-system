@@ -305,7 +305,9 @@ const patientEducationTopics: PatientEducationTopic[] = [
         "முழு வளைவு இம்பிளாண்ட் சிகிச்சையின் தற்காலிக மற்றும் இறுதி கட்டங்களை விளக்குகிறது.",
     },
     imageSrc: "/patient-education/all-on-x-implant-treatment.jpg",
-    matches: ({ name }) => /all[-\s]?on[-\s]?x|full arch/i.test(name),
+    matches: ({ name }) =>
+      !/temporary denture|interim denture/i.test(name) &&
+      /all[-\s]?on[-\s]?x|full arch/i.test(name),
   },
   {
     id: "temporary-dentures",
