@@ -78,6 +78,14 @@ type TreatmentOption = {
   phases: Phase[];
 };
 
+type PatientEducationTopic = {
+  id: string;
+  title: string;
+  description: string;
+  imageSrc: string;
+  matches: (treatment: Pick<Treatment, "category" | "name">) => boolean;
+};
+
 
 type InstallmentPlanId =
   | "none"
@@ -247,6 +255,50 @@ const installmentPlans: InstallmentPlan[] = [
     label: "In-House Instalment - 12 months",
     months: 12,
     isInHouse: true,
+  },
+];
+
+const patientEducationTopics: PatientEducationTopic[] = [
+  {
+    id: "root-canal-treatment",
+    title: "Root Canal Treatment (RCT)",
+    description:
+      "Explains how an infected tooth is cleaned, filled and restored.",
+    imageSrc: "/patient-education/root-canal-treatment.jpg",
+    matches: ({ name }) => /root canal|\brct\b/i.test(name),
+  },
+  {
+    id: "sinus-lift",
+    title: "Sinus Lift for Upper Dental Implants",
+    description:
+      "Explains why and how bone is added beneath the sinus for upper implants.",
+    imageSrc: "/patient-education/sinus-lift.jpg",
+    matches: ({ name }) => /sinus lift/i.test(name),
+  },
+  {
+    id: "all-on-x-implant-treatment",
+    title: "All-on-X Implant Treatment",
+    description:
+      "Explains the temporary and final phases for full-arch implant treatment.",
+    imageSrc: "/patient-education/all-on-x-implant-treatment.jpg",
+    matches: ({ name }) => /all[-\s]?on[-\s]?x|full arch/i.test(name),
+  },
+  {
+    id: "temporary-dentures",
+    title: "Temporary Dentures after Extraction / Implant Treatment",
+    description:
+      "Explains why temporary dentures may feel less fitted while gums heal.",
+    imageSrc: "/patient-education/temporary-dentures.jpg",
+    matches: ({ name }) => /temporary denture|interim denture/i.test(name),
+  },
+  {
+    id: "dental-implant-treatment",
+    title: "Dental Implant Treatment",
+    description:
+      "Explains implant insertion, healing, abutment placement and final teeth options.",
+    imageSrc: "/patient-education/dental-implant-treatment.jpg",
+    matches: ({ category, name }) =>
+      /implant/i.test(category) || /implant|overdenture/i.test(name),
   },
 ];
 
@@ -1795,6 +1847,12 @@ function displayValue(value: string) {
   return value.trim() || "—";
 }
 
+function getPatientEducationTopic(
+  treatment: Pick<Treatment, "category" | "name">,
+) {
+  return patientEducationTopics.find((topic) => topic.matches(treatment));
+}
+
 function formatAttendedBy(value: string) {
   const trimmed = value.trim();
 
@@ -1977,6 +2035,8 @@ export default function Home() {
     useState<QuotationStatus>("estimated");
   const [financialSummaryDisplay, setFinancialSummaryDisplay] =
     useState<FinancialSummaryDisplayMode>("full");
+  const [showPatientEducationAnnex, setShowPatientEducationAnnex] =
+    useState(true);
   const [preferredLanguage, setPreferredLanguage] =
     useState<PreferredLanguage>("English");
   const [printLanguageMode, setPrintLanguageMode] =
@@ -2180,6 +2240,11 @@ export default function Home() {
       typeof draft.financialSummaryDisplay === "string"
         ? (draft.financialSummaryDisplay as FinancialSummaryDisplayMode)
         : "full",
+    );
+    setShowPatientEducationAnnex(
+      typeof draft.showPatientEducationAnnex === "boolean"
+        ? draft.showPatientEducationAnnex
+        : true,
     );
     setPreferredLanguage(
       typeof draft.preferredLanguage === "string"
@@ -2438,6 +2503,37 @@ export default function Home() {
       optionTotals.get(option.id) ??
       calculateTotalsForPhases(option.phases),
   }));
+  const patientEducationAnnexItems = useMemo(() => {
+    if (!showPatientEducationAnnex) {
+      return [];
+    }
+
+    const matchedTopics = new Map<string, PatientEducationTopic>();
+
+    treatmentOptions.forEach((option) => {
+      option.phases.forEach((phase) => {
+        phase.procedures.forEach((procedure) => {
+          const topic = getPatientEducationTopic(procedure);
+
+          if (topic && !matchedTopics.has(topic.id)) {
+            matchedTopics.set(topic.id, topic);
+          }
+        });
+      });
+    });
+
+    return Array.from(matchedTopics.values()).map((topic, index) => ({
+      ...topic,
+      reference: `A${index + 1}`,
+    }));
+  }, [showPatientEducationAnnex, treatmentOptions]);
+  const patientEducationReferenceByTopicId = useMemo(
+    () =>
+      new Map(
+        patientEducationAnnexItems.map((item) => [item.id, item.reference]),
+      ),
+    [patientEducationAnnexItems],
+  );
 
   const draftQuotationState: DraftQuotationState = {
     clinicBranch,
@@ -2451,6 +2547,7 @@ export default function Home() {
     subsidyTier,
     quotationStatus,
     financialSummaryDisplay,
+    showPatientEducationAnnex,
     preferredLanguage,
     printLanguageMode,
     selectedInstallmentPlan,
@@ -3243,6 +3340,26 @@ export default function Home() {
                       Print Language: English + preferred language
                     </option>
                   </select>
+
+                  <label className="flex items-start gap-3 rounded-xl border bg-white px-4 py-3 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={showPatientEducationAnnex}
+                      onChange={(event) =>
+                        setShowPatientEducationAnnex(event.target.checked)
+                      }
+                      className="mt-1 h-4 w-4"
+                    />
+                    <span>
+                      <span className="font-semibold">
+                        Show patient education annex in print/PDF
+                      </span>
+                      <span className="mt-1 block text-xs leading-relaxed text-gray-500">
+                        Matching annex images are added once at the end and can
+                        be hidden for this quotation.
+                      </span>
+                    </span>
+                  </label>
                 </div>
               )}
             </section>
@@ -3943,6 +4060,14 @@ export default function Home() {
                           const discountAmount = getDiscountAmount(procedure);
                           const hasRemarks =
                             procedure.description.trim().length > 0;
+                          const educationTopic = showPatientEducationAnnex
+                            ? getPatientEducationTopic(procedure)
+                            : undefined;
+                          const annexReference = educationTopic
+                            ? patientEducationReferenceByTopicId.get(
+                                educationTopic.id,
+                              )
+                            : undefined;
 
                           return (
                             <article
@@ -4053,6 +4178,15 @@ export default function Home() {
                                   </span>
                                 </div>
                               ) : null}
+
+                              {annexReference ? (
+                                <div className="mt-3 rounded border-l-2 border-indigo-300 bg-indigo-50 px-2 py-1.5 text-xs leading-snug text-indigo-950">
+                                  <span className="font-semibold">
+                                    Patient education:{" "}
+                                  </span>
+                                  See Annex {annexReference}
+                                </div>
+                              ) : null}
                             </article>
                           );
                         })}
@@ -4110,6 +4244,14 @@ export default function Home() {
                             const discountAmount = getDiscountAmount(procedure);
                             const hasRemarks =
                               procedure.description.trim().length > 0;
+                            const educationTopic = showPatientEducationAnnex
+                              ? getPatientEducationTopic(procedure)
+                              : undefined;
+                            const annexReference = educationTopic
+                              ? patientEducationReferenceByTopicId.get(
+                                  educationTopic.id,
+                                )
+                              : undefined;
 
 
                             return (
@@ -4136,6 +4278,14 @@ export default function Home() {
                                         <span className="whitespace-pre-wrap">
                                           {procedure.description}
                                         </span>
+                                      </div>
+                                    ) : null}
+                                    {annexReference ? (
+                                      <div className="mt-1.5 rounded border-l-2 border-indigo-300 bg-indigo-50 px-1.5 py-1 text-[10px] leading-snug text-indigo-950">
+                                        <span className="font-semibold">
+                                          Patient education:{" "}
+                                        </span>
+                                        See Annex {annexReference}
                                       </div>
                                     ) : null}
                                   </td>
@@ -5173,6 +5323,53 @@ export default function Home() {
                 </div>
               </div>
             </section>
+
+            {isFinalized && patientEducationAnnexItems.length > 0 ? (
+              <section className="print-break-before rounded-2xl border bg-white p-4 sm:p-6">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                    Supporting information
+                  </p>
+                  <h2 className="mt-1 text-2xl font-bold">
+                    Patient Education Annex
+                  </h2>
+                  <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                    These diagrams are provided as general patient education
+                    references for the procedures listed in this quotation.
+                  </p>
+                </div>
+
+                <div className="mt-5 space-y-6">
+                  {patientEducationAnnexItems.map((item) => (
+                    <article
+                      key={item.id}
+                      className="avoid-break rounded-2xl border bg-gray-50 p-3 sm:p-4"
+                    >
+                      <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <p className="text-xs font-bold uppercase tracking-wide text-blue-700">
+                            Annex {item.reference}
+                          </p>
+                          <h3 className="mt-1 text-xl font-bold">
+                            {item.title}
+                          </h3>
+                        </div>
+                      </div>
+                      <Image
+                        src={item.imageSrc}
+                        alt={item.title}
+                        width={1200}
+                        height={675}
+                        className="h-auto w-full rounded-xl border bg-white object-contain"
+                      />
+                      <p className="mt-3 text-sm leading-relaxed text-gray-600">
+                        {item.description}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            ) : null}
           </section>
         </div>
       </div>
