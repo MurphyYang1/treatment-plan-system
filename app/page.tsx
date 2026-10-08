@@ -262,6 +262,19 @@ const installmentPlans: InstallmentPlan[] = [
   },
 ];
 
+function isPatientEducationExcluded(
+  treatment: Pick<Treatment, "category" | "name">,
+) {
+  return (
+    /final prosthesis.*dental implants|orthodontic \/ cosmetic treatment/i.test(
+      treatment.category,
+    ) ||
+    /single pterygoid implant|single zygomatic implant|explant|bony protuberance/i.test(
+      treatment.name,
+    )
+  );
+}
+
 const patientEducationTopics: PatientEducationTopic[] = [
   {
     id: "root-canal-treatment",
@@ -305,9 +318,10 @@ const patientEducationTopics: PatientEducationTopic[] = [
         "முழு வளைவு இம்பிளாண்ட் சிகிச்சையின் தற்காலிக மற்றும் இறுதி கட்டங்களை விளக்குகிறது.",
     },
     imageSrc: "/patient-education/all-on-x-implant-treatment.jpg",
-    matches: ({ name }) =>
-      !/temporary denture|interim denture/i.test(name) &&
-      /all[-\s]?on[-\s]?x|full arch/i.test(name),
+    matches: (treatment) =>
+      !isPatientEducationExcluded(treatment) &&
+      !/temporary denture|interim denture/i.test(treatment.name) &&
+      /all[-\s]?on[-\s]?x|full arch/i.test(treatment.name),
   },
   {
     id: "temporary-dentures",
@@ -352,8 +366,10 @@ const patientEducationTopics: PatientEducationTopic[] = [
         "இம்பிளாண்ட் பொருத்துதல், ஆறுதல், அபட்மெண்ட் பொருத்துதல் மற்றும் இறுதி பல் விருப்பங்களை விளக்குகிறது.",
     },
     imageSrc: "/patient-education/dental-implant-treatment.jpg",
-    matches: ({ category, name }) =>
-      /implant/i.test(category) || /implant|overdenture/i.test(name),
+    matches: (treatment) =>
+      !isPatientEducationExcluded(treatment) &&
+      (/implant/i.test(treatment.category) ||
+        /implant|overdenture/i.test(treatment.name)),
   },
   {
     id: "smoking-healing",
