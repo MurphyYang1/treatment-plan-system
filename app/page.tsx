@@ -323,6 +323,21 @@ const patientEducationTopics: PatientEducationTopic[] = [
     matches: ({ name }) => /temporary denture|interim denture/i.test(name),
   },
   {
+    id: "socket-preservation",
+    title: "Socket Preservation",
+    descriptions: {
+      English:
+        "Explains how bone graft material can help preserve the socket after tooth extraction for future implant placement.",
+      Malay:
+        "Menerangkan bagaimana bahan graf tulang boleh membantu mengekalkan soket selepas cabutan gigi untuk pemasangan implan pada masa hadapan.",
+      "Simplified Chinese": "说明拔牙后如何使用骨粉帮助保存牙槽窝，以便日后进行种植牙。",
+      Tamil:
+        "பல் எடுக்கப்பட்ட பிறகு எதிர்கால இம்பிளாண்ட் பொருத்துதலுக்காக எலும்பு graft பொருள் socket-ஐ எவ்வாறு பாதுகாக்க உதவுகிறது என்பதை விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/socket-preservation.jpg",
+    matches: ({ name }) => /socket preservation/i.test(name),
+  },
+  {
     id: "dental-implant-treatment",
     title: "Dental Implant Treatment",
     descriptions: {
