@@ -323,6 +323,82 @@ const patientEducationTopics: PatientEducationTopic[] = [
     matches: ({ name }) => /single implant.*crestal sinus lift/i.test(name),
   },
   {
+    id: "pfm-zirconia-crowns",
+    title: "PFM Crown and Zirconia Crown",
+    descriptions: {
+      English:
+        "Compares PFM and zirconia crown options, including strength, appearance and material differences.",
+      Malay:
+        "Membandingkan pilihan korona PFM dan zirkonia, termasuk kekuatan, rupa bentuk dan perbezaan bahan.",
+      "Simplified Chinese":
+        "比较 PFM 牙冠和氧化锆牙冠的选择，包括强度、外观和材料差异。",
+      Tamil:
+        "PFM மற்றும் zirconia கிரவுன் விருப்பங்களை, வலிமை, தோற்றம் மற்றும் பொருள் வேறுபாடுகளுடன் ஒப்பிடுகிறது.",
+    },
+    imageSrc: "/patient-education/pfm-zirconia-crowns.jpg",
+    matches: ({ name }) => /pfm|zirconia/i.test(name),
+  },
+  {
+    id: "pterygoid-implants",
+    title: "Pterygoid Implants",
+    descriptions: {
+      English:
+        "Explains pterygoid implants for cases with limited bone at the back of the upper jaw.",
+      Malay:
+        "Menerangkan implan pterygoid untuk keadaan tulang yang terhad di bahagian belakang rahang atas.",
+      "Simplified Chinese": "说明翼突种植体如何用于上颌后方骨量不足的情况。",
+      Tamil:
+        "மேல் தாடையின் பின்புற பகுதியில் எலும்பு குறைவாக இருக்கும் நிலைகளில் pterygoid இம்பிளாண்டுகள் பற்றி விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/pterygoid-implants.jpg",
+    matches: ({ name }) => /pterygoid/i.test(name),
+  },
+  {
+    id: "zygomatic-implants",
+    title: "Zygomatic Implants",
+    descriptions: {
+      English:
+        "Explains zygomatic implants for patients with severe bone loss in the upper jaw.",
+      Malay:
+        "Menerangkan implan zygomatic untuk pesakit yang mengalami kehilangan tulang yang teruk di rahang atas.",
+      "Simplified Chinese": "说明颧骨种植体如何用于上颌骨严重缺损的患者。",
+      Tamil:
+        "மேல் தாடையில் கடுமையான எலும்பு இழப்பு உள்ள நோயாளிகளுக்கான zygomatic இம்பிளாண்டுகள் பற்றி விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/zygomatic-implants.jpg",
+    matches: ({ name }) => /zygomatic/i.test(name),
+  },
+  {
+    id: "complete-locator-overdentures",
+    title: "Implant-supported Overdenture (Locator System)",
+    descriptions: {
+      English:
+        "Explains how a complete locator overdenture clips onto implant attachments and can be removed for cleaning.",
+      Malay:
+        "Menerangkan bagaimana overdenture lengkap locator diklip pada sambungan implan dan boleh ditanggalkan untuk pembersihan.",
+      "Simplified Chinese": "说明全口 Locator 覆盖义齿如何扣在种植体附件上，并可取下清洁。",
+      Tamil:
+        "முழு locator overdenture இம்பிளாண்ட் இணைப்புகளில் எவ்வாறு கிளிப் ஆகி, சுத்தம் செய்ய அகற்றப்பட முடியும் என்பதை விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/complete-locator-overdentures.jpg",
+    matches: ({ name }) => /complete locator overdentures/i.test(name),
+  },
+  {
+    id: "dolder-bar-overdentures",
+    title: "Dolder Bar Overdentures",
+    descriptions: {
+      English:
+        "Explains how a Dolder Bar overdenture is supported by implants using a smooth metal bar and sleeve.",
+      Malay:
+        "Menerangkan bagaimana overdenture Dolder Bar disokong oleh implan menggunakan bar logam licin dan lengan penahan.",
+      "Simplified Chinese": "说明 Dolder Bar 覆盖义齿如何通过光滑金属杆和套筒由种植体支撑。",
+      Tamil:
+        "மென்மையான உலோக bar மற்றும் sleeve மூலம் Dolder Bar overdenture இம்பிளாண்டுகளால் எவ்வாறு ஆதரிக்கப்படுகிறது என்பதை விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/dolder-bar-overdentures.jpg",
+    matches: ({ name }) => /dolder bar overdentures/i.test(name),
+  },
+  {
     id: "all-on-x-implant-treatment",
     title: "All-on-X Implant Treatment",
     descriptions: {
