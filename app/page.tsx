@@ -1653,9 +1653,22 @@ const availableTreatments: Treatment[] = [
   },
   {
     category: "Final prosthesis for Dental implants",
-    name: "Removable COMPLETE Hader-bar Overdentures supported by implants (per arch)",
+    name: "Removable COMPLETE Dolder Bar Overdentures supported by implants (per arch)",
     duration: "",
     fee: 3400,
+    medisave: 0,
+    subsidies: {
+      chasBlue: 408.5,
+      chasOrange: 272.5,
+      merdeka: 413.5,
+      pioneer: 418.5,
+    },
+  },
+  {
+    category: "Final prosthesis for Dental implants",
+    name: "Removable COMPLETE Bar on locators Overdentures supported by implants (per arch)",
+    duration: "",
+    fee: 5500,
     medisave: 0,
     subsidies: {
       chasBlue: 408.5,
