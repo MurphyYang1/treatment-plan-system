@@ -399,6 +399,21 @@ const patientEducationTopics: PatientEducationTopic[] = [
     matches: ({ name }) => /dolder bar overdentures/i.test(name),
   },
   {
+    id: "complete-bar-on-locators-overdentures",
+    title: "Bar Overdenture",
+    descriptions: {
+      English:
+        "Explains how a removable bar overdenture clips onto a metal bar attached to implants.",
+      Malay:
+        "Menerangkan bagaimana overdenture bar boleh tanggal diklip pada bar logam yang dipasang pada implan.",
+      "Simplified Chinese": "说明可摘式杆卡覆盖义齿如何扣在连接种植体的金属杆上。",
+      Tamil:
+        "இம்பிளாண்டுகளில் பொருத்தப்பட்ட உலோக bar மீது அகற்றக்கூடிய bar overdenture எவ்வாறு கிளிப் ஆகிறது என்பதை விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/complete-bar-on-locators-overdentures.jpg",
+    matches: ({ name }) => /complete bar on locators overdentures/i.test(name),
+  },
+  {
     id: "all-on-x-implant-treatment",
     title: "All-on-X Implant Treatment",
     descriptions: {
