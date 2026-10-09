@@ -5550,6 +5550,8 @@ export default function Home() {
                         alt={item.title}
                         width={1200}
                         height={675}
+                        loading="eager"
+                        unoptimized
                         className="h-auto w-full rounded-xl border bg-white object-contain"
                       />
                       <p className="mt-3 text-sm leading-relaxed text-gray-600">
