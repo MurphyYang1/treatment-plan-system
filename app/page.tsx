@@ -2078,12 +2078,6 @@ function displayValue(value: string) {
   return value.trim() || "—";
 }
 
-function getPatientEducationTopic(
-  treatment: Pick<Treatment, "category" | "name">,
-) {
-  return patientEducationTopics.find((topic) => topic.matches(treatment));
-}
-
 function isSingleImplantCrownTreatment(
   treatment: Pick<Treatment, "category" | "name">,
 ) {
