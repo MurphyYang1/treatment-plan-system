@@ -496,6 +496,25 @@ const patientEducationTopics: PatientEducationTopic[] = [
   },
 ];
 
+const patientEducationAnnexDisclaimerHeadings: Record<PreferredLanguage, string> =
+  {
+    English: "Disclaimer",
+    Malay: "Penafian",
+    "Simplified Chinese": "免责声明",
+    Tamil: "பொறுப்பு துறப்பு",
+  };
+
+const patientEducationAnnexDisclaimers: Record<PreferredLanguage, string> = {
+  English:
+    "Illustrations in this annex are provided for general educational purposes only and may not reflect the patient's actual clinical condition, treatment complexity, or final treatment outcome. Patients should not rely solely on these materials when making treatment decisions. Please discuss any questions or concerns with your treating dentist, review information from reliable sources, and seek a second opinion where appropriate.",
+  Malay:
+    "Ilustrasi dalam lampiran ini disediakan untuk tujuan pendidikan umum sahaja dan mungkin tidak mencerminkan keadaan klinikal sebenar pesakit, kerumitan rawatan, atau hasil akhir rawatan. Pesakit tidak harus bergantung sepenuhnya pada bahan ini semasa membuat keputusan rawatan. Sila bincangkan sebarang soalan atau kebimbangan dengan doktor gigi yang merawat anda, semak maklumat daripada sumber yang dipercayai, dan dapatkan pendapat kedua jika sesuai.",
+  "Simplified Chinese":
+    "本附件中的图示仅供一般教育用途，可能无法反映患者的实际临床情况、治疗复杂程度或最终治疗结果。患者在作出治疗决定时，不应仅依赖这些资料。请与您的主治牙医讨论任何疑问或顾虑，参考可靠来源的信息，并在适当情况下寻求第二意见。",
+  Tamil:
+    "இந்த இணைப்பில் உள்ள விளக்கப்படங்கள் பொதுவான கல்வி நோக்கத்திற்காக மட்டுமே வழங்கப்படுகின்றன; நோயாளியின் உண்மையான மருத்துவ நிலை, சிகிச்சையின் சிக்கல், அல்லது இறுதி சிகிச்சை முடிவை முழுமையாக பிரதிபலிக்காமல் இருக்கலாம். சிகிச்சை முடிவெடுக்கும் போது நோயாளிகள் இந்த தகவல்களை மட்டுமே சார்ந்து இருக்கக் கூடாது. ஏதேனும் கேள்விகள் அல்லது கவலைகள் இருந்தால் சிகிச்சை அளிக்கும் பல் மருத்துவருடன் கலந்துரையாடவும், நம்பகமான தகவல் ஆதாரங்களைப் பார்க்கவும், தேவையான இடங்களில் இரண்டாம் கருத்தைப் பெறவும்.",
+};
+
 const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
   English: {
     label: "English",
@@ -2166,6 +2185,18 @@ function combineLanguageText(englishText: string, translatedText: string) {
   return englishText === translatedText
     ? englishText
     : `${englishText} / ${translatedText}`;
+}
+
+function getPatientEducationAnnexText(
+  copy: Record<PreferredLanguage, string>,
+  preferredLanguage: PreferredLanguage,
+  printLanguageMode: PrintLanguageMode,
+) {
+  if (printLanguageMode === "english" || preferredLanguage === "English") {
+    return copy.English;
+  }
+
+  return combineLanguageText(copy.English, copy[preferredLanguage]);
 }
 
 function getPrintLanguageCopy(
@@ -5738,6 +5769,22 @@ export default function Home() {
                     These diagrams are provided as general patient education
                     references for the procedures listed in this quotation.
                   </p>
+                  <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm leading-relaxed text-amber-950">
+                    <p className="font-semibold">
+                      {getPatientEducationAnnexText(
+                        patientEducationAnnexDisclaimerHeadings,
+                        preferredLanguage,
+                        printLanguageMode,
+                      )}
+                    </p>
+                    <p className="mt-1">
+                      {getPatientEducationAnnexText(
+                        patientEducationAnnexDisclaimers,
+                        preferredLanguage,
+                        printLanguageMode,
+                      )}
+                    </p>
+                  </div>
                 </div>
 
                 <div className="mt-5 space-y-6">
