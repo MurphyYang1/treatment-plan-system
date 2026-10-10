@@ -498,21 +498,21 @@ const patientEducationTopics: PatientEducationTopic[] = [
 
 const patientEducationAnnexDisclaimerHeadings: Record<PreferredLanguage, string> =
   {
-    English: "Important note",
-    Malay: "Nota penting",
-    "Simplified Chinese": "重要说明",
-    Tamil: "முக்கிய குறிப்பு",
+    English: "Disclaimer",
+    Malay: "Penafian",
+    "Simplified Chinese": "免责声明",
+    Tamil: "பொறுப்பு துறப்பு",
   };
 
 const patientEducationAnnexDisclaimers: Record<PreferredLanguage, string> = {
   English:
-    "These diagrams are general education aids only. They do not replace your dentist's clinical advice. Please ask your dentist if anything is unclear, and feel free to refer to reliable sources before making treatment decisions.",
+    "Illustrations in this annex are provided for general educational purposes only and may not reflect the patient's actual clinical condition, treatment complexity, or final treatment outcome. Patients should not rely solely on these materials when making treatment decisions. Please discuss any questions or concerns with your treating dentist, review information from reliable sources, and seek a second opinion where appropriate.",
   Malay:
-    "Rajah ini hanyalah panduan pendidikan umum. Ia tidak menggantikan nasihat klinikal doktor gigi anda. Sila bertanya kepada doktor gigi jika ada perkara yang tidak jelas, dan rujuk sumber yang dipercayai sebelum membuat keputusan rawatan.",
+    "Ilustrasi dalam lampiran ini disediakan untuk tujuan pendidikan umum sahaja dan mungkin tidak mencerminkan keadaan klinikal sebenar pesakit, kerumitan rawatan, atau hasil akhir rawatan. Pesakit tidak harus bergantung sepenuhnya pada bahan ini semasa membuat keputusan rawatan. Sila bincangkan sebarang soalan atau kebimbangan dengan doktor gigi yang merawat anda, semak maklumat daripada sumber yang dipercayai, dan dapatkan pendapat kedua jika sesuai.",
   "Simplified Chinese":
-    "这些图示仅作一般教育参考，不能取代牙医的临床建议。如有不清楚，请向牙医询问，也可参考可靠资料后再作治疗决定。",
+    "本附件中的图示仅供一般教育用途，可能无法反映患者的实际临床情况、治疗复杂程度或最终治疗结果。患者在作出治疗决定时，不应仅依赖这些资料。请与您的主治牙医讨论任何疑问或顾虑，参考可靠来源的信息，并在适当情况下寻求第二意见。",
   Tamil:
-    "இந்த படங்கள் பொதுவான கல்வி உதவிக்காக மட்டுமே. இவை உங்கள் பல் மருத்துவரின் மருத்துவ ஆலோசனையை மாற்றாது. ஏதேனும் தெளிவில்லையெனில் உங்கள் பல் மருத்துவரிடம் கேட்டு, சிகிச்சை முடிவெடுக்கும் முன் நம்பகமான தகவல்களையும் பார்க்கலாம்.",
+    "இந்த இணைப்பில் உள்ள விளக்கப்படங்கள் பொதுவான கல்வி நோக்கத்திற்காக மட்டுமே வழங்கப்படுகின்றன; நோயாளியின் உண்மையான மருத்துவ நிலை, சிகிச்சையின் சிக்கல், அல்லது இறுதி சிகிச்சை முடிவை முழுமையாக பிரதிபலிக்காமல் இருக்கலாம். சிகிச்சை முடிவெடுக்கும் போது நோயாளிகள் இந்த தகவல்களை மட்டுமே சார்ந்து இருக்கக் கூடாது. ஏதேனும் கேள்விகள் அல்லது கவலைகள் இருந்தால் சிகிச்சை அளிக்கும் பல் மருத்துவருடன் கலந்துரையாடவும், நம்பகமான தகவல் ஆதாரங்களைப் பார்க்கவும், தேவையான இடங்களில் இரண்டாம் கருத்தைப் பெறவும்.",
 };
 
 const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
