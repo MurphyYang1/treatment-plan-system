@@ -1991,6 +1991,29 @@ function createTreatmentOption(index: number): TreatmentOption {
   };
 }
 
+function cloneTreatmentOption(
+  option: TreatmentOption,
+  nextOptionIndex: number,
+): TreatmentOption {
+  const idSeed = Date.now() + nextOptionIndex * 1000;
+  const fallbackTitle = `Option ${String.fromCharCode(65 + nextOptionIndex)}`;
+  const sourceTitle = option.title.trim() || fallbackTitle;
+
+  return {
+    ...option,
+    id: idSeed,
+    title: `${sourceTitle} (Copy)`,
+    phases: option.phases.map((phase, phaseIndex) => ({
+      ...phase,
+      id: idSeed + phaseIndex + 1,
+      procedures: phase.procedures.map((procedure) => ({
+        ...procedure,
+        subsidies: { ...procedure.subsidies },
+      })),
+    })),
+  };
+}
+
 function calculateTotalsForPhases(phases: Phase[]) {
   let subtotal = 0;
   let gst = 0;
@@ -2255,6 +2278,18 @@ function getDefaultFinancialDisplayForStatus(
   return "cashOnly";
 }
 
+function getPrintDocumentTitle(patientName: string) {
+  const sanitizedPatientName = patientName
+    .trim()
+    .replace(/[<>:"/\\|?*\x00-\x1F]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return sanitizedPatientName
+    ? `Nofrills Dental Treatment Plan (${sanitizedPatientName})`
+    : "Nofrills Dental Treatment Plan";
+}
+
 function isTreatmentOptionArray(value: unknown): value is TreatmentOption[] {
   return Array.isArray(value) && value.length > 0;
 }
@@ -2432,24 +2467,27 @@ export default function Home() {
 
   const printQuotation = () => {
     const originalUrl = window.location.href;
+    const originalTitle = document.title;
     const sanitizedUrl = `${window.location.origin}${window.location.pathname}${window.location.hash}`;
     const nextPrintTimestamp = new Intl.DateTimeFormat("en-SG", {
       dateStyle: "medium",
       timeStyle: "short",
     }).format(new Date());
 
-    const restoreUrl = () => {
+    const restorePrintState = () => {
       window.history.replaceState(null, "", originalUrl);
-      window.removeEventListener("afterprint", restoreUrl);
+      document.title = originalTitle;
+      window.removeEventListener("afterprint", restorePrintState);
     };
 
     setPrintTimestamp(nextPrintTimestamp);
+    document.title = getPrintDocumentTitle(patientName);
 
     if (originalUrl !== sanitizedUrl) {
       window.history.replaceState(null, "", sanitizedUrl);
-      window.addEventListener("afterprint", restoreUrl);
+      window.addEventListener("afterprint", restorePrintState);
     } else {
-      window.addEventListener("afterprint", restoreUrl);
+      window.addEventListener("afterprint", restorePrintState);
     }
 
     window.setTimeout(() => {
@@ -2700,6 +2738,28 @@ export default function Home() {
     const nextOption = createTreatmentOption(treatmentOptions.length);
     setTreatmentOptions((currentOptions) => [...currentOptions, nextOption]);
     setActiveOptionId(nextOption.id);
+  };
+
+  const duplicateTreatmentOption = (optionId: number) => {
+    const sourceOptionIndex = treatmentOptions.findIndex(
+      (option) => option.id === optionId,
+    );
+
+    if (sourceOptionIndex === -1) {
+      return;
+    }
+
+    const duplicateOption = cloneTreatmentOption(
+      treatmentOptions[sourceOptionIndex],
+      treatmentOptions.length,
+    );
+
+    setTreatmentOptions((currentOptions) => [
+      ...currentOptions.slice(0, sourceOptionIndex + 1),
+      duplicateOption,
+      ...currentOptions.slice(sourceOptionIndex + 1),
+    ]);
+    setActiveOptionId(duplicateOption.id);
   };
 
   const deleteTreatmentOption = (optionId: number) => {
@@ -3932,38 +3992,51 @@ export default function Home() {
                         />
                       </label>
                     </div>
-                    <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-sm text-gray-500">
+                    <div className="mt-3 flex flex-col gap-3 text-sm text-gray-500 sm:flex-row sm:items-center sm:justify-between">
                       <p>
                         Cash payable for this option is calculated automatically:
                         {" "}
                         {formatCurrency(totals.payable)}.
                       </p>
-                      {treatmentOptions.length > 1 ? (
+                      <div className="flex flex-wrap gap-2">
                         <button
                           type="button"
                           onClick={() =>
                             activeOption
-                              ? setRecommendedOptionId(activeOption.id)
+                              ? duplicateTreatmentOption(activeOption.id)
                               : undefined
                           }
-                          className="rounded-xl border px-4 py-2 text-green-700 transition hover:bg-green-50"
+                          className="rounded-xl border px-4 py-2 text-slate-700 transition hover:bg-white"
                         >
-                          Mark Current Option Recommended
+                          Duplicate Current Option
                         </button>
-                      ) : null}
-                      {treatmentOptions.length > 1 ? (
-                        <button
-                          type="button"
-                          onClick={() =>
-                            activeOption
-                              ? deleteTreatmentOption(activeOption.id)
-                              : undefined
-                          }
-                          className="rounded-xl border px-4 py-2 text-red-500 transition hover:bg-red-50"
-                        >
-                          Delete Current Option
-                        </button>
-                      ) : null}
+                        {treatmentOptions.length > 1 ? (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              activeOption
+                                ? setRecommendedOptionId(activeOption.id)
+                                : undefined
+                            }
+                            className="rounded-xl border px-4 py-2 text-green-700 transition hover:bg-green-50"
+                          >
+                            Mark Current Option Recommended
+                          </button>
+                        ) : null}
+                        {treatmentOptions.length > 1 ? (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              activeOption
+                                ? deleteTreatmentOption(activeOption.id)
+                                : undefined
+                            }
+                            className="rounded-xl border px-4 py-2 text-red-500 transition hover:bg-red-50"
+                          >
+                            Delete Current Option
+                          </button>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
                 </div>
