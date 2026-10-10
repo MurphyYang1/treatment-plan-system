@@ -2084,6 +2084,38 @@ function getPatientEducationTopic(
   return patientEducationTopics.find((topic) => topic.matches(treatment));
 }
 
+function isSingleImplantCrownTreatment(
+  treatment: Pick<Treatment, "category" | "name">,
+) {
+  return (
+    /implant treatment/i.test(treatment.category) &&
+    /single implant/i.test(treatment.name) &&
+    /pfm|zirconia/i.test(treatment.name) &&
+    /crown/i.test(treatment.name)
+  );
+}
+
+function getPatientEducationTopics(
+  treatment: Pick<Treatment, "category" | "name">,
+) {
+  const topics = patientEducationTopics.filter((topic) =>
+    topic.matches(treatment),
+  );
+
+  if (!isSingleImplantCrownTreatment(treatment)) {
+    return topics.slice(0, 1);
+  }
+
+  const implantTopic = topics.find(
+    (topic) => topic.id === "dental-implant-treatment",
+  );
+  const crownTopic = topics.find((topic) => topic.id === "pfm-zirconia-crowns");
+
+  return [implantTopic, crownTopic].filter(
+    (topic): topic is PatientEducationTopic => Boolean(topic),
+  );
+}
+
 function getPatientEducationDescription(
   topic: PatientEducationTopic,
   preferredLanguage: PreferredLanguage,
@@ -2755,11 +2787,13 @@ export default function Home() {
     treatmentOptions.forEach((option) => {
       option.phases.forEach((phase) => {
         phase.procedures.forEach((procedure) => {
-          const topic = getPatientEducationTopic(procedure);
+          const topics = getPatientEducationTopics(procedure);
 
-          if (topic && !matchedTopics.has(topic.id)) {
-            matchedTopics.set(topic.id, topic);
-          }
+          topics.forEach((topic) => {
+            if (!matchedTopics.has(topic.id)) {
+              matchedTopics.set(topic.id, topic);
+            }
+          });
         });
       });
     });
@@ -4354,14 +4388,17 @@ export default function Home() {
                           const discountAmount = getDiscountAmount(procedure);
                           const hasRemarks =
                             procedure.description.trim().length > 0;
-                          const educationTopic = showPatientEducationAnnex
-                            ? getPatientEducationTopic(procedure)
-                            : undefined;
-                          const annexReference = educationTopic
-                            ? patientEducationReferenceByTopicId.get(
-                                educationTopic.id,
-                              )
-                            : undefined;
+                          const educationTopics = showPatientEducationAnnex
+                            ? getPatientEducationTopics(procedure)
+                            : [];
+                          const annexReferences = educationTopics
+                            .map((topic) =>
+                              patientEducationReferenceByTopicId.get(topic.id),
+                            )
+                            .filter(
+                              (reference): reference is string =>
+                                Boolean(reference),
+                            );
 
                           return (
                             <article
@@ -4473,12 +4510,12 @@ export default function Home() {
                                 </div>
                               ) : null}
 
-                              {annexReference ? (
+                              {annexReferences.length > 0 ? (
                                 <div className="mt-3 rounded border-l-2 border-indigo-300 bg-indigo-50 px-2 py-1.5 text-xs leading-snug text-indigo-950">
                                   <span className="font-semibold">
                                     Patient education:{" "}
                                   </span>
-                                  See Annex {annexReference}
+                                  See Annex {annexReferences.join(", ")}
                                 </div>
                               ) : null}
                             </article>
@@ -4538,14 +4575,17 @@ export default function Home() {
                             const discountAmount = getDiscountAmount(procedure);
                             const hasRemarks =
                               procedure.description.trim().length > 0;
-                            const educationTopic = showPatientEducationAnnex
-                              ? getPatientEducationTopic(procedure)
-                              : undefined;
-                            const annexReference = educationTopic
-                              ? patientEducationReferenceByTopicId.get(
-                                  educationTopic.id,
-                                )
-                              : undefined;
+                            const educationTopics = showPatientEducationAnnex
+                              ? getPatientEducationTopics(procedure)
+                              : [];
+                            const annexReferences = educationTopics
+                              .map((topic) =>
+                                patientEducationReferenceByTopicId.get(topic.id),
+                              )
+                              .filter(
+                                (reference): reference is string =>
+                                  Boolean(reference),
+                              );
 
 
                             return (
@@ -4574,12 +4614,12 @@ export default function Home() {
                                         </span>
                                       </div>
                                     ) : null}
-                                    {annexReference ? (
+                                    {annexReferences.length > 0 ? (
                                       <div className="mt-1.5 rounded border-l-2 border-indigo-300 bg-indigo-50 px-1.5 py-1 text-[10px] leading-snug text-indigo-950">
                                         <span className="font-semibold">
                                           Patient education:{" "}
                                         </span>
-                                        See Annex {annexReference}
+                                        See Annex {annexReferences.join(", ")}
                                       </div>
                                     ) : null}
                                   </td>
