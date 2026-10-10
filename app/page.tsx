@@ -291,6 +291,54 @@ const patientEducationTopics: PatientEducationTopic[] = [
     matches: ({ name }) => /root canal|\brct\b/i.test(name),
   },
   {
+    id: "periodontal-probing",
+    title: "Periodontal Probing",
+    descriptions: {
+      English:
+        "Explains how gum pocket measurements help detect and monitor gum disease.",
+      Malay:
+        "Menerangkan bagaimana ukuran poket gusi membantu mengesan dan memantau penyakit gusi.",
+      "Simplified Chinese": "说明牙周探诊如何通过测量牙龈袋来发现和监测牙周病。",
+      Tamil:
+        "ஈறு pocket அளவீடுகள் ஈறு நோயை கண்டறிந்து கண்காணிக்க எவ்வாறு உதவுகின்றன என்பதை விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/periodontal-probing.png",
+    matches: ({ name }) => name.toLowerCase() === "periodontal probing",
+  },
+  {
+    id: "gum-disease-root-planing",
+    title: "Gum Disease and Root Planing",
+    descriptions: {
+      English:
+        "Explains gum disease progression and how scaling and root planing help clean above and below the gum line.",
+      Malay:
+        "Menerangkan perkembangan penyakit gusi dan bagaimana scaling serta root planing membantu membersihkan bahagian atas dan bawah garis gusi.",
+      "Simplified Chinese":
+        "说明牙周病的发展，以及洗牙和根面平整如何清洁牙龈线上下的牙菌斑和牙石。",
+      Tamil:
+        "ஈறு நோயின் முன்னேற்றத்தையும், scaling மற்றும் root planing ஈறு வரியின் மேல் மற்றும் கீழ் பகுதியை எவ்வாறு சுத்தம் செய்ய உதவுகின்றன என்பதையும் விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/gum-disease-root-planing.png",
+    matches: ({ name }) =>
+      name.toLowerCase() ===
+      "root planing / gum treatment (per quadrant)",
+  },
+  {
+    id: "periodontal-splinting",
+    title: "Periodontal Splinting",
+    descriptions: {
+      English:
+        "Explains how splinting can help stabilise mobile teeth affected by gum disease.",
+      Malay:
+        "Menerangkan bagaimana splinting boleh membantu menstabilkan gigi longgar yang terjejas oleh penyakit gusi.",
+      "Simplified Chinese": "说明牙周夹板如何帮助稳定受牙周病影响而松动的牙齿。",
+      Tamil:
+        "ஈறு நோயால் பாதிக்கப்பட்ட அசையும் பற்களை splinting எவ்வாறு நிலைப்படுத்த உதவுகிறது என்பதை விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/periodontal-splinting.png",
+    matches: ({ name }) => name.toLowerCase() === "periodontal splinting",
+  },
+  {
     id: "sinus-lift",
     title: "Sinus Lift for Upper Dental Implants",
     descriptions: {
