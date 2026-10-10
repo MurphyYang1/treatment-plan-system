@@ -496,6 +496,25 @@ const patientEducationTopics: PatientEducationTopic[] = [
   },
 ];
 
+const patientEducationAnnexDisclaimerHeadings: Record<PreferredLanguage, string> =
+  {
+    English: "Important note",
+    Malay: "Nota penting",
+    "Simplified Chinese": "重要说明",
+    Tamil: "முக்கிய குறிப்பு",
+  };
+
+const patientEducationAnnexDisclaimers: Record<PreferredLanguage, string> = {
+  English:
+    "These diagrams are general education aids only. They do not replace your dentist's clinical advice. Please ask your dentist if anything is unclear, and feel free to refer to reliable sources before making treatment decisions.",
+  Malay:
+    "Rajah ini hanyalah panduan pendidikan umum. Ia tidak menggantikan nasihat klinikal doktor gigi anda. Sila bertanya kepada doktor gigi jika ada perkara yang tidak jelas, dan rujuk sumber yang dipercayai sebelum membuat keputusan rawatan.",
+  "Simplified Chinese":
+    "这些图示仅作一般教育参考，不能取代牙医的临床建议。如有不清楚，请向牙医询问，也可参考可靠资料后再作治疗决定。",
+  Tamil:
+    "இந்த படங்கள் பொதுவான கல்வி உதவிக்காக மட்டுமே. இவை உங்கள் பல் மருத்துவரின் மருத்துவ ஆலோசனையை மாற்றாது. ஏதேனும் தெளிவில்லையெனில் உங்கள் பல் மருத்துவரிடம் கேட்டு, சிகிச்சை முடிவெடுக்கும் முன் நம்பகமான தகவல்களையும் பார்க்கலாம்.",
+};
+
 const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
   English: {
     label: "English",
@@ -2166,6 +2185,18 @@ function combineLanguageText(englishText: string, translatedText: string) {
   return englishText === translatedText
     ? englishText
     : `${englishText} / ${translatedText}`;
+}
+
+function getPatientEducationAnnexText(
+  copy: Record<PreferredLanguage, string>,
+  preferredLanguage: PreferredLanguage,
+  printLanguageMode: PrintLanguageMode,
+) {
+  if (printLanguageMode === "english" || preferredLanguage === "English") {
+    return copy.English;
+  }
+
+  return combineLanguageText(copy.English, copy[preferredLanguage]);
 }
 
 function getPrintLanguageCopy(
@@ -5738,6 +5769,22 @@ export default function Home() {
                     These diagrams are provided as general patient education
                     references for the procedures listed in this quotation.
                   </p>
+                  <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm leading-relaxed text-amber-950">
+                    <p className="font-semibold">
+                      {getPatientEducationAnnexText(
+                        patientEducationAnnexDisclaimerHeadings,
+                        preferredLanguage,
+                        printLanguageMode,
+                      )}
+                    </p>
+                    <p className="mt-1">
+                      {getPatientEducationAnnexText(
+                        patientEducationAnnexDisclaimers,
+                        preferredLanguage,
+                        printLanguageMode,
+                      )}
+                    </p>
+                  </div>
                 </div>
 
                 <div className="mt-5 space-y-6">
