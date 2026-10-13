@@ -371,6 +371,23 @@ const patientEducationTopics: PatientEducationTopic[] = [
     matches: ({ name }) => /single implant.*crestal sinus lift/i.test(name),
   },
   {
+    id: "crowns-bridges-natural-teeth",
+    title: "Crowns and Bridges on Natural Teeth",
+    descriptions: {
+      English:
+        "Explains how crowns on natural teeth are prepared, protected with temporary crowns and completed with final crowns.",
+      Malay:
+        "Menerangkan bagaimana korona pada gigi semula jadi disediakan, dilindungi dengan korona sementara dan disiapkan dengan korona akhir.",
+      "Simplified Chinese":
+        "说明天然牙牙冠如何进行备牙、临时牙冠保护以及最终牙冠修复。",
+      Tamil:
+        "இயற்கை பற்களில் கிரவுன் செய்வதற்கான தயாரிப்பு, தற்காலிக கிரவுன் பாதுகாப்பு மற்றும் இறுதி கிரவுன் பொருத்துதல் பற்றி விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/crowns-bridges-natural-teeth.jpg",
+    matches: ({ category, name }) =>
+      /general treatment/i.test(category) && /permanent crown/i.test(name),
+  },
+  {
     id: "pfm-zirconia-crowns",
     title: "PFM Crown and Zirconia Crown",
     descriptions: {
@@ -387,34 +404,20 @@ const patientEducationTopics: PatientEducationTopic[] = [
     matches: ({ name }) => /pfm|zirconia/i.test(name),
   },
   {
-    id: "pterygoid-implants",
-    title: "Pterygoid Implants",
+    id: "pterygoid-zygomatic-implants",
+    title: "Pterygoid vs Zygomatic Implants",
     descriptions: {
       English:
-        "Explains pterygoid implants for cases with limited bone at the back of the upper jaw.",
+        "Compares pterygoid and zygomatic implants for cases with very little bone at the back of the upper jaw.",
       Malay:
-        "Menerangkan implan pterygoid untuk keadaan tulang yang terhad di bahagian belakang rahang atas.",
-      "Simplified Chinese": "说明翼突种植体如何用于上颌后方骨量不足的情况。",
+        "Membandingkan implan pterygoid dan zygomatic untuk keadaan tulang yang sangat sedikit di bahagian belakang rahang atas.",
+      "Simplified Chinese":
+        "比较翼突种植体和颧骨种植体在上颌后方骨量严重不足时的用途。",
       Tamil:
-        "மேல் தாடையின் பின்புற பகுதியில் எலும்பு குறைவாக இருக்கும் நிலைகளில் pterygoid இம்பிளாண்டுகள் பற்றி விளக்குகிறது.",
+        "மேல் தாடையின் பின்புற பகுதியில் எலும்பு மிகவும் குறைவாக இருக்கும் நிலைகளில் pterygoid மற்றும் zygomatic இம்பிளாண்டுகளை ஒப்பிடுகிறது.",
     },
-    imageSrc: "/patient-education/pterygoid-implants.jpg",
-    matches: ({ name }) => /pterygoid/i.test(name),
-  },
-  {
-    id: "zygomatic-implants",
-    title: "Zygomatic Implants",
-    descriptions: {
-      English:
-        "Explains zygomatic implants for patients with severe bone loss in the upper jaw.",
-      Malay:
-        "Menerangkan implan zygomatic untuk pesakit yang mengalami kehilangan tulang yang teruk di rahang atas.",
-      "Simplified Chinese": "说明颧骨种植体如何用于上颌骨严重缺损的患者。",
-      Tamil:
-        "மேல் தாடையில் கடுமையான எலும்பு இழப்பு உள்ள நோயாளிகளுக்கான zygomatic இம்பிளாண்டுகள் பற்றி விளக்குகிறது.",
-    },
-    imageSrc: "/patient-education/zygomatic-implants.jpg",
-    matches: ({ name }) => /zygomatic/i.test(name),
+    imageSrc: "/patient-education/pterygoid-zygomatic-implants.jpg",
+    matches: ({ name }) => /pterygoid|zygomatic/i.test(name),
   },
   {
     id: "complete-locator-overdentures",
