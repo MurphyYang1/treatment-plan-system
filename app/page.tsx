@@ -2231,6 +2231,16 @@ function isSingleImplantCrownTreatment(
   );
 }
 
+function isGeneralPermanentCrownTreatment(
+  treatment: Pick<Treatment, "category" | "name">,
+) {
+  return (
+    /general treatment/i.test(treatment.category) &&
+    /permanent crown/i.test(treatment.name) &&
+    /pfm|zirconia/i.test(treatment.name)
+  );
+}
+
 function getPatientEducationTopics(
   treatment: Pick<Treatment, "category" | "name">,
 ) {
@@ -2238,18 +2248,37 @@ function getPatientEducationTopics(
     topic.matches(treatment),
   );
 
-  if (!isSingleImplantCrownTreatment(treatment)) {
+  if (isSingleImplantCrownTreatment(treatment)) {
+    const implantTopic = topics.find(
+      (topic) => topic.id === "dental-implant-treatment",
+    );
+    const crownTopic = topics.find(
+      (topic) => topic.id === "pfm-zirconia-crowns",
+    );
+
+    return [implantTopic, crownTopic].filter(
+      (topic): topic is PatientEducationTopic => Boolean(topic),
+    );
+  }
+
+  if (isGeneralPermanentCrownTreatment(treatment)) {
+    const naturalCrownTopic = topics.find(
+      (topic) => topic.id === "crowns-bridges-natural-teeth",
+    );
+    const crownComparisonTopic = topics.find(
+      (topic) => topic.id === "pfm-zirconia-crowns",
+    );
+
+    return [naturalCrownTopic, crownComparisonTopic].filter(
+      (topic): topic is PatientEducationTopic => Boolean(topic),
+    );
+  }
+
+  if (topics.length > 0) {
     return topics.slice(0, 1);
   }
 
-  const implantTopic = topics.find(
-    (topic) => topic.id === "dental-implant-treatment",
-  );
-  const crownTopic = topics.find((topic) => topic.id === "pfm-zirconia-crowns");
-
-  return [implantTopic, crownTopic].filter(
-    (topic): topic is PatientEducationTopic => Boolean(topic),
-  );
+  return [];
 }
 
 function getPatientEducationDescription(
