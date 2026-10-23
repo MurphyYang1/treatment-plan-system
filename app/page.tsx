@@ -5312,115 +5312,28 @@ export default function Home() {
             })}
 
 
-            {!isFinalized ||
-            (showFinancialSummary && treatmentOptions.length <= 1) ? (
-            <section
-              className={compactClass(
-                isFinalized,
-                "avoid-break rounded-2xl border bg-gray-50 p-4 sm:p-6",
-                "avoid-break rounded-xl border bg-gray-50 p-3 sm:p-4 print:p-3",
-              )}
-            >
-              <h2 className={compactClass(isFinalized, "mb-5 text-2xl font-bold", "mb-3 text-xl font-bold")}>
-                {isFinalized
-                  ? selectedLanguageCopy.financialSummary
-                  : "Financial Summary"}
+            {!isFinalized ? (
+            <section className="avoid-break rounded-2xl border bg-gray-50 p-4 sm:p-6">
+              <h2 className="section-title mb-5 text-2xl font-bold tracking-tight">
+                Financial Summary
               </h2>
 
-              {isFinalized ? (
-                <div className="mb-4 rounded-xl border border-blue-100 bg-blue-50 p-3 text-sm leading-relaxed text-blue-950">
-                  <p className="font-semibold">
-                    {selectedLanguageCopy.patientCostExplanationHeading}
-                  </p>
-                  <p className="mt-1">
-                    {selectedLanguageCopy.patientCostExplanationText}
-                  </p>
-                </div>
-              ) : null}
-
-
-              {isFinalized && treatmentOptions.length > 1 ? (
-                <div className="space-y-3">
-                  {treatmentOptions.map((option) => {
-                    const summary =
-                      optionTotals.get(option.id) ??
-                      calculateTotalsForPhases(option.phases);
-
-                    return (
-                      <div
-                        key={option.id}
-                        className="rounded-xl border bg-white p-3"
-                      >
-                        <h3 className="font-semibold">
-                          {displayValue(option.title)}
-                        </h3>
-                        <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-5">
-                          <div>
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                              {selectedLanguageCopy.treatmentSubtotal}
-                            </p>
-                            <p className="font-semibold tabular-nums">
-                              {formatCurrency(summary.subtotal)}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                              {selectedLanguageCopy.gst}
-                            </p>
-                            <p className="font-semibold tabular-nums">
-                              {formatCurrency(summary.gst)}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                              {selectedLanguageCopy.totalSubsidiesUsed}
-                            </p>
-                            <p className="font-semibold tabular-nums">
-                              {formatDeduction(summary.subsidy)}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                              {selectedLanguageCopy.totalMedisaveUsed}
-                            </p>
-                            <p className="font-semibold tabular-nums">
-                              {formatDeduction(summary.medisave)}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                              {selectedLanguageCopy.cashPortion}
-                            </p>
-                            <p className="text-lg font-bold tabular-nums">
-                              {formatCurrency(summary.payable)}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-              <div className={compactClass(isFinalized, "space-y-4", "space-y-2 text-sm")}>
+              <div className="space-y-2 text-sm">
                 {showFullFinancialSummary ? (
                   <>
                     <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
                       <span className="min-w-0 break-words">
-                        {isFinalized
-                          ? selectedLanguageCopy.treatmentSubtotal
-                          : "Treatment Subtotal"}
+                        Treatment Subtotal
                       </span>
-                      <span className="whitespace-nowrap text-right tabular-nums">
+                      <span className="money whitespace-nowrap text-right">
                         ${totals.subtotal.toFixed(2)}
                       </span>
                     </div>
 
 
                     <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                      <span className="min-w-0 break-words">
-                        {isFinalized ? selectedLanguageCopy.gst : "GST (9%)"}
-                      </span>
-                      <span className="whitespace-nowrap text-right tabular-nums">
+                      <span className="min-w-0 break-words">GST (9%)</span>
+                      <span className="money whitespace-nowrap text-right">
                         ${totals.gst.toFixed(2)}
                       </span>
                     </div>
@@ -5428,11 +5341,9 @@ export default function Home() {
 
                     <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
                       <span className="min-w-0 break-words">
-                        {isFinalized
-                          ? selectedLanguageCopy.totalSubsidiesUsed
-                          : "Total Subsidies USED"}
+                        Total Subsidies USED
                       </span>
-                      <span className="whitespace-nowrap text-right tabular-nums">
+                      <span className="money whitespace-nowrap text-right">
                         ${totals.subsidy.toFixed(2)}
                       </span>
                     </div>
@@ -5440,11 +5351,9 @@ export default function Home() {
 
                     <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
                       <span className="min-w-0 break-words">
-                        {isFinalized
-                          ? selectedLanguageCopy.totalMedisaveUsed
-                          : "Total Medisave USED"}
+                        Total Medisave USED
                       </span>
-                      <span className="whitespace-nowrap text-right tabular-nums">
+                      <span className="money whitespace-nowrap text-right">
                         ${totals.medisave.toFixed(2)}
                       </span>
                     </div>
@@ -5452,54 +5361,41 @@ export default function Home() {
                 ) : null}
 
 
-                <div
-                  className={compactClass(
-                    isFinalized,
-                    "grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 border-t pt-5 text-2xl font-bold",
-                    "grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 border-t pt-3 text-xl font-bold",
-                  )}
-                >
-                  <span className="min-w-0 break-words">
-                    {isFinalized
-                      ? selectedLanguageCopy.patientPaysAfterDeductions
-                      : "Cash Portion"}
-                  </span>
-                  <span className="whitespace-nowrap text-right tabular-nums">
+                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 border-t pt-3 text-xl font-bold">
+                  <span className="min-w-0 break-words">Cash Portion</span>
+                  <span className="money whitespace-nowrap text-right">
                     ${totals.payable.toFixed(2)}
                   </span>
                 </div>
 
 
-                {!isFinalized ? (
-                  <div className="border-t pt-4">
-                    <label className="mb-2 block text-sm font-semibold text-gray-700">
-                      Optional Instalment Plan
-                    </label>
-                    <select
-                      value={selectedInstallmentPlan}
-                      onChange={(event) =>
-                        setSelectedInstallmentPlan(
-                          event.target.value as InstallmentPlanId,
-                        )
-                      }
-                      className="w-full rounded-xl border bg-white px-4 py-3"
-                    >
-                      <option value="none">No instalment plan selected</option>
-                      {installmentPlans.map((plan) => (
-                        <option key={plan.id} value={plan.id}>
-                          {plan.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                ) : null}
+                <div className="border-t pt-4">
+                  <label className="mb-2 block text-sm font-semibold text-gray-700">
+                    Optional Instalment Plan
+                  </label>
+                  <select
+                    value={selectedInstallmentPlan}
+                    onChange={(event) =>
+                      setSelectedInstallmentPlan(
+                        event.target.value as InstallmentPlanId,
+                      )
+                    }
+                    className="w-full rounded-xl border bg-white px-4 py-3"
+                  >
+                    <option value="none">No instalment plan selected</option>
+                    {installmentPlans.map((plan) => (
+                      <option key={plan.id} value={plan.id}>
+                        {plan.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
 
                 {installmentBreakdown ? (
                   renderInstallmentBreakdown(installmentBreakdown)
                 ) : null}
               </div>
-              )}
             </section>
             ) : null}
 
