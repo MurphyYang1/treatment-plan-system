@@ -608,24 +608,24 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     inHouseInstallmentNote:
       "For in-house instalments, the GST amount linked to the Medisave claim is excluded from the instalment amount and collected in cash.",
     interestFreeInstallments: "Interest-Free Instalments",
-    patientSummaryHeading: "Patient Summary",
+    patientSummaryHeading: "At a Glance",
     patientSummaryIntro:
-      "Key figures for each treatment option before reading the detailed procedures.",
+      "Quick payable comparison before reading the detailed treatment phases below.",
     treatmentCostBeforeDeductions: "Treatment cost before deductions",
     lessGovernmentSubsidy: "Less government subsidy",
     lessMedisave: "Less Medisave",
     estimatedCashPayable: "Estimated cash payable",
     patientCostExplanationHeading: "What the patient pays",
     patientCostExplanationText:
-      "Cash payable is the estimated amount after GST, subsidy, Medisave and any discount have been applied.",
+      "Cash payable is the estimated amount after GST, subsidy, Medisave and any discount have been applied. Full subsidy and Medisave figures appear in the comparison after the detailed phases.",
     patientPaysAfterDeductions: "Patient pays after deductions",
     recommended: "Recommended",
     recommendedByDentist: "Recommended by dentist",
     recommendedOption: "Recommended Option",
     patientSelectedBadge: "Patient Selected",
-    treatmentOptionsComparison: "Treatment Options Comparison",
+    treatmentOptionsComparison: "Compare Options in Detail",
     treatmentOptionsComparisonIntro:
-      "Compare the treatment options after reviewing their detailed phases and procedures above.",
+      "After reviewing the phases above, compare option notes, duration, subsidies, Medisave and cash payable side by side.",
     option: "Option",
     descriptionLabel: "Description",
     estimatedDuration: "Est. Duration",
@@ -729,24 +729,24 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     inHouseInstallmentNote:
       "Untuk ansuran dalaman, jumlah GST berkaitan tuntutan Medisave tidak termasuk dalam jumlah ansuran dan perlu dibayar secara tunai.",
     interestFreeInstallments: "Ansuran Tanpa Faedah",
-    patientSummaryHeading: "Ringkasan Pesakit",
+    patientSummaryHeading: "Sekilas Pandang",
     patientSummaryIntro:
-      "Angka utama bagi setiap pilihan rawatan sebelum membaca prosedur terperinci.",
+      "Perbandingan tunai ringkas sebelum membaca fasa rawatan terperinci di bawah.",
     treatmentCostBeforeDeductions: "Kos rawatan sebelum potongan",
     lessGovernmentSubsidy: "Tolak subsidi kerajaan",
     lessMedisave: "Tolak Medisave",
     estimatedCashPayable: "Anggaran tunai perlu dibayar",
     patientCostExplanationHeading: "Jumlah yang pesakit bayar",
     patientCostExplanationText:
-      "Tunai perlu dibayar ialah anggaran jumlah selepas GST, subsidi, Medisave dan sebarang diskaun digunakan.",
+      "Tunai perlu dibayar ialah anggaran jumlah selepas GST, subsidi, Medisave dan sebarang diskaun digunakan. Angka subsidi dan Medisave penuh dipaparkan dalam perbandingan selepas fasa terperinci.",
     patientPaysAfterDeductions: "Pesakit bayar selepas potongan",
     recommended: "Disyorkan",
     recommendedByDentist: "Disyorkan oleh doktor gigi",
     recommendedOption: "Pilihan Disyorkan",
     patientSelectedBadge: "Dipilih Pesakit",
-    treatmentOptionsComparison: "Perbandingan Pilihan Rawatan",
+    treatmentOptionsComparison: "Bandingkan Pilihan Secara Terperinci",
     treatmentOptionsComparisonIntro:
-      "Bandingkan pilihan rawatan selepas menyemak fasa dan prosedur terperinci di atas.",
+      "Selepas menyemak fasa di atas, bandingkan nota pilihan, tempoh, subsidi, Medisave dan tunai perlu dibayar secara bersebelahan.",
     option: "Pilihan",
     descriptionLabel: "Penerangan",
     estimatedDuration: "Anggaran Tempoh",
@@ -857,22 +857,23 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     inHouseInstallmentNote:
       "如选择诊所内部分期付款，与保健储蓄索赔相关的消费税不包括在分期金额内，并需以现金支付。",
     interestFreeInstallments: "免息分期付款",
-    patientSummaryHeading: "患者摘要",
-    patientSummaryIntro: "在阅读详细程序前，先查看每个治疗选项的主要金额。",
+    patientSummaryHeading: "一眼概览",
+    patientSummaryIntro: "在阅读下方详细治疗阶段前，先快速比较各选项需付金额。",
     treatmentCostBeforeDeductions: "扣除前治疗费用",
     lessGovernmentSubsidy: "扣除政府补贴",
     lessMedisave: "扣除保健储蓄",
     estimatedCashPayable: "预计需付现金",
     patientCostExplanationHeading: "患者需支付金额",
     patientCostExplanationText:
-      "需付现金是计入消费税，并扣除补贴、保健储蓄及任何折扣后的预计金额。",
+      "需付现金是计入消费税，并扣除补贴、保健储蓄及任何折扣后的预计金额。完整的补贴与保健储蓄数字会在详细阶段后的比较表中显示。",
     patientPaysAfterDeductions: "扣除后患者需付",
     recommended: "推荐",
     recommendedByDentist: "牙医推荐",
     recommendedOption: "推荐选项",
     patientSelectedBadge: "患者已选择",
-    treatmentOptionsComparison: "治疗选项比较",
-    treatmentOptionsComparisonIntro: "请先查看以上详细阶段和程序，再比较治疗选项。",
+    treatmentOptionsComparison: "详细比较选项",
+    treatmentOptionsComparisonIntro:
+      "在查看以上阶段后，并排比较选项说明、时长、补贴、保健储蓄与需付现金。",
     option: "选项",
     descriptionLabel: "说明",
     estimatedDuration: "预计时长",
@@ -978,25 +979,25 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     inHouseInstallmentNote:
       "உள் தவணைகளுக்கு, Medisave கோரிக்கையுடன் தொடர்புடைய GST தொகை தவணைத் தொகையில் சேர்க்கப்படாது; அது ரொக்கமாக வசூலிக்கப்படும்.",
     interestFreeInstallments: "வட்டி இல்லா தவணைகள்",
-    patientSummaryHeading: "நோயாளர் சுருக்கம்",
+    patientSummaryHeading: "ஒரே பார்வையில்",
     patientSummaryIntro:
-      "விரிவான செயல்முறைகளைப் படிக்கும் முன் ஒவ்வொரு சிகிச்சை விருப்பத்திற்கான முக்கிய தொகைகள்.",
+      "கீழே உள்ள விரிவான சிகிச்சை கட்டங்களைப் படிக்கும் முன், செலுத்த வேண்டிய தொகையை விரைவாக ஒப்பிடவும்.",
     treatmentCostBeforeDeductions: "கழிவுகளுக்கு முன் சிகிச்சை செலவு",
     lessGovernmentSubsidy: "அரசு மானியம் கழித்து",
     lessMedisave: "Medisave கழித்து",
     estimatedCashPayable: "மதிப்பிடப்பட்ட ரொக்கப் பணம்",
     patientCostExplanationHeading: "நோயாளர் செலுத்த வேண்டிய தொகை",
     patientCostExplanationText:
-      "செலுத்த வேண்டிய ரொக்கம் என்பது GST சேர்த்து, மானியம், Medisave மற்றும் ஏதேனும் தள்ளுபடி கழித்த பின் மதிப்பிடப்பட்ட தொகை.",
+      "செலுத்த வேண்டிய ரொக்கம் என்பது GST சேர்த்து, மானியம், Medisave மற்றும் ஏதேனும் தள்ளுபடி கழித்த பின் மதிப்பிடப்பட்ட தொகை. முழு மானியம் மற்றும் Medisave தொகைகள் விரிவான கட்டங்களுக்குப் பிறகுள்ள ஒப்பீட்டில் காட்டப்படும்.",
     patientPaysAfterDeductions:
       "கழிவுகளுக்குப் பிறகு நோயாளர் செலுத்துவது",
     recommended: "பரிந்துரைக்கப்பட்டது",
     recommendedByDentist: "பல் மருத்துவர் பரிந்துரை",
     recommendedOption: "பரிந்துரைக்கப்பட்ட விருப்பம்",
     patientSelectedBadge: "நோயாளர் தேர்வு",
-    treatmentOptionsComparison: "சிகிச்சை விருப்ப ஒப்பீடு",
+    treatmentOptionsComparison: "விருப்பங்களை விரிவாக ஒப்பிடுக",
     treatmentOptionsComparisonIntro:
-      "மேலுள்ள விரிவான கட்டங்கள் மற்றும் செயல்முறைகளைப் பார்த்த பிறகு சிகிச்சை விருப்பங்களை ஒப்பிடவும்.",
+      "மேலுள்ள கட்டங்களைப் பார்த்த பிறகு, விருப்ப குறிப்புகள், காலம், மானியம், Medisave மற்றும் ரொக்கத் தொகையை அருகருகே ஒப்பிடவும்.",
     option: "விருப்பம்",
     descriptionLabel: "விளக்கம்",
     estimatedDuration: "மதிப்பிடப்பட்ட காலம்",
@@ -4334,67 +4335,6 @@ export default function Home() {
                     {selectedLanguageCopy.patientCostExplanationText}
                   </p>
                 </div>
-
-                {showFullFinancialSummary ? (
-                  <div className="mt-4 grid gap-4 lg:grid-cols-2">
-                    {comparisonRows.map((option) => {
-                      const totalBeforeDeductions =
-                        option.totals.subtotal + option.totals.gst;
-
-                      return (
-                        <div
-                          key={option.id}
-                          className={`rounded-2xl border p-4 ${
-                            Number(option.id) === recommendedOptionId
-                              ? "border-green-300 bg-green-50"
-                              : "bg-gray-50"
-                          }`}
-                        >
-                          <div className="flex flex-wrap items-center justify-between gap-2">
-                            <h3 className="font-bold">{option.title}</h3>
-                            {Number(option.id) === recommendedOptionId ? (
-                              <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-800">
-                                {selectedLanguageCopy.recommendedOption}
-                              </span>
-                            ) : null}
-                          </div>
-                          <div className="mt-3 space-y-2 text-sm">
-                            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3">
-                              <span>
-                                {selectedLanguageCopy.treatmentCostBeforeDeductions}
-                              </span>
-                              <span className="money font-semibold">
-                                {formatCurrency(totalBeforeDeductions)}
-                              </span>
-                            </div>
-                            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 text-green-700">
-                              <span>
-                                {selectedLanguageCopy.lessGovernmentSubsidy}
-                              </span>
-                              <span className="money font-semibold">
-                                {formatDeduction(option.totals.subsidy)}
-                              </span>
-                            </div>
-                            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 text-green-700">
-                              <span>{selectedLanguageCopy.lessMedisave}</span>
-                              <span className="money font-semibold">
-                                {formatDeduction(option.totals.medisave)}
-                              </span>
-                            </div>
-                            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 rounded-xl bg-white px-3 py-2 text-lg font-bold">
-                              <span>
-                                {selectedLanguageCopy.patientPaysAfterDeductions}
-                              </span>
-                              <span className="money">
-                                {formatCurrency(option.totals.payable)}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : null}
               </section>
             ) : null}
 
