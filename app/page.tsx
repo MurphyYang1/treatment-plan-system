@@ -3522,68 +3522,71 @@ export default function Home() {
             "border-b p-3 sm:p-4 print:p-4",
           )}
         >
-          <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-            <div className="flex items-center gap-3 sm:gap-4">
-            <Image
-              src="/nofrills-logo.png"
-              alt="Nofrills Dental"
-              width={120}
-              height={120}
-              className={compactClass(
-                isFinalized,
-                "h-16 w-16 rounded-xl sm:h-24 sm:w-24 sm:rounded-2xl lg:h-[120px] lg:w-[120px]",
-                "h-14 w-14 rounded-lg sm:h-20 sm:w-20 sm:rounded-xl print:h-16 print:w-16",
-              )}
-              priority
-            />
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-row items-start justify-between gap-4">
+              <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+                <Image
+                  src="/nofrills-logo.png"
+                  alt="Nofrills Dental"
+                  width={120}
+                  height={120}
+                  className={compactClass(
+                    isFinalized,
+                    "h-16 w-16 shrink-0 rounded-xl sm:h-24 sm:w-24 sm:rounded-2xl lg:h-[120px] lg:w-[120px]",
+                    "h-14 w-14 shrink-0 rounded-lg sm:h-20 sm:w-20 sm:rounded-xl print:h-16 print:w-16",
+                  )}
+                  priority
+                />
 
-
-            <div>
-              <h1
-                className={compactClass(
-                  isFinalized,
-                  "doc-title text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl",
-                  "doc-title text-2xl font-bold tracking-tight sm:text-3xl print:text-2xl",
-                )}
-              >
-                Nofrills Dental
-              </h1>
-              <p
-                className={compactClass(
-                  isFinalized,
-                  "helper-text mt-2 text-base",
-                  "helper-text mt-1 text-sm",
-                )}
-              >
-                {isFinalized
-                  ? selectedLanguageCopy.documentTitle
-                  : "Dental Treatment Plan & Quotation"}
-              </p>
-            </div>
-            </div>
-
-            {isFinalized ? (
-              <div className="print-only hidden text-right text-xs leading-relaxed text-gray-700">
-                <p className="font-bold uppercase tracking-wide text-black">
-                  {getQuotationStatusLabel(quotationStatus, selectedLanguageCopy)}
-                </p>
-                <p>
-                  {selectedLanguageCopy.patientName}:{" "}
-                  <span className="font-semibold">
-                    {displayValue(patientName)}
-                  </span>
-                </p>
-                <p>
-                  {selectedLanguageCopy.quotationDate}:{" "}
-                  <span className="font-semibold">
-                    {displayValue(quotationDate)}
-                  </span>
-                </p>
+                <div className="min-w-0">
+                  <h1
+                    className={compactClass(
+                      isFinalized,
+                      "doc-title text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl",
+                      "doc-title text-2xl font-bold tracking-tight sm:text-3xl print:text-2xl",
+                    )}
+                  >
+                    Nofrills Dental
+                  </h1>
+                  <p
+                    className={compactClass(
+                      isFinalized,
+                      "helper-text mt-2 text-base",
+                      "helper-text mt-1 text-sm",
+                    )}
+                  >
+                    {isFinalized
+                      ? selectedLanguageCopy.documentTitle
+                      : "Dental Treatment Plan & Quotation"}
+                  </p>
+                </div>
               </div>
-            ) : null}
 
+              {isFinalized ? (
+                <div className="print-header-meta shrink-0 text-right text-xs leading-relaxed text-gray-700">
+                  <p className="font-bold uppercase tracking-wide text-black">
+                    {getQuotationStatusLabel(
+                      quotationStatus,
+                      selectedLanguageCopy,
+                    )}
+                  </p>
+                  <p className="mt-1">
+                    {selectedLanguageCopy.patientName}:{" "}
+                    <span className="font-semibold">
+                      {displayValue(patientName)}
+                    </span>
+                  </p>
+                  <p>
+                    {selectedLanguageCopy.quotationDate}:{" "}
+                    <span className="font-semibold">
+                      {displayValue(quotationDate)}
+                    </span>
+                  </p>
+                </div>
+              ) : null}
+            </div>
 
-            <div className="no-print flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap">
+            <div className="no-print flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
               <button
                 type="button"
                 onClick={() => setIsFinalized((current) => !current)}
@@ -3591,7 +3594,6 @@ export default function Home() {
               >
                 {isFinalized ? "Edit Quotation" : "Finalize for Print"}
               </button>
-
 
               {isFinalized ? (
                 <button
