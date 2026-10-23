@@ -137,6 +137,11 @@ input[type="date"]::-webkit-date-and-time-value {
     font-size: 10px;
   }
 
+  .print-header-meta {
+    max-width: 45%;
+    text-align: right;
+  }
+
   input,
   select,
   textarea {
