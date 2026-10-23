@@ -1509,15 +1509,6 @@ const availableTreatments: Treatment[] = [
     subsidies: noSubsidy,
   },
   {
-    category: "Periodontal Treatment",
-    name: "Blank / Custom Procedure",
-    duration: "",
-    fee: 0,
-    medisave: 0,
-    subsidies: noSubsidy,
-    isCustom: true,
-  },
-  {
     category: "Implant Treatment",
     name: "Implant surgery (2 implants)",
     duration: "",
@@ -2477,7 +2468,6 @@ export default function Home() {
   const [patientId, setPatientId] = useState("");
   const [quotationDate, setQuotationDate] = useState("");
   const [dateSigned, setDateSigned] = useState("");
-  const [printTimestamp, setPrintTimestamp] = useState("");
   const [signatureDataUrl, setSignatureDataUrl] = useState("");
   const [signatureUrl, setSignatureUrl] = useState("#signature");
   const [signingSessionId, setSigningSessionId] = useState("");
@@ -2629,10 +2619,6 @@ export default function Home() {
     const originalUrl = window.location.href;
     const originalTitle = document.title;
     const sanitizedUrl = `${window.location.origin}${window.location.pathname}${window.location.hash}`;
-    const nextPrintTimestamp = new Intl.DateTimeFormat("en-SG", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    }).format(new Date());
 
     const restorePrintState = () => {
       window.history.replaceState(null, "", originalUrl);
@@ -2640,7 +2626,6 @@ export default function Home() {
       window.removeEventListener("afterprint", restorePrintState);
     };
 
-    setPrintTimestamp(nextPrintTimestamp);
     document.title = getPrintDocumentTitle(patientName);
 
     if (originalUrl !== sanitizedUrl) {
@@ -3619,13 +3604,6 @@ export default function Home() {
             </div>
           </div>
         </header>
-
-        {printTimestamp ? (
-          <div className="print-only hidden border-b px-4 py-2 text-right text-xs text-gray-600">
-            Printed on {printTimestamp}
-          </div>
-        ) : null}
-
 
         <div
           className={compactClass(
