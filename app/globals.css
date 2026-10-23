@@ -1,16 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --brand: #3aa8c9;
-  --brand-deep: #1f6f88;
-  --brand-soft: #e8f6fa;
-  --brand-mid: #b7e0ec;
-  --page: #eef4f7;
-  --option-a: #e8f6fa;
-  --option-b: #eef5f0;
-  --option-c: #f4f0ea;
-  --option-b-text: #2f6b52;
-  --option-c-text: #7a5a2e;
+  /* Muted slate-teal — calmer than logo cyan for long-form reading */
+  --brand: #6a8490;
+  --brand-deep: #3f5560;
+  --brand-soft: #f1f4f5;
+  --brand-mid: #c9d3d8;
+  --page: #f2f4f5;
+  --option-a: #eef2f4;
+  --option-b: #eef2f0;
+  --option-c: #f3f1ee;
+  --option-b-text: #45554b;
+  --option-c-text: #5c5246;
+  --rail-options: #6d8578;
+  --rail-summary: #9a8360;
 }
 
 * {
@@ -84,7 +87,7 @@ input[type="date"]::-webkit-date-and-time-value {
   left: 0;
   right: 0;
   top: 0;
-  height: 5px;
+  height: 3px;
   background-color: var(--brand);
 }
 
