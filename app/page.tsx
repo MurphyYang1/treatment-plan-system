@@ -2207,6 +2207,11 @@ function compactClass(isFinalized: boolean, editClass: string, finalClass: strin
   return isFinalized ? finalClass : editClass;
 }
 
+function getOptionTintClass(index: number) {
+  const tints = ["option-tint-a", "option-tint-b", "option-tint-c"] as const;
+  return tints[index % tints.length];
+}
+
 
 function costLabelClass(isFinalized: boolean) {
   return compactClass(
@@ -3503,22 +3508,22 @@ export default function Home() {
     <main
       className={compactClass(
         isFinalized,
-        "min-h-screen bg-gray-100 p-3 text-black sm:p-4 lg:p-6 print:bg-white print:p-0",
-        "min-h-screen bg-gray-100 p-2 text-black sm:p-3 print:bg-white print:p-0",
+        "bg-page min-h-screen p-3 text-black sm:p-4 lg:p-6 print:bg-white print:p-0",
+        "bg-page min-h-screen p-2 text-black sm:p-3 print:bg-white print:p-0",
       )}
     >
       <div
         className={compactClass(
           isFinalized,
-          "print-page mx-auto max-w-7xl overflow-hidden rounded-2xl bg-white shadow-xl sm:rounded-3xl print:max-w-none print:rounded-none print:shadow-none",
-          "print-page mx-auto max-w-6xl overflow-hidden rounded-xl bg-white shadow-md print:max-w-none print:rounded-none print:shadow-none",
+          "print-page mx-auto max-w-7xl overflow-hidden rounded-2xl border border-[var(--brand-mid)] bg-white shadow-xl sm:rounded-3xl print:max-w-none print:rounded-none print:border-0 print:shadow-none",
+          "print-page mx-auto max-w-6xl overflow-hidden rounded-xl border border-[var(--brand-mid)] bg-white shadow-md print:max-w-none print:rounded-none print:border-0 print:shadow-none",
         )}
       >
         <header
           className={compactClass(
             isFinalized,
-            "border-b p-4 sm:p-6 lg:p-8 print:p-4",
-            "border-b p-3 sm:p-4 print:p-4",
+            "letterhead print-exact border-b border-[var(--brand-mid)] p-4 sm:p-6 lg:p-8 print:p-4",
+            "letterhead print-exact border-b border-[var(--brand-mid)] p-3 sm:p-4 print:p-4",
           )}
         >
           <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
@@ -3530,8 +3535,8 @@ export default function Home() {
               height={120}
               className={compactClass(
                 isFinalized,
-                "h-16 w-16 rounded-xl sm:h-24 sm:w-24 sm:rounded-2xl lg:h-[120px] lg:w-[120px]",
-                "h-14 w-14 rounded-lg sm:h-20 sm:w-20 sm:rounded-xl print:h-16 print:w-16",
+                "h-16 w-16 rounded-xl border border-[var(--brand-mid)] bg-brand-soft sm:h-24 sm:w-24 sm:rounded-2xl lg:h-[120px] lg:w-[120px]",
+                "h-14 w-14 rounded-lg border border-[var(--brand-mid)] bg-brand-soft sm:h-20 sm:w-20 sm:rounded-xl print:h-16 print:w-16",
               )}
               priority
             />
@@ -3541,8 +3546,8 @@ export default function Home() {
               <h1
                 className={compactClass(
                   isFinalized,
-                  "text-2xl font-bold sm:text-3xl lg:text-4xl",
-                  "text-2xl font-bold sm:text-3xl print:text-2xl",
+                  "text-2xl font-bold text-brand-deep sm:text-3xl lg:text-4xl",
+                  "text-2xl font-bold text-brand-deep sm:text-3xl print:text-2xl",
                 )}
               >
                 Nofrills Dental
@@ -3552,6 +3557,11 @@ export default function Home() {
                   ? selectedLanguageCopy.documentTitle
                   : "Dental Treatment Plan & Quotation"}
               </p>
+              {!isFinalized ? (
+                <p className="mt-1 text-xs font-semibold text-brand-deep">
+                  Patient discussion document
+                </p>
+              ) : null}
             </div>
             </div>
 
@@ -3580,7 +3590,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setIsFinalized((current) => !current)}
-                className="w-full rounded-xl bg-black px-5 py-3 text-white sm:w-auto sm:py-2"
+                className="w-full rounded-xl bg-brand-deep px-5 py-3 text-white sm:w-auto sm:py-2"
               >
                 {isFinalized ? "Edit Quotation" : "Finalize for Print"}
               </button>
@@ -3590,7 +3600,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={printQuotation}
-                  className="w-full rounded-xl border px-5 py-3 transition hover:bg-gray-100 sm:w-auto sm:py-2"
+                  className="w-full rounded-xl border border-[var(--brand-mid)] px-5 py-3 transition hover:bg-brand-soft sm:w-auto sm:py-2"
                 >
                   Print
                 </button>
@@ -3599,7 +3609,7 @@ export default function Home() {
                 type="button"
                 onClick={copyDraftLink}
                 disabled={!draftQuotationId || !isFirebaseConfigured}
-                className="w-full rounded-xl border px-5 py-3 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:py-2"
+                className="w-full rounded-xl border border-[var(--brand-mid)] px-5 py-3 transition hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:py-2"
               >
                 Copy Draft Link
               </button>
@@ -3626,11 +3636,17 @@ export default function Home() {
             <section
               className={compactClass(
                 isFinalized,
-                "avoid-break rounded-2xl border p-4 sm:p-6",
-                "avoid-break rounded-xl border p-3 sm:p-4 print:p-3",
+                "section-rail avoid-break rounded-2xl border border-[var(--brand-mid)] p-4 sm:p-6",
+                "avoid-break rounded-xl border border-[var(--brand-mid)] p-3 sm:p-4 print:p-3",
               )}
             >
-              <h2 className={compactClass(isFinalized, "mb-5 text-2xl font-bold", "mb-3 text-xl font-bold")}>
+              <h2
+                className={compactClass(
+                  isFinalized,
+                  "mb-5 text-2xl font-bold text-brand-deep",
+                  "print-section-title mb-3 text-xl font-bold text-brand-deep",
+                )}
+              >
                 {isFinalized
                   ? selectedLanguageCopy.patientInformation
                   : "Patient Information"}
@@ -4018,7 +4034,7 @@ export default function Home() {
                     ["4", "Review & Sign", "Finalize, review patient summary, collect signature, then print."],
                   ].map(([step, title, description]) => (
                     <li key={step} className="rounded-xl bg-gray-50 p-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-sm font-bold text-white">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-deep text-sm font-bold text-white">
                         {step}
                       </div>
                       <p className="mt-2 font-semibold">{title}</p>
@@ -4030,10 +4046,10 @@ export default function Home() {
             ) : null}
 
             {!isFinalized ? (
-              <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
+              <section className="section-rail section-rail-options avoid-break rounded-2xl border border-[var(--brand-mid)] bg-white p-4 sm:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div>
-                    <h2 className="text-2xl font-bold">Treatment Options</h2>
+                    <h2 className="text-2xl font-bold text-brand-deep">Treatment Options</h2>
                     <p className="mt-1 text-sm text-gray-500">
                       Select one option below to edit its phases and procedures.
                       The finalized printout will show each option as a separate
@@ -4053,15 +4069,15 @@ export default function Home() {
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {treatmentOptions.map((option) => (
+                  {treatmentOptions.map((option, optionIndex) => (
                     <button
                       key={option.id}
                       type="button"
                       onClick={() => setActiveOptionId(option.id)}
                       className={`rounded-xl border px-4 py-2 text-sm transition ${
                         option.id === activeOption?.id
-                          ? "bg-black text-white"
-                          : "hover:bg-gray-100"
+                          ? "bg-brand-deep text-white"
+                          : `${getOptionTintClass(optionIndex)} hover:opacity-90`
                       }`}
                     >
                       <span className="font-semibold">
@@ -4194,14 +4210,20 @@ export default function Home() {
             <section
               className={compactClass(
                 isFinalized,
-                `rounded-2xl border p-4 sm:p-6 ${
+                `section-rail section-rail-options rounded-2xl border border-[var(--brand-mid)] p-4 sm:p-6 ${
                   treatmentOptions.length > 1 ? "print:hidden" : ""
                 }`,
-                "avoid-break rounded-xl border p-3 sm:p-4 print:p-3",
+                "avoid-break rounded-xl border border-[var(--brand-mid)] p-3 sm:p-4 print:p-3",
               )}
             >
               <div className="flex flex-wrap items-center justify-between gap-4">
-                <h2 className={compactClass(isFinalized, "text-2xl font-bold", "text-xl font-bold")}>
+                <h2
+                  className={compactClass(
+                    isFinalized,
+                    "text-2xl font-bold text-brand-deep",
+                    "print-section-title text-xl font-bold text-brand-deep",
+                  )}
+                >
                   {isFinalized
                     ? selectedLanguageCopy.treatmentPhases
                     : "Treatment Phases"}
@@ -4212,7 +4234,7 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={addPhase}
-                    className="rounded-xl bg-black px-6 py-3 text-white"
+                    className="rounded-xl bg-brand-deep px-6 py-3 text-white"
                   >
                     + Add Phase
                   </button>
@@ -4224,8 +4246,8 @@ export default function Home() {
             <section
               className={compactClass(
                 isFinalized,
-                "avoid-break rounded-2xl border bg-blue-50 p-5 text-sm text-blue-950",
-                "avoid-break rounded-xl border bg-blue-50 p-3 text-xs text-blue-950 print:p-2",
+                "avoid-break rounded-2xl border border-[var(--brand-mid)] bg-brand-soft p-5 text-sm text-brand-deep",
+                "avoid-break rounded-xl border border-[var(--brand-mid)] bg-brand-soft p-3 text-xs text-brand-deep print:p-2",
               )}
             >
               <h3 className="font-bold">
@@ -4241,8 +4263,8 @@ export default function Home() {
             </section>
 
             {isFinalized && treatmentOptions.length > 1 && showFinancialSummary ? (
-              <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
-                <h2 className="text-xl font-bold">
+              <section className="section-rail section-rail-summary avoid-break rounded-2xl border border-[var(--brand-mid)] bg-white p-4 sm:p-6">
+                <h2 className="print-section-title text-xl font-bold text-brand-deep">
                   {selectedLanguageCopy.patientSummaryHeading}
                 </h2>
                 <p className="mt-1 text-sm text-gray-500">
@@ -4257,7 +4279,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="mt-4 grid gap-4 lg:grid-cols-2">
-                  {comparisonRows.map((option) => {
+                  {comparisonRows.map((option, optionIndex) => {
                     const totalBeforeDeductions =
                       option.totals.subtotal + option.totals.gst;
 
@@ -4267,7 +4289,7 @@ export default function Home() {
                         className={`rounded-2xl border p-4 ${
                           Number(option.id) === recommendedOptionId
                             ? "border-green-300 bg-green-50"
-                            : "bg-gray-50"
+                            : getOptionTintClass(optionIndex)
                         }`}
                       >
                         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -4337,26 +4359,38 @@ export default function Home() {
               : activeOption
                 ? [activeOption]
                 : []
-            ).map((option) => {
+            ).map((option, optionIndex) => {
               const optionSummary =
                 optionTotals.get(option.id) ??
                 calculateTotalsForPhases(option.phases);
+              const optionTintClass = getOptionTintClass(
+                isFinalized
+                  ? optionIndex
+                  : Math.max(
+                      0,
+                      treatmentOptions.findIndex(
+                        (item) => item.id === option.id,
+                      ),
+                    ),
+              );
 
               return (
               <div
                 key={option.id}
                 className={compactClass(
                   isFinalized,
-                  "space-y-4 rounded-[2rem] border-2 border-gray-200 bg-white p-3 shadow-sm sm:p-4 print:border-2 print:border-gray-300 print:p-3",
+                  "space-y-4 rounded-[2rem] border-2 border-[var(--brand-mid)] bg-white p-3 shadow-sm sm:p-4 print:border-2 print:border-[var(--brand-mid)] print:p-3",
                   "space-y-4",
                 )}
               >
                 {isFinalized ? (
-                  <section className="avoid-break overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-                    <div className="print-exact bg-slate-900 px-4 py-4 text-white print:bg-slate-900 print:text-white sm:px-6">
+                  <section className="avoid-break overflow-hidden rounded-2xl border border-[var(--brand-mid)] bg-white shadow-sm">
+                    <div
+                      className={`print-exact px-4 py-4 sm:px-6 ${optionTintClass}`}
+                    >
                       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                         <div>
-                          <p className="text-xs font-semibold uppercase tracking-wide text-gray-300 print:text-gray-300">
+                          <p className="text-xs font-semibold uppercase tracking-wide opacity-80">
                             {selectedLanguageCopy.option}
                           </p>
                           <div className="mt-1 flex flex-wrap items-center gap-2">
@@ -4377,11 +4411,11 @@ export default function Home() {
                         </div>
 
                         {showFinancialSummary ? (
-                          <div className="print-exact rounded-2xl border border-white/40 bg-white px-4 py-3 text-slate-950 shadow-sm sm:min-w-56 sm:text-right print:bg-white print:text-slate-950">
-                            <p className="text-[11px] font-black uppercase tracking-wide text-slate-700">
+                          <div className="print-exact rounded-2xl border border-[var(--brand-mid)] bg-white px-4 py-3 text-slate-950 shadow-sm sm:min-w-56 sm:text-right print:bg-white print:text-slate-950">
+                            <p className="text-[11px] font-black uppercase tracking-wide text-brand-deep">
                               {selectedLanguageCopy.patientPaysAfterDeductions}
                             </p>
-                            <p className="mt-1 text-3xl font-black tabular-nums">
+                            <p className="mt-1 text-3xl font-black tabular-nums text-brand-deep">
                               {formatCurrency(optionSummary.payable)}
                             </p>
                           </div>
@@ -4583,7 +4617,7 @@ export default function Home() {
                         <button
                           type="button"
                           onClick={() => addProcedure(phaseIndex)}
-                          className="rounded-xl bg-black px-6 py-3 text-white sm:col-span-2 lg:col-span-1"
+                          className="rounded-xl bg-brand-deep px-6 py-3 text-white sm:col-span-2 lg:col-span-1"
                         >
                           Add Procedure
                         </button>
@@ -4740,7 +4774,7 @@ export default function Home() {
 
                     <div className="mt-3 hidden overflow-x-auto rounded-lg border lg:block print:block">
                       <table className="w-full min-w-[760px] table-fixed border-collapse text-[11px] leading-tight print:min-w-0">
-                        <thead className="bg-gray-100 text-gray-700">
+                        <thead className="print-exact table-brand-head">
                           <tr>
                             <th className="w-[28%] px-2 py-2 text-left font-semibold">
                               {selectedLanguageCopy.treatment}
@@ -5504,7 +5538,7 @@ export default function Home() {
 
                 <div className="mt-4 overflow-x-auto rounded-lg border">
                   <table className="w-full min-w-[820px] table-fixed border-collapse text-sm print:min-w-0">
-                    <thead className="bg-gray-100 text-gray-700">
+                    <thead className="print-exact table-brand-head">
                       <tr>
                         <th className="w-[18%] px-3 py-2 text-left font-semibold">
                           {selectedLanguageCopy.option}
@@ -5718,11 +5752,17 @@ export default function Home() {
               id="signature"
               className={compactClass(
                 isFinalized,
-                "avoid-break print-break-before rounded-2xl border bg-white p-4 sm:p-6 lg:p-8",
-                "avoid-break print-break-before rounded-xl border bg-white p-3 sm:p-4 print:p-3",
+                "section-rail section-rail-sign avoid-break print-break-before rounded-2xl border border-[var(--brand-mid)] bg-white p-4 sm:p-6 lg:p-8",
+                "avoid-break print-break-before rounded-xl border border-[var(--brand-mid)] bg-white p-3 sm:p-4 print:p-3",
               )}
             >
-              <h2 className={compactClass(isFinalized, "mb-6 text-2xl font-bold", "mb-3 text-xl font-bold")}>
+              <h2
+                className={compactClass(
+                  isFinalized,
+                  "mb-6 text-2xl font-bold text-brand-deep",
+                  "print-section-title mb-3 text-xl font-bold text-brand-deep",
+                )}
+              >
                 {isFinalized
                   ? selectedLanguageCopy.signatureHeading
                   : "Patient Acknowledgement & Signature"}
@@ -5817,7 +5857,7 @@ export default function Home() {
                           type="button"
                           onClick={saveDesktopSignature}
                           disabled={isSavingSignature || !isFirebaseConfigured}
-                          className="rounded-xl bg-black px-5 py-3 text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300 sm:py-2"
+                          className="rounded-xl bg-brand-deep px-5 py-3 text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:bg-gray-300 sm:py-2"
                         >
                           {isSavingSignature
                             ? "Saving..."
@@ -5942,6 +5982,17 @@ export default function Home() {
             ) : null}
           </section>
         </div>
+
+        <footer className="print-footer print-only hidden px-4 py-3 text-xs sm:px-6">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <span>Nofrills Dental · Confidential — for patient discussion</span>
+            <span className="text-brand-deep">
+              {displayValue(clinicBranch) !== "—"
+                ? displayValue(clinicBranch)
+                : "Treatment quotation"}
+            </span>
+          </div>
+        </footer>
       </div>
     </main>
   );
