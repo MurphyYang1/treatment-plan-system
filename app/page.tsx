@@ -1509,6 +1509,15 @@ const availableTreatments: Treatment[] = [
     subsidies: noSubsidy,
   },
   {
+    category: "Periodontal Treatment",
+    name: "Blank / Custom Procedure",
+    duration: "",
+    fee: 0,
+    medisave: 0,
+    subsidies: noSubsidy,
+    isCustom: true,
+  },
+  {
     category: "Implant Treatment",
     name: "Implant surgery (2 implants)",
     duration: "",
@@ -2806,7 +2815,8 @@ export default function Home() {
 
 
     const found = availableTreatments.find(
-      (item) => item.name === selectedTreatment,
+      (item) =>
+        item.category === selectedCategory && item.name === selectedTreatment,
     );
 
 
