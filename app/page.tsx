@@ -3541,13 +3541,19 @@ export default function Home() {
               <h1
                 className={compactClass(
                   isFinalized,
-                  "text-2xl font-bold sm:text-3xl lg:text-4xl",
-                  "text-2xl font-bold sm:text-3xl print:text-2xl",
+                  "doc-title text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl",
+                  "doc-title text-2xl font-bold tracking-tight sm:text-3xl print:text-2xl",
                 )}
               >
                 Nofrills Dental
               </h1>
-              <p className={compactClass(isFinalized, "mt-2 text-gray-600", "mt-1 text-sm text-gray-600")}>
+              <p
+                className={compactClass(
+                  isFinalized,
+                  "helper-text mt-2 text-base",
+                  "helper-text mt-1 text-sm",
+                )}
+              >
                 {isFinalized
                   ? selectedLanguageCopy.documentTitle
                   : "Dental Treatment Plan & Quotation"}
@@ -3618,11 +3624,11 @@ export default function Home() {
         <div
           className={compactClass(
             isFinalized,
-            "grid min-w-0 gap-4 p-3 sm:p-4 md:gap-6 lg:grid-cols-3 lg:gap-8 lg:p-8 print:grid-cols-1 print:gap-4 print:p-4",
-            "grid min-w-0 gap-3 p-3 sm:gap-4 sm:p-4 lg:grid-cols-[18rem_minmax(0,1fr)] print:grid-cols-1 print:gap-3 print:p-3",
+            "grid min-w-0 gap-5 p-4 sm:p-5 md:gap-7 lg:grid-cols-3 lg:gap-8 lg:p-8 print:grid-cols-1 print:gap-5 print:p-4",
+            "grid min-w-0 gap-3 p-3 sm:gap-4 sm:p-4 lg:grid-cols-[18rem_minmax(0,1fr)] print:grid-cols-1 print:gap-4 print:p-3",
           )}
         >
-          <aside className="min-w-0 space-y-4 lg:col-span-1 lg:col-start-1 lg:row-start-1 print:col-auto print:row-auto print:space-y-3">
+          <aside className="min-w-0 space-y-5 lg:col-span-1 lg:col-start-1 lg:row-start-1 print:col-auto print:row-auto print:space-y-4">
             <section
               className={compactClass(
                 isFinalized,
@@ -3630,7 +3636,13 @@ export default function Home() {
                 "avoid-break rounded-xl border p-3 sm:p-4 print:p-3",
               )}
             >
-              <h2 className={compactClass(isFinalized, "mb-5 text-2xl font-bold", "mb-3 text-xl font-bold")}>
+              <h2
+                className={compactClass(
+                  isFinalized,
+                  "section-title mb-5 text-2xl font-bold tracking-tight",
+                  "section-title mb-3 text-xl font-bold tracking-tight",
+                )}
+              >
                 {isFinalized
                   ? selectedLanguageCopy.patientInformation
                   : "Patient Information"}
@@ -4003,13 +4015,15 @@ export default function Home() {
           <section
             className={compactClass(
               isFinalized,
-              "min-w-0 space-y-6 lg:col-span-2 lg:col-start-2 lg:row-start-1 print:col-auto print:row-auto",
-              "min-w-0 space-y-3 lg:col-span-1 lg:col-start-2 lg:row-start-1 print:col-auto print:row-auto print:space-y-3",
+              "min-w-0 space-y-8 lg:col-span-2 lg:col-start-2 lg:row-start-1 print:col-auto print:row-auto print:space-y-5",
+              "min-w-0 space-y-4 lg:col-span-1 lg:col-start-2 lg:row-start-1 print:col-auto print:row-auto print:space-y-4",
             )}
           >
             {!isFinalized ? (
               <section className="rounded-2xl border bg-white p-4 sm:p-6">
-                <h2 className="text-xl font-bold">Guided Workflow</h2>
+                <h2 className="section-title text-xl font-bold tracking-tight">
+                  Guided Workflow
+                </h2>
                 <ol className="mt-4 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
                   {[
                     ["1", "Patient Info", "Confirm branch, dentist, patient details, and language."],
@@ -4033,8 +4047,10 @@ export default function Home() {
               <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div>
-                    <h2 className="text-2xl font-bold">Treatment Options</h2>
-                    <p className="mt-1 text-sm text-gray-500">
+                    <h2 className="section-title text-2xl font-bold tracking-tight">
+                      Treatment Options
+                    </h2>
+                    <p className="helper-text mt-1 text-sm">
                       Select one option below to edit its phases and procedures.
                       The finalized printout will show each option as a separate
                       section, then compare them at the end.
@@ -4201,7 +4217,13 @@ export default function Home() {
               )}
             >
               <div className="flex flex-wrap items-center justify-between gap-4">
-                <h2 className={compactClass(isFinalized, "text-2xl font-bold", "text-xl font-bold")}>
+                <h2
+                  className={compactClass(
+                    isFinalized,
+                    "section-title text-2xl font-bold tracking-tight",
+                    "section-title text-xl font-bold tracking-tight",
+                  )}
+                >
                   {isFinalized
                     ? selectedLanguageCopy.treatmentPhases
                     : "Treatment Phases"}
@@ -4242,92 +4264,137 @@ export default function Home() {
 
             {isFinalized && treatmentOptions.length > 1 && showFinancialSummary ? (
               <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
-                <h2 className="text-xl font-bold">
+                <h2 className="section-title text-xl font-bold tracking-tight">
                   {selectedLanguageCopy.patientSummaryHeading}
                 </h2>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="helper-text mt-1 text-sm">
                   {selectedLanguageCopy.patientSummaryIntro}
                 </p>
-                <div className="mt-3 rounded-xl border border-blue-100 bg-blue-50 p-3 text-sm leading-relaxed text-blue-950">
-                  <p className="font-semibold">
+
+                <div className="mt-4 overflow-x-auto rounded-xl border border-gray-200">
+                  <table className="w-full min-w-[520px] border-collapse text-sm">
+                    <thead className="bg-gray-100 text-gray-700">
+                      <tr>
+                        <th className="px-3 py-2.5 text-left font-semibold">
+                          {selectedLanguageCopy.option}
+                        </th>
+                        <th className="px-3 py-2.5 text-left font-semibold">
+                          {selectedLanguageCopy.estimatedDuration}
+                        </th>
+                        <th className="px-3 py-2.5 text-right font-semibold">
+                          {selectedLanguageCopy.patientPaysAfterDeductions}
+                        </th>
+                        <th className="px-3 py-2.5 text-left font-semibold">
+                          {" "}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {comparisonRows.map((option) => (
+                        <tr
+                          key={`glance-${option.id}`}
+                          className="border-t border-gray-200"
+                        >
+                          <td className="px-3 py-2.5 font-semibold">
+                            {option.title}
+                          </td>
+                          <td className="helper-text px-3 py-2.5">
+                            {option.estimatedDuration.trim()
+                              ? option.estimatedDuration
+                              : "—"}
+                          </td>
+                          <td className="money px-3 py-2.5 text-right text-base font-bold">
+                            {formatCurrency(option.totals.payable)}
+                          </td>
+                          <td className="px-3 py-2.5">
+                            <div className="flex flex-wrap gap-1.5">
+                              {Number(option.id) === recommendedOptionId ? (
+                                <span className="rounded-full bg-green-100 px-2 py-0.5 text-[11px] font-bold text-green-800">
+                                  {selectedLanguageCopy.recommendedOption}
+                                </span>
+                              ) : null}
+                              {patientSelectedOptionId === Number(option.id) ? (
+                                <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[11px] font-bold text-blue-800">
+                                  {selectedLanguageCopy.patientSelectedBadge}
+                                </span>
+                              ) : null}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="mt-3 rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm leading-relaxed text-gray-700">
+                  <p className="font-semibold text-gray-900">
                     {selectedLanguageCopy.patientCostExplanationHeading}
                   </p>
-                  <p className="mt-1">
+                  <p className="helper-text mt-1">
                     {selectedLanguageCopy.patientCostExplanationText}
                   </p>
                 </div>
-                <div className="mt-4 grid gap-4 lg:grid-cols-2">
-                  {comparisonRows.map((option) => {
-                    const totalBeforeDeductions =
-                      option.totals.subtotal + option.totals.gst;
 
-                    return (
-                      <div
-                        key={option.id}
-                        className={`rounded-2xl border p-4 ${
-                          Number(option.id) === recommendedOptionId
-                            ? "border-green-300 bg-green-50"
-                            : "bg-gray-50"
-                        }`}
-                      >
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <h3 className="font-bold">
-                            {option.title}
-                          </h3>
-                          {Number(option.id) === recommendedOptionId ? (
-                            <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-800">
-                              {selectedLanguageCopy.recommendedOption}
-                            </span>
-                          ) : null}
-                          {patientSelectedOptionId === Number(option.id) ? (
-                            <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-800">
-                              {selectedLanguageCopy.patientSelectedBadge}
-                            </span>
-                          ) : null}
-                        </div>
-                        {option.estimatedDuration.trim() ? (
-                          <p className="mt-1 text-sm text-gray-600">
-                            Est. Duration: {option.estimatedDuration}
-                          </p>
-                        ) : null}
-                        <div className="mt-3 space-y-2 text-sm">
-                          {showFullFinancialSummary ? (
-                            <>
-                              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3">
-                                <span>
-                                  {selectedLanguageCopy.treatmentCostBeforeDeductions}
-                                </span>
-                                <span className="font-semibold tabular-nums">
-                                  {formatCurrency(totalBeforeDeductions)}
-                                </span>
-                              </div>
-                              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 text-green-700">
-                                <span>{selectedLanguageCopy.lessGovernmentSubsidy}</span>
-                                <span className="font-semibold tabular-nums">
-                                  {formatDeduction(option.totals.subsidy)}
-                                </span>
-                              </div>
-                              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 text-green-700">
-                                <span>{selectedLanguageCopy.lessMedisave}</span>
-                                <span className="font-semibold tabular-nums">
-                                  {formatDeduction(option.totals.medisave)}
-                                </span>
-                              </div>
-                            </>
-                          ) : null}
-                          <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 rounded-xl bg-white px-3 py-2 text-lg font-bold">
-                            <span>
-                              {selectedLanguageCopy.patientPaysAfterDeductions}
-                            </span>
-                            <span className="tabular-nums">
-                              {formatCurrency(option.totals.payable)}
-                            </span>
+                {showFullFinancialSummary ? (
+                  <div className="mt-4 grid gap-4 lg:grid-cols-2">
+                    {comparisonRows.map((option) => {
+                      const totalBeforeDeductions =
+                        option.totals.subtotal + option.totals.gst;
+
+                      return (
+                        <div
+                          key={option.id}
+                          className={`rounded-2xl border p-4 ${
+                            Number(option.id) === recommendedOptionId
+                              ? "border-green-300 bg-green-50"
+                              : "bg-gray-50"
+                          }`}
+                        >
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <h3 className="font-bold">{option.title}</h3>
+                            {Number(option.id) === recommendedOptionId ? (
+                              <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-800">
+                                {selectedLanguageCopy.recommendedOption}
+                              </span>
+                            ) : null}
+                          </div>
+                          <div className="mt-3 space-y-2 text-sm">
+                            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3">
+                              <span>
+                                {selectedLanguageCopy.treatmentCostBeforeDeductions}
+                              </span>
+                              <span className="money font-semibold">
+                                {formatCurrency(totalBeforeDeductions)}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 text-green-700">
+                              <span>
+                                {selectedLanguageCopy.lessGovernmentSubsidy}
+                              </span>
+                              <span className="money font-semibold">
+                                {formatDeduction(option.totals.subsidy)}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 text-green-700">
+                              <span>{selectedLanguageCopy.lessMedisave}</span>
+                              <span className="money font-semibold">
+                                {formatDeduction(option.totals.medisave)}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 rounded-xl bg-white px-3 py-2 text-lg font-bold">
+                              <span>
+                                {selectedLanguageCopy.patientPaysAfterDeductions}
+                              </span>
+                              <span className="money">
+                                {formatCurrency(option.totals.payable)}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                      );
+                    })}
+                  </div>
+                ) : null}
               </section>
             ) : null}
 
@@ -4337,17 +4404,23 @@ export default function Home() {
               : activeOption
                 ? [activeOption]
                 : []
-            ).map((option) => {
+            ).map((option, optionIndex) => {
               const optionSummary =
                 optionTotals.get(option.id) ??
                 calculateTotalsForPhases(option.phases);
+              const startsOnNewPrintPage =
+                isFinalized &&
+                treatmentOptions.length > 1 &&
+                optionIndex > 0;
 
               return (
               <div
                 key={option.id}
                 className={compactClass(
                   isFinalized,
-                  "space-y-4 rounded-[2rem] border-2 border-gray-200 bg-white p-3 shadow-sm sm:p-4 print:border-2 print:border-gray-300 print:p-3",
+                  `print-option-block space-y-4 rounded-[2rem] border-2 border-gray-200 bg-white p-3 shadow-sm sm:p-4 print:border-2 print:border-gray-300 print:p-3 ${
+                    startsOnNewPrintPage ? "print-option-continued" : ""
+                  }`,
                   "space-y-4",
                 )}
               >
@@ -4739,7 +4812,7 @@ export default function Home() {
                       </div>
 
                     <div className="mt-3 hidden overflow-x-auto rounded-lg border lg:block print:block">
-                      <table className="w-full min-w-[760px] table-fixed border-collapse text-[11px] leading-tight print:min-w-0">
+                      <table className="fee-table w-full min-w-[760px] table-fixed border-collapse text-[11px] leading-tight print:min-w-0">
                         <thead className="bg-gray-100 text-gray-700">
                           <tr>
                             <th className="w-[28%] px-2 py-2 text-left font-semibold">
@@ -5494,16 +5567,16 @@ export default function Home() {
             {isFinalized && treatmentOptions.length > 1 ? (
               <section className="avoid-break rounded-2xl border bg-white p-4 sm:p-6">
                 <div>
-                  <h2 className="text-xl font-bold">
+                  <h2 className="section-title text-xl font-bold tracking-tight">
                     {selectedLanguageCopy.treatmentOptionsComparison}
                   </h2>
-                  <p className="mt-1 text-sm text-gray-500">
+                  <p className="helper-text mt-1 text-sm">
                     {selectedLanguageCopy.treatmentOptionsComparisonIntro}
                   </p>
                 </div>
 
                 <div className="mt-4 overflow-x-auto rounded-lg border">
-                  <table className="w-full min-w-[820px] table-fixed border-collapse text-sm print:min-w-0">
+                  <table className="fee-table w-full min-w-[820px] table-fixed border-collapse text-sm print:min-w-0">
                     <thead className="bg-gray-100 text-gray-700">
                       <tr>
                         <th className="w-[18%] px-3 py-2 text-left font-semibold">
@@ -5583,10 +5656,10 @@ export default function Home() {
 
             {isFinalized ? (
               <section className="avoid-break rounded-2xl border-2 border-gray-200 bg-white p-4 shadow-sm sm:p-6">
-                <h2 className="text-xl font-bold">
+                <h2 className="section-title text-xl font-bold tracking-tight">
                   {selectedLanguageCopy.patientSelectedOption}
                 </h2>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="helper-text mt-1 text-sm">
                   {selectedLanguageCopy.patientSelectedOptionIntro}
                 </p>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -5718,11 +5791,17 @@ export default function Home() {
               id="signature"
               className={compactClass(
                 isFinalized,
-                "avoid-break print-break-before rounded-2xl border bg-white p-4 sm:p-6 lg:p-8",
-                "avoid-break print-break-before rounded-xl border bg-white p-3 sm:p-4 print:p-3",
+                "print-signature-block avoid-break print-break-before rounded-2xl border bg-white p-4 sm:p-6 lg:p-8",
+                "print-signature-block avoid-break print-break-before rounded-xl border bg-white p-3 sm:p-4 print:p-3",
               )}
             >
-              <h2 className={compactClass(isFinalized, "mb-6 text-2xl font-bold", "mb-3 text-xl font-bold")}>
+              <h2
+                className={compactClass(
+                  isFinalized,
+                  "section-title mb-6 text-2xl font-bold tracking-tight",
+                  "section-title mb-3 text-xl font-bold tracking-tight",
+                )}
+              >
                 {isFinalized
                   ? selectedLanguageCopy.signatureHeading
                   : "Patient Acknowledgement & Signature"}
@@ -5942,6 +6021,16 @@ export default function Home() {
             ) : null}
           </section>
         </div>
+
+        <footer className="print-footer print-only hidden px-4 py-3 sm:px-6">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <span>Nofrills Dental · Confidential — for patient discussion</span>
+            <span className="money">
+              {displayValue(patientName)}
+              {quotationDate ? ` · ${quotationDate}` : ""}
+            </span>
+          </div>
+        </footer>
       </div>
     </main>
   );
