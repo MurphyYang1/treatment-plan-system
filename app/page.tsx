@@ -401,7 +401,8 @@ const patientEducationTopics: PatientEducationTopic[] = [
         "PFM மற்றும் zirconia கிரவுன் விருப்பங்களை, வலிமை, தோற்றம் மற்றும் பொருள் வேறுபாடுகளுடன் ஒப்பிடுகிறது.",
     },
     imageSrc: "/patient-education/pfm-zirconia-crowns.jpg",
-    matches: ({ name }) => /pfm|zirconia/i.test(name),
+    matches: ({ name }) =>
+      /pfm|zirconia/i.test(name) && !/veneer/i.test(name),
   },
   {
     id: "pterygoid-zygomatic-implants",
@@ -511,6 +512,55 @@ const patientEducationTopics: PatientEducationTopic[] = [
     },
     imageSrc: "/patient-education/socket-preservation.jpg",
     matches: ({ name }) => /socket preservation/i.test(name),
+  },
+  {
+    id: "apicoectomy",
+    title: "Apicoectomy (Root End Surgery)",
+    descriptions: {
+      English:
+        "Explains surgical removal of an infected root tip and sealing of the root end after root canal treatment.",
+      Malay:
+        "Menerangkan pembuangan pembedahan hujung akar yang dijangkiti dan penutupan hujung akar selepas rawatan saluran akar.",
+      "Simplified Chinese":
+        "说明在根管治疗后如何通过手术切除受感染的根尖并封闭根端。",
+      Tamil:
+        "ரூட் கனால் சிகிச்சைக்குப் பிறகு பாதிக்கப்பட்ட வேர் நுனியை அறுவை சிகிச்சை மூலம் நீக்கி வேர் முனையை சீல் செய்வதை விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/apicoectomy.jpg",
+    matches: ({ name }) => /apicoectomy/i.test(name),
+  },
+  {
+    id: "guided-bone-regeneration",
+    title: "Guided Bone Regeneration (GBR)",
+    descriptions: {
+      English:
+        "Explains how bone graft material and a membrane can rebuild deficient bone for a dental implant.",
+      Malay:
+        "Menerangkan bagaimana bahan graf tulang dan membran boleh membina semula tulang yang tidak mencukupi untuk implan pergigian.",
+      "Simplified Chinese":
+        "说明如何使用骨粉和膜重建不足的骨量，以便放置种植牙。",
+      Tamil:
+        "பல் இம்பிளாண்டிற்கு போதிய எலும்பு இல்லாதபோது எலும்பு graft பொருள் மற்றும் membrane மூலம் எலும்பை மீண்டும் உருவாக்குவதை விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/guided-bone-regeneration.jpg",
+    matches: ({ name }) =>
+      /alveoloplasty|\bgbr\b|bone regenerative/i.test(name),
+  },
+  {
+    id: "veneers-vs-crowns",
+    title: "Veneers and Crowns",
+    descriptions: {
+      English:
+        "Compares veneers and crowns, including how much tooth is prepared and when each option is used.",
+      Malay:
+        "Membandingkan veneer dan korona, termasuk berapa banyak struktur gigi yang disediakan dan bila setiap pilihan digunakan.",
+      "Simplified Chinese":
+        "比较贴面和牙冠，包括备牙量以及各自适用的情况。",
+      Tamil:
+        "வெனியர்கள் மற்றும் கிரவுன்களை ஒப்பிட்டு, எவ்வளவு பல் தயாரிக்கப்படுகிறது மற்றும் எப்போது ஒவ்வொரு விருப்பமும் பயன்படுத்தப்படுகிறது என்பதை விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/veneers-vs-crowns.jpg",
+    matches: ({ name }) => /veneer/i.test(name),
   },
   {
     id: "dental-implant-treatment",
