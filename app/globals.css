@@ -109,12 +109,7 @@ input[type="date"]::-webkit-date-and-time-value {
     print-color-adjust: exact !important;
   }
 
-  /* Keep each finalized option together; start later options on a new page */
-  .print-option-block {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
+  /* Start each later treatment option on a new printed page */
   .print-option-block.print-option-continued {
     break-before: page;
     page-break-before: always;

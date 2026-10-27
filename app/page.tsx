@@ -2030,11 +2030,18 @@ function createProcedure(
   treatment: Treatment,
   subsidyTier: SubsidyTier,
 ): Procedure {
+  const defaultClaimQty =
+    subsidyTier === "Private"
+      ? 0
+      : treatment.category === "General Treatment"
+        ? 1
+        : 0;
+
   return {
     ...treatment,
     name: treatment.isCustom ? "" : treatment.name,
     quantity: 1,
-    subsidyClaimQty: treatment.category === "General Treatment" ? 1 : 0,
+    subsidyClaimQty: defaultClaimQty,
     subsidyAmount: getTreatmentSubsidyAmount(treatment, subsidyTier),
     discountPercent: 0,
     medisaveClaim: treatment.medisave,
@@ -3511,8 +3518,8 @@ export default function Home() {
       <div
         className={compactClass(
           isFinalized,
-          "print-page mx-auto max-w-7xl overflow-hidden rounded-2xl bg-white shadow-xl sm:rounded-3xl print:max-w-none print:rounded-none print:shadow-none",
-          "print-page mx-auto max-w-6xl overflow-hidden rounded-xl bg-white shadow-md print:max-w-none print:rounded-none print:shadow-none",
+          "print-page mx-auto max-w-7xl overflow-hidden rounded-2xl bg-white shadow-xl sm:rounded-3xl print:max-w-none print:overflow-visible print:rounded-none print:shadow-none",
+          "print-page mx-auto max-w-6xl overflow-hidden rounded-xl bg-white shadow-md print:max-w-none print:overflow-visible print:rounded-none print:shadow-none",
         )}
       >
         <header
@@ -3754,9 +3761,26 @@ export default function Home() {
 
                   <select
                     value={subsidyTier}
-                    onChange={(event) =>
-                      setSubsidyTier(event.target.value as SubsidyTier)
-                    }
+                    onChange={(event) => {
+                      const nextTier = event.target.value as SubsidyTier;
+                      setSubsidyTier(nextTier);
+
+                      if (nextTier === "Private") {
+                        setTreatmentOptions((currentOptions) =>
+                          currentOptions.map((option) => ({
+                            ...option,
+                            phases: option.phases.map((phase) => ({
+                              ...phase,
+                              procedures: phase.procedures.map((procedure) => ({
+                                ...procedure,
+                                subsidyClaimQty: 0,
+                                subsidyAmount: 0,
+                              })),
+                            })),
+                          })),
+                        );
+                      }
+                    }}
                     className="w-full rounded-xl border px-4 py-3"
                   >
                     <option>Private</option>
@@ -4360,14 +4384,14 @@ export default function Home() {
                 key={option.id}
                 className={compactClass(
                   isFinalized,
-                  `print-option-block space-y-4 rounded-[2rem] border-2 border-gray-200 bg-white p-3 shadow-sm sm:p-4 print:border-2 print:border-gray-300 print:p-3 ${
+                  `print-option-block space-y-4 rounded-2xl bg-white sm:rounded-[2rem] print:rounded-none ${
                     startsOnNewPrintPage ? "print-option-continued" : ""
                   }`,
                   "space-y-4",
                 )}
               >
                 {isFinalized ? (
-                  <section className="avoid-break overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                  <section className="avoid-break overflow-hidden rounded-2xl bg-white shadow-sm print:shadow-none">
                     <div className="print-exact bg-slate-900 px-4 py-4 text-white print:bg-slate-900 print:text-white sm:px-6">
                       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                         <div>
@@ -4984,8 +5008,12 @@ export default function Home() {
                               <input
                                 type="number"
                                 min="0"
-                                value={procedure.subsidyClaimQty}
-                                readOnly={isFinalized}
+                                value={
+                                  subsidyTier === "Private"
+                                    ? 0
+                                    : procedure.subsidyClaimQty
+                                }
+                                readOnly={isFinalized || subsidyTier === "Private"}
                                 onChange={(event) =>
                                   updateProcedure(
                                     phaseIndex,
