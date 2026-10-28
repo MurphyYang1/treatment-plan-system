@@ -641,7 +641,7 @@ export default function SignQuotationPage() {
       <div className="mx-auto max-w-2xl space-y-4 rounded-2xl bg-white p-4 shadow-xl sm:p-6">
         <header>
           <p className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-            Nofrills Dental
+            NoFrills Dental
           </p>
           <h1 className="mt-1 text-2xl font-bold">
             {copy.reviewTitle}

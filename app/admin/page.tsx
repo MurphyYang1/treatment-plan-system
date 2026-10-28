@@ -25,7 +25,7 @@ function AdminLogin({ hasInvalidCode }: { hasInvalidCode: boolean }) {
     <main className="min-h-screen bg-gray-100 p-4 text-black">
       <section className="mx-auto max-w-md rounded-2xl bg-white p-6 shadow-xl">
         <p className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-          Nofrills Dental
+          NoFrills Dental
         </p>
         <h1 className="mt-2 text-2xl font-bold">Staff quotation access</h1>
         <p className="mt-3 text-sm leading-relaxed text-gray-600">
@@ -216,7 +216,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-                Nofrills Dental
+                NoFrills Dental
               </p>
               <h1 className="mt-1 text-2xl font-bold">Signed quotations</h1>
               <p className="mt-2 text-sm text-gray-600">
