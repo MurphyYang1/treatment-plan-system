@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Nofrills Dental Treatment Plan",
+  title: "NoFrills Dental Treatment Plan",
   description: "Dental treatment plan and quotation generator",
 };
 

@@ -2076,9 +2076,37 @@ function getTreatmentSubsidyAmount(
   }
 }
 
+const CLINIC_BRANCHES = [
+  "NoFrills Dental Marina Square",
+  "NoFrills Dental Suntec",
+  "NoFrills Dental Katong",
+  "NoFrills Dental Beauty World",
+  "NoFrills Dental Dhoby Ghaut",
+] as const;
+
+function normalizeClinicBranch(clinicBranch: string) {
+  return clinicBranch.replace(/\bNofrills\b/gi, "NoFrills");
+}
+
+function isNoGstClinicBranch(clinicBranch: string) {
+  return /beauty\s*world|dhoby\s*ghaut/i.test(clinicBranch);
+}
+
+function getDefaultGstApplicable(
+  treatment: Pick<Treatment, "category">,
+  clinicBranch: string,
+) {
+  if (treatment.category === "Implant Treatment") {
+    return false;
+  }
+
+  return !isNoGstClinicBranch(clinicBranch);
+}
+
 function createProcedure(
   treatment: Treatment,
   subsidyTier: SubsidyTier,
+  clinicBranch: string,
 ): Procedure {
   const defaultClaimQty =
     subsidyTier === "Private"
@@ -2096,7 +2124,7 @@ function createProcedure(
     discountPercent: 0,
     medisaveClaim: treatment.medisave,
     description: "",
-    gstApplicable: treatment.category !== "Implant Treatment",
+    gstApplicable: getDefaultGstApplicable(treatment, clinicBranch),
   };
 }
 
@@ -2504,8 +2532,8 @@ function getPrintDocumentTitle(patientName: string) {
     .trim();
 
   return sanitizedPatientName
-    ? `Nofrills Dental Treatment Plan (${sanitizedPatientName})`
-    : "Nofrills Dental Treatment Plan";
+    ? `NoFrills Dental Treatment Plan (${sanitizedPatientName})`
+    : "NoFrills Dental Treatment Plan";
 }
 
 function isTreatmentOptionArray(value: unknown): value is TreatmentOption[] {
@@ -2725,7 +2753,11 @@ export default function Home() {
   };
 
   const applyDraftQuotation = (draft: DraftQuotationState) => {
-    setClinicBranch(typeof draft.clinicBranch === "string" ? draft.clinicBranch : "");
+    setClinicBranch(
+      typeof draft.clinicBranch === "string"
+        ? normalizeClinicBranch(draft.clinicBranch)
+        : "",
+    );
     setDentistName(typeof draft.dentistName === "string" ? draft.dentistName : "");
     setPatientName(typeof draft.patientName === "string" ? draft.patientName : "");
     setPatientId(typeof draft.patientId === "string" ? draft.patientId : "");
@@ -2888,7 +2920,10 @@ export default function Home() {
         index === phaseIndex
           ? {
               ...phase,
-              procedures: [...phase.procedures, createProcedure(found, subsidyTier)],
+              procedures: [
+                ...phase.procedures,
+                createProcedure(found, subsidyTier, clinicBranch),
+              ],
             }
           : phase,
       ),
@@ -3584,7 +3619,7 @@ export default function Home() {
               <div className="flex min-w-0 items-center gap-3 sm:gap-4">
                 <Image
                   src="/nofrills-logo.png"
-                  alt="Nofrills Dental"
+                  alt="NoFrills Dental"
                   width={120}
                   height={120}
                   className={compactClass(
@@ -3603,7 +3638,7 @@ export default function Home() {
                       "doc-title text-2xl font-bold tracking-tight sm:text-3xl print:text-2xl",
                     )}
                   >
-                    Nofrills Dental
+                    NoFrills Dental
                   </h1>
                   <p
                     className={compactClass(
@@ -3772,10 +3807,11 @@ export default function Home() {
                     className="w-full rounded-xl border px-4 py-3"
                   >
                     <option value="">Select Clinic Branch</option>
-                    <option>Nofrills Dental Marina Square</option>
-                    <option>Nofrills Dental Suntec</option>
-                    <option>Nofrills Dental Katong</option>
-                    <option>Nofrills Dental Beauty World</option>
+                    {CLINIC_BRANCHES.map((branch) => (
+                      <option key={branch} value={branch}>
+                        {branch}
+                      </option>
+                    ))}
                   </select>
 
                   <input
@@ -5940,7 +5976,7 @@ export default function Home() {
 
         <footer className="print-footer print-only hidden px-4 py-3 sm:px-6">
           <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-            <span>Nofrills Dental · Confidential — for patient discussion</span>
+            <span>NoFrills Dental · Confidential — for patient discussion</span>
             <span className="money">
               {displayValue(patientName)}
               {quotationDate ? ` · ${quotationDate}` : ""}
