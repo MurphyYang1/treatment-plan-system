@@ -656,7 +656,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     amountUnderInstallments: "Amount under instalments",
     estimatedMonthlyInstallment: "Estimated monthly instalment",
     inHouseInstallmentNote:
-      "For in-house instalments, the GST amount linked to the Medisave claim is excluded from the instalment amount and collected in cash.",
+      "For in-house instalments, the GST amount linked to the Medisave claim is excluded from the instalment amount and collected in cash. The patient's treatment duration may stretch based on the duration of the chosen instalment months.",
     interestFreeInstallments: "Interest-Free Instalments",
     patientSummaryHeading: "At a Glance",
     patientSummaryIntro:
@@ -777,7 +777,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     amountUnderInstallments: "Jumlah di bawah ansuran",
     estimatedMonthlyInstallment: "Anggaran ansuran bulanan",
     inHouseInstallmentNote:
-      "Untuk ansuran dalaman, jumlah GST berkaitan tuntutan Medisave tidak termasuk dalam jumlah ansuran dan perlu dibayar secara tunai.",
+      "Untuk ansuran dalaman, jumlah GST berkaitan tuntutan Medisave tidak termasuk dalam jumlah ansuran dan perlu dibayar secara tunai. Tempoh rawatan pesakit mungkin dipanjangkan mengikut tempoh bulan ansuran yang dipilih.",
     interestFreeInstallments: "Ansuran Tanpa Faedah",
     patientSummaryHeading: "Sekilas Pandang",
     patientSummaryIntro:
@@ -905,7 +905,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     amountUnderInstallments: "分期付款金额",
     estimatedMonthlyInstallment: "预计每月分期付款",
     inHouseInstallmentNote:
-      "如选择诊所内部分期付款，与保健储蓄索赔相关的消费税不包括在分期金额内，并需以现金支付。",
+      "如选择诊所内部分期付款，与保健储蓄索赔相关的消费税不包括在分期金额内，并需以现金支付。患者的治疗周期可能会根据所选分期月数相应延长。",
     interestFreeInstallments: "免息分期付款",
     patientSummaryHeading: "一眼概览",
     patientSummaryIntro: "在阅读下方详细治疗阶段前，先快速比较各选项需付金额。",
@@ -1027,7 +1027,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     amountUnderInstallments: "தவணைத் தொகை",
     estimatedMonthlyInstallment: "மதிப்பிடப்பட்ட மாத தவணை",
     inHouseInstallmentNote:
-      "உள் தவணைகளுக்கு, Medisave கோரிக்கையுடன் தொடர்புடைய GST தொகை தவணைத் தொகையில் சேர்க்கப்படாது; அது ரொக்கமாக வசூலிக்கப்படும்.",
+      "உள் தவணைகளுக்கு, Medisave கோரிக்கையுடன் தொடர்புடைய GST தொகை தவணைத் தொகையில் சேர்க்கப்படாது; அது ரொக்கமாக வசூலிக்கப்படும். தேர்ந்தெடுக்கப்பட்ட தவணை மாதங்களின் கால அளவைப் பொறுத்து நோயாளரின் சிகிச்சை காலம் நீட்டிக்கப்படலாம்.",
     interestFreeInstallments: "வட்டி இல்லா தவணைகள்",
     patientSummaryHeading: "ஒரே பார்வையில்",
     patientSummaryIntro:
@@ -3560,7 +3560,7 @@ export default function Home() {
           <p className="text-xs leading-relaxed text-gray-600">
             {isFinalized
               ? selectedLanguageCopy.inHouseInstallmentNote
-              : "For in-house instalments, the GST amount linked to the Medisave claim is excluded from the instalment amount and collected in cash."}
+              : "For in-house instalments, the GST amount linked to the Medisave claim is excluded from the instalment amount and collected in cash. The patient's treatment duration may stretch based on the duration of the chosen instalment months."}
           </p>
         </div>
       ) : (
