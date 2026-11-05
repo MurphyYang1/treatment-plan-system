@@ -402,7 +402,9 @@ const patientEducationTopics: PatientEducationTopic[] = [
     },
     imageSrc: "/patient-education/pfm-zirconia-crowns.jpg",
     matches: ({ name }) =>
-      /pfm|zirconia/i.test(name) && !/veneer/i.test(name),
+      /pfm|zirconia/i.test(name) &&
+      !/veneer/i.test(name) &&
+      !/zirconia implant/i.test(name),
   },
   {
     id: "pterygoid-zygomatic-implants",
@@ -561,6 +563,22 @@ const patientEducationTopics: PatientEducationTopic[] = [
     },
     imageSrc: "/patient-education/veneers-vs-crowns.jpg",
     matches: ({ name }) => /veneer/i.test(name),
+  },
+  {
+    id: "zirconia-dental-implant",
+    title: "Zirconia Dental Implant (Metal-Free Implant)",
+    descriptions: {
+      English:
+        "Compares zirconia and titanium implants, including suitability, limitations, survival rates, and warranty considerations.",
+      Malay:
+        "Membandingkan implan zirkonia dan titanium, termasuk kesesuaian, batasan, kadar kelangsungan hidup, dan pertimbangan waranti.",
+      "Simplified Chinese":
+        "比较氧化锆种植体与钛种植体，包括适用情况、局限性、存留率及保修相关说明。",
+      Tamil:
+        "ஜிர்கோனியா மற்றும் டைட்டானியம் இம்பிளாண்டுகளை ஒப்பிட்டு, பொருத்தம், வரம்புகள், உயிர்வாழும் விகிதங்கள் மற்றும் உத்தரவாதக் கருத்துகளை விளக்குகிறது.",
+    },
+    imageSrc: "/patient-education/zirconia-dental-implant.png",
+    matches: ({ name }) => /zirconia implant/i.test(name),
   },
   {
     id: "dental-implant-treatment",
@@ -1634,6 +1652,14 @@ const availableTreatments: Treatment[] = [
   },
   {
     category: "Implant Treatment",
+    name: "Zirconia Implant Fixture",
+    duration: "",
+    fee: 3500,
+    medisave: 1950,
+    subsidies: noSubsidy,
+  },
+  {
+    category: "Implant Treatment",
     name: "Single Implant with Crestal Sinus lift",
     duration: "",
     fee: 2450,
@@ -1783,6 +1809,15 @@ const availableTreatments: Treatment[] = [
     fee: 1200,
     medisave: 0,
     subsidies: noSubsidy,
+  },
+  {
+    category: "Orthodontic / Cosmetic Treatment",
+    name: "Blank / Custom Procedure",
+    duration: "",
+    fee: 0,
+    medisave: 0,
+    subsidies: noSubsidy,
+    isCustom: true,
   },
   {
     category: "Surgical Treatment",
@@ -1955,6 +1990,15 @@ const availableTreatments: Treatment[] = [
     subsidies: noSubsidy,
   },
   {
+    category: "Final prosthesis for Dental implants",
+    name: "Blank / Custom Procedure",
+    duration: "",
+    fee: 0,
+    medisave: 0,
+    subsidies: noSubsidy,
+    isCustom: true,
+  },
+  {
     category: "Implant Treatment",
     name: "Explant (Trephine Removal) SB702M 1C",
     duration: "",
@@ -1977,6 +2021,15 @@ const availableTreatments: Treatment[] = [
     fee: 1950,
     medisave: 1950,
     subsidies: noSubsidy,
+  },
+  {
+    category: "Implant Treatment",
+    name: "Blank / Custom Procedure",
+    duration: "",
+    fee: 0,
+    medisave: 0,
+    subsidies: noSubsidy,
+    isCustom: true,
   },
   {
     category: "Surgical Treatment",
@@ -2049,6 +2102,15 @@ const availableTreatments: Treatment[] = [
     fee: 3210,
     medisave: 3210,
     subsidies: noSubsidy,
+  },
+  {
+    category: "Surgical Treatment",
+    name: "Blank / Custom Procedure",
+    duration: "",
+    fee: 0,
+    medisave: 0,
+    subsidies: noSubsidy,
+    isCustom: true,
   },
 ];
 
