@@ -195,6 +195,7 @@ type LanguageCopy = {
   debitCardRequirement: string;
   disclaimer: string;
   disclaimerItems: string[];
+  goodwillDisclaimerItems: string[];
   signatureHeading: string;
   dateSigned: string;
   scanQrText: string;
@@ -761,6 +762,13 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "Additional treatment procedures required due to complications, changes in clinical condition or patient requests may incur additional treatment charges.",
       "CHAS, Merdeka Generation, Pioneer Generation and Medisave claims remain subject to prevailing MOH regulations and patient eligibility.",
     ],
+    goodwillDisclaimerItems: [
+      "Fees shown are based on this revised / goodwill plan and include prevailing 9% GST where GST applies.",
+      "This document reflects agreed adjustments for an existing patient and is not a new open treatment quotation.",
+      "Any amount covered by NoFrills Dental or refunded to the patient applies only to the items listed in this document.",
+      "Further treatment beyond this revised plan may incur additional charges.",
+      "CHAS, Merdeka Generation, Pioneer Generation and Medisave claims remain subject to prevailing MOH regulations and patient eligibility.",
+    ],
     signatureHeading: "Patient Acknowledgement & Signature",
     dateSigned: "Date Signed",
     scanQrText:
@@ -891,6 +899,13 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "Semua yuran rawatan yang dinyatakan termasuk GST 9% semasa.",
       "Sebut harga ini kekal sah dengan syarat keadaan mulut pesakit dan pelan rawatan tidak berubah. Yuran mungkin disemak jika terdapat perubahan keadaan klinikal, doktor gigi yang merawat, skop rawatan, atau jika rawatan tambahan atau alternatif diperlukan.",
       "Prosedur rawatan tambahan yang diperlukan akibat komplikasi, perubahan keadaan klinikal atau permintaan pesakit mungkin dikenakan caj tambahan.",
+      "Tuntutan CHAS, Generasi Merdeka, Generasi Perintis dan Medisave tertakluk kepada peraturan MOH semasa dan kelayakan pesakit.",
+    ],
+    goodwillDisclaimerItems: [
+      "Yuran yang ditunjukkan adalah berdasarkan pelan disemak / goodwill ini dan termasuk GST 9% semasa di mana GST dikenakan.",
+      "Dokumen ini mencerminkan pelarasan yang dipersetujui untuk pesakit sedia ada dan bukan sebut harga rawatan baharu yang terbuka.",
+      "Sebarang jumlah yang ditanggung oleh NoFrills Dental atau dibayar balik kepada pesakit hanya terpakai kepada item yang disenaraikan dalam dokumen ini.",
+      "Rawatan lanjut di luar pelan yang disemak ini mungkin dikenakan caj tambahan.",
       "Tuntutan CHAS, Generasi Merdeka, Generasi Perintis dan Medisave tertakluk kepada peraturan MOH semasa dan kelayakan pesakit.",
     ],
     signatureHeading: "Pengakuan & Tandatangan Pesakit",
@@ -1028,6 +1043,13 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "因并发症、临床情况变化或患者要求而需要的额外治疗程序，可能会产生额外费用。",
       "CHAS、建国一代、乐龄一代及保健储蓄索赔须符合卫生部现行规定及患者资格。",
     ],
+    goodwillDisclaimerItems: [
+      "所示费用基于本修订 / 善意调整方案，并在适用消费税的项目中包含现行9%消费税。",
+      "本文件反映针对现有患者的约定调整，并非全新开放式治疗报价。",
+      "由 NoFrills Dental 承担或退还给患者的任何金额，仅适用于本文件所列项目。",
+      "超出本修订方案的进一步治疗可能会产生额外费用。",
+      "CHAS、建国一代、乐龄一代及保健储蓄索赔须符合卫生部现行规定及患者资格。",
+    ],
     signatureHeading: "患者确认与签名",
     dateSigned: "签署日期",
     scanQrText: "请扫描二维码，在手机上查看并以电子方式签署此治疗报价。",
@@ -1163,6 +1185,13 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "குறிப்பிடப்பட்ட அனைத்து சிகிச்சை கட்டணங்களும் நடைமுறையில் உள்ள 9% GST உட்படக் குறிப்பிடப்பட்டுள்ளன.",
       "நோயாளியின் வாய்நிலை மற்றும் சிகிச்சைத் திட்டம் மாறாமல் இருந்தால் இந்த மேற்கோள் செல்லுபடியாகும். மருத்துவ நிலை, சிகிச்சை அளிக்கும் பல் மருத்துவர், சிகிச்சை வரம்பு மாறினால் அல்லது கூடுதல்/மாற்று சிகிச்சை தேவைப்பட்டால் கட்டணங்கள் மறுபரிசீலனை செய்யப்படலாம்.",
       "சிக்கல்கள், மருத்துவ நிலை மாற்றங்கள் அல்லது நோயாளர் கோரிக்கைகள் காரணமாக தேவைப்படும் கூடுதல் சிகிச்சைகளுக்கு கூடுதல் கட்டணம் விதிக்கப்படலாம்.",
+      "CHAS, Merdeka Generation, Pioneer Generation மற்றும் Medisave கோரிக்கைகள் MOH விதிமுறைகள் மற்றும் நோயாளர் தகுதிக்கு உட்பட்டவை.",
+    ],
+    goodwillDisclaimerItems: [
+      "காட்டப்பட்டுள்ள கட்டணங்கள் இந்த திருத்தப்பட்ட / goodwill திட்டத்தை அடிப்படையாகக் கொண்டவை; GST பொருந்தும் இடங்களில் நடைமுறையில் உள்ள 9% GST சேர்க்கப்பட்டுள்ளது.",
+      "இந்த ஆவணம் ஏற்கனவே உள்ள நோயாளிக்கான ஒப்புக்கொள்ளப்பட்ட மாற்றங்களை பிரதிபலிக்கிறது; இது புதிய திறந்த சிகிச்சை மேற்கோள் அல்ல.",
+      "NoFrills Dental ஏற்கும் அல்லது நோயாளிக்கு திருப்பிச் செலுத்தும் எந்தத் தொகையும் இந்த ஆவணத்தில் பட்டியலிடப்பட்ட உருப்படிகளுக்கு மட்டுமே பொருந்தும்.",
+      "இந்த திருத்தப்பட்ட திட்டத்திற்கு அப்பால் மேலும் சிகிச்சை தேவைப்பட்டால் கூடுதல் கட்டணம் விதிக்கப்படலாம்.",
       "CHAS, Merdeka Generation, Pioneer Generation மற்றும் Medisave கோரிக்கைகள் MOH விதிமுறைகள் மற்றும் நோயாளர் தகுதிக்கு உட்பட்டவை.",
     ],
     signatureHeading: "நோயாளர் ஒப்புதல் & கையொப்பம்",
@@ -2281,6 +2310,7 @@ function createProcedure(
     discountPercent: 0,
     medisaveClaim: treatment.isRefund ? 0 : treatment.medisave,
     description: "",
+    // Refunds default GST off; staff can enable when the refund should include GST.
     gstApplicable: treatment.isRefund
       ? false
       : getDefaultGstApplicable(treatment, clinicBranch),
@@ -2301,14 +2331,32 @@ function getRowSubtotal(procedure: Pick<Procedure, "fee" | "quantity">) {
   return procedure.fee * procedure.quantity;
 }
 
-function getRefundCreditAmount(
+function getRefundBaseAmount(
   procedure: Pick<Procedure, "fee" | "quantity" | "isRefund">,
 ) {
   if (!isRefundProcedure(procedure)) {
     return 0;
   }
 
-  return Math.abs(Number(procedure.fee) || 0) * Math.max(Number(procedure.quantity) || 0, 1);
+  return (
+    Math.abs(Number(procedure.fee) || 0) *
+    Math.max(Number(procedure.quantity) || 0, 1)
+  );
+}
+
+function getRefundCreditAmount(
+  procedure: Pick<
+    Procedure,
+    "fee" | "quantity" | "isRefund" | "gstApplicable"
+  >,
+) {
+  const baseAmount = getRefundBaseAmount(procedure);
+
+  if (baseAmount <= 0) {
+    return 0;
+  }
+
+  return procedure.gstApplicable ? baseAmount * (1 + GST_RATE) : baseAmount;
 }
 
 function getDiscountAmount(
@@ -2360,7 +2408,11 @@ function getProcedureGst(
   >,
 ) {
   if (isRefundProcedure(procedure)) {
-    return 0;
+    if (!procedure.gstApplicable) {
+      return 0;
+    }
+
+    return getRefundBaseAmount(procedure) * GST_RATE;
   }
 
   return procedure.gstApplicable ? getDiscountedSubtotal(procedure) * GST_RATE : 0;
@@ -2663,6 +2715,13 @@ function getPrintLanguageCopy(
     disclaimerItems: englishCopy.disclaimerItems.map((item, index) =>
       combineLanguageText(item, preferredCopy.disclaimerItems[index] ?? item),
     ),
+    goodwillDisclaimerItems: englishCopy.goodwillDisclaimerItems.map(
+      (item, index) =>
+        combineLanguageText(
+          item,
+          preferredCopy.goodwillDisclaimerItems[index] ?? item,
+        ),
+    ),
     categoryTranslations: {},
   };
 
@@ -2740,6 +2799,12 @@ function getQuotationAcknowledgement(status: QuotationStatus, copy: LanguageCopy
   }
 
   return copy.estimatedAcknowledgement;
+}
+
+function getDisclaimerItems(status: QuotationStatus, copy: LanguageCopy) {
+  return status === "estimated"
+    ? copy.goodwillDisclaimerItems
+    : copy.disclaimerItems;
 }
 
 function getDefaultFinancialDisplayForStatus(
@@ -3039,10 +3104,17 @@ export default function Home() {
         ? (draft.printLanguageMode as PrintLanguageMode)
         : "english",
     );
+    const nextQuotationStatus =
+      typeof draft.quotationStatus === "string"
+        ? (draft.quotationStatus as QuotationStatus)
+        : "estimated";
+
     setSelectedInstallmentPlan(
-      typeof draft.selectedInstallmentPlan === "string"
-        ? (draft.selectedInstallmentPlan as InstallmentPlanId)
-        : "none",
+      nextQuotationStatus === "estimated"
+        ? "none"
+        : typeof draft.selectedInstallmentPlan === "string"
+          ? (draft.selectedInstallmentPlan as InstallmentPlanId)
+          : "none",
     );
     setSelectedCategory(
       typeof draft.selectedCategory === "string"
@@ -3066,11 +3138,6 @@ export default function Home() {
           : draft.treatmentOptions[0]?.id ?? 0,
       );
     }
-
-    const nextQuotationStatus =
-      typeof draft.quotationStatus === "string"
-        ? (draft.quotationStatus as QuotationStatus)
-        : "estimated";
 
     if (nextQuotationStatus === "estimated") {
       setPatientSelectedOptionId("");
@@ -4136,6 +4203,7 @@ export default function Home() {
                       );
                       if (nextStatus === "estimated") {
                         setPatientSelectedOptionId("");
+                        setSelectedInstallmentPlan("none");
                       }
                     }}
                     className="w-full rounded-xl border px-4 py-3"
@@ -4295,46 +4363,48 @@ export default function Home() {
 
             {!isFinalized ? (
               <>
-                <section className="avoid-break rounded-2xl border bg-gray-50 p-4 sm:p-6">
-                  <h2 className="mb-5 text-2xl font-bold">
-                    Interest-Free Instalments
-                  </h2>
+                {!isGoodwillQuotation ? (
+                  <section className="avoid-break rounded-2xl border bg-gray-50 p-4 sm:p-6">
+                    <h2 className="mb-5 text-2xl font-bold">
+                      Interest-Free Instalments
+                    </h2>
 
 
-                  <div className="space-y-4 text-sm">
-                    <div>
-                      <p className="font-semibold">Atome</p>
-                      <p>3 months interest-free</p>
+                    <div className="space-y-4 text-sm">
+                      <div>
+                        <p className="font-semibold">Atome</p>
+                        <p>3 months interest-free</p>
+                      </div>
+
+
+                      <div>
+                        <p className="font-semibold">GrabPay</p>
+                        <p>4 months interest-free</p>
+                      </div>
+
+
+                      <div>
+                        <p className="font-semibold">
+                          UOB / OCBC Credit Card 12 Mths
+                        </p>
+                        <p>12 months interest-free instalment</p>
+                      </div>
+
+
+                      <div>
+                        <p className="font-semibold">In-House Instalment</p>
+                        <ul className="mt-2 list-disc space-y-1 pl-5">
+                          <li>
+                            6/12 months interest-free - depending on treatment
+                          </li>
+                          <li>Applicant must be SG / PR</li>
+                          <li>1x guarantor required (SG / PR)</li>
+                          <li>Valid debit card required</li>
+                        </ul>
+                      </div>
                     </div>
-
-
-                    <div>
-                      <p className="font-semibold">GrabPay</p>
-                      <p>4 months interest-free</p>
-                    </div>
-
-
-                    <div>
-                      <p className="font-semibold">
-                        UOB / OCBC Credit Card 12 Mths
-                      </p>
-                      <p>12 months interest-free instalment</p>
-                    </div>
-
-
-                    <div>
-                      <p className="font-semibold">In-House Instalment</p>
-                      <ul className="mt-2 list-disc space-y-1 pl-5">
-                        <li>
-                          6/12 months interest-free - depending on treatment
-                        </li>
-                        <li>Applicant must be SG / PR</li>
-                        <li>1x guarantor required (SG / PR)</li>
-                        <li>Valid debit card required</li>
-                      </ul>
-                    </div>
-                  </div>
-                </section>
+                  </section>
+                ) : null}
 
 
                 <section className="avoid-break rounded-2xl border bg-white p-4 text-sm leading-relaxed text-gray-700 sm:p-6">
@@ -4344,33 +4414,12 @@ export default function Home() {
 
 
                   <div className="space-y-4">
-                    <p>
-                      All treatment fees stated are inclusive of prevailing 9%
-                      GST.
-                    </p>
-
-
-                    <p>
-                      This quotation remains valid provided the patient&apos;s oral
-                      condition and treatment plan remain unchanged. Fees may be
-                      reviewed if there is a change in clinical condition,
-                      attending dentist, treatment scope, or if additional or
-                      alternative treatment is required.
-                    </p>
-
-
-                    <p>
-                      Additional treatment procedures required due to
-                      complications, changes in clinical condition or patient
-                      requests may incur additional treatment charges.
-                    </p>
-
-
-                    <p>
-                      CHAS, Merdeka Generation, Pioneer Generation and Medisave
-                      claims remain subject to prevailing MOH regulations and
-                      patient eligibility.
-                    </p>
+                    {getDisclaimerItems(
+                      quotationStatus,
+                      selectedLanguageCopy,
+                    ).map((item) => (
+                      <p key={item}>{item}</p>
+                    ))}
                   </div>
                 </section>
               </>
@@ -5263,11 +5312,9 @@ export default function Home() {
                                     )}
                                   </td>
                                   <td className="px-2 py-2 text-right tabular-nums">
-                                    {isRefundProcedure(procedure)
-                                      ? "N/A"
-                                      : procedure.gstApplicable
-                                        ? formatCurrency(gst)
-                                        : "N/A"}
+                                    {procedure.gstApplicable
+                                      ? formatCurrency(gst)
+                                      : "N/A"}
                                   </td>
                                   {phaseHasDiscount ? (
                                     <td className="px-2 py-2 text-right tabular-nums">
@@ -5522,12 +5569,7 @@ export default function Home() {
                                 <label className="mt-2 flex items-center gap-2 rounded-xl border bg-white px-3 py-3 text-sm">
                                   <input
                                     type="checkbox"
-                                    checked={
-                                      isRefundProcedure(procedure)
-                                        ? false
-                                        : procedure.gstApplicable
-                                    }
-                                    disabled={isRefundProcedure(procedure)}
+                                    checked={procedure.gstApplicable}
                                     onChange={(event) =>
                                       updateProcedure(
                                         phaseIndex,
@@ -5792,7 +5834,7 @@ export default function Home() {
                         </div>
                       </div>
                     ) : null}
-                    {selectedInstallmentPlan !== "none"
+                    {!isGoodwillQuotation && selectedInstallmentPlan !== "none"
                       ? (() => {
                           const selectedPlan = installmentPlans.find(
                             (plan) => plan.id === selectedInstallmentPlan,
@@ -5898,31 +5940,35 @@ export default function Home() {
                 </div>
 
 
-                <div className="border-t pt-4">
-                  <label className="mb-2 block text-sm font-semibold text-gray-700">
-                    Optional Instalment Plan
-                  </label>
-                  <select
-                    value={selectedInstallmentPlan}
-                    onChange={(event) =>
-                      setSelectedInstallmentPlan(
-                        event.target.value as InstallmentPlanId,
-                      )
-                    }
-                    className="w-full rounded-xl border bg-white px-4 py-3"
-                  >
-                    <option value="none">No instalment plan selected</option>
-                    {installmentPlans.map((plan) => (
-                      <option key={plan.id} value={plan.id}>
-                        {plan.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                {!isGoodwillQuotation ? (
+                  <>
+                    <div className="border-t pt-4">
+                      <label className="mb-2 block text-sm font-semibold text-gray-700">
+                        Optional Instalment Plan
+                      </label>
+                      <select
+                        value={selectedInstallmentPlan}
+                        onChange={(event) =>
+                          setSelectedInstallmentPlan(
+                            event.target.value as InstallmentPlanId,
+                          )
+                        }
+                        className="w-full rounded-xl border bg-white px-4 py-3"
+                      >
+                        <option value="none">No instalment plan selected</option>
+                        {installmentPlans.map((plan) => (
+                          <option key={plan.id} value={plan.id}>
+                            {plan.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
 
-                {installmentBreakdown ? (
-                  renderInstallmentBreakdown(installmentBreakdown)
+                    {installmentBreakdown
+                      ? renderInstallmentBreakdown(installmentBreakdown)
+                      : null}
+                  </>
                 ) : null}
               </div>
             </section>
@@ -6128,42 +6174,50 @@ export default function Home() {
 
 
             {isFinalized ? (
-              <div className="grid gap-3 md:grid-cols-2 print:grid-cols-2">
-                <section className="avoid-break rounded-xl border bg-gray-50 p-4 text-xs print:p-3">
-                  <h2 className="mb-3 text-xl font-bold">
-                    {selectedLanguageCopy.interestFreeInstallments}
-                  </h2>
+              <div
+                className={
+                  isGoodwillQuotation
+                    ? "grid gap-3"
+                    : "grid gap-3 md:grid-cols-2 print:grid-cols-2"
+                }
+              >
+                {!isGoodwillQuotation ? (
+                  <section className="avoid-break rounded-xl border bg-gray-50 p-4 text-xs print:p-3">
+                    <h2 className="mb-3 text-xl font-bold">
+                      {selectedLanguageCopy.interestFreeInstallments}
+                    </h2>
 
 
-                  <div className="space-y-2">
-                    <div>
-                      <p>{selectedLanguageCopy.atomePlan}</p>
+                    <div className="space-y-2">
+                      <div>
+                        <p>{selectedLanguageCopy.atomePlan}</p>
+                      </div>
+
+
+                      <div>
+                        <p>{selectedLanguageCopy.grabPayPlan}</p>
+                      </div>
+
+
+                      <div>
+                        <p>{selectedLanguageCopy.cardPlan}</p>
+                      </div>
+
+
+                      <div>
+                        <p className="font-semibold">
+                          {selectedLanguageCopy.inHouseInstallment}
+                        </p>
+                        <ul className="mt-1 list-disc space-y-1 pl-4">
+                          <li>{selectedLanguageCopy.inHouseSixTwelve}</li>
+                          <li>{selectedLanguageCopy.applicantRequirement}</li>
+                          <li>{selectedLanguageCopy.guarantorRequirement}</li>
+                          <li>{selectedLanguageCopy.debitCardRequirement}</li>
+                        </ul>
+                      </div>
                     </div>
-
-
-                    <div>
-                      <p>{selectedLanguageCopy.grabPayPlan}</p>
-                    </div>
-
-
-                    <div>
-                      <p>{selectedLanguageCopy.cardPlan}</p>
-                    </div>
-
-
-                    <div>
-                      <p className="font-semibold">
-                        {selectedLanguageCopy.inHouseInstallment}
-                      </p>
-                      <ul className="mt-1 list-disc space-y-1 pl-4">
-                        <li>{selectedLanguageCopy.inHouseSixTwelve}</li>
-                        <li>{selectedLanguageCopy.applicantRequirement}</li>
-                        <li>{selectedLanguageCopy.guarantorRequirement}</li>
-                        <li>{selectedLanguageCopy.debitCardRequirement}</li>
-                      </ul>
-                    </div>
-                  </div>
-                </section>
+                  </section>
+                ) : null}
 
 
                 <section className="avoid-break rounded-xl border bg-white p-4 text-xs leading-relaxed text-gray-700 print:p-3">
@@ -6173,7 +6227,10 @@ export default function Home() {
 
 
                   <div className="space-y-2">
-                    {selectedLanguageCopy.disclaimerItems.map((item) => (
+                    {getDisclaimerItems(
+                      quotationStatus,
+                      selectedLanguageCopy,
+                    ).map((item) => (
                       <p key={item}>{item}</p>
                     ))}
                   </div>
