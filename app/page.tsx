@@ -5762,7 +5762,7 @@ export default function Home() {
                               {selectedLanguageCopy.refundToPatient}
                             </p>
                             <p className="font-semibold tabular-nums">
-                              {formatDeduction(optionSummary.refundCredit)}
+                              {formatCurrency(optionSummary.refundCredit)}
                             </p>
                           </div>
                         ) : null}
@@ -5862,7 +5862,7 @@ export default function Home() {
                           Refund / credit to patient
                         </span>
                         <span className="money whitespace-nowrap text-right">
-                          {formatDeduction(totals.refundCredit)}
+                          {formatCurrency(totals.refundCredit)}
                         </span>
                       </div>
                     ) : null}
