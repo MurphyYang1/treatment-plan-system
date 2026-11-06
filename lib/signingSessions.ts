@@ -30,6 +30,8 @@ export type SigningQuotationProcedure = {
   discountPercent?: number;
   discountAmount?: number;
   noFrillsCoveredAmount?: number;
+  isRefund?: boolean;
+  refundCreditAmount?: number;
   gst?: number;
   subsidy?: number;
   medisaveClaim?: number;
@@ -73,6 +75,7 @@ export type SigningQuotationSnapshot = {
     subsidy?: number;
     medisave?: number;
     noFrillsCovered?: number;
+    refundCredit?: number;
     payable?: number;
   };
   phases?: SigningQuotationPhase[];

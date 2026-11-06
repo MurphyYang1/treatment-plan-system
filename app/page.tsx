@@ -49,6 +49,7 @@ type Treatment = {
   medisave: number;
   subsidies: Subsidy;
   isCustom?: boolean;
+  isRefund?: boolean;
 };
 
 
@@ -143,6 +144,10 @@ type LanguageCopy = {
   discount: string;
   coveredByNoFrills: string;
   amountCoveredByNoFrills: string;
+  refundCredit: string;
+  refundToPatient: string;
+  refundAmount: string;
+  refundBadge: string;
   selectedInstallmentPlan: string;
   months: string;
   ifApplicable: string;
@@ -681,7 +686,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     remarks: "Remarks",
     howToReadCosts: "How to read each treatment cost",
     howToReadCostsText:
-      "Quantity is the number of procedures planned. Claim quantity is the number submitted for CHAS / Merdeka / Pioneer subsidy. Cash payable is calculated as treatment subtotal (unit price x quantity) plus GST, less subsidy and Medisave deductions.",
+      "Quantity is the number of procedures planned. Claim quantity is the number submitted for CHAS / Merdeka / Pioneer subsidy. Cash payable is calculated as treatment subtotal (unit price x quantity) plus GST, less subsidy, Medisave and any refund / credit to the patient.",
     phaseCashTotal: "Phase CASH Total",
     financialSummary: "Financial Summary",
     treatmentSubtotal: "Treatment Subtotal",
@@ -691,6 +696,10 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     discount: "Discount",
     coveredByNoFrills: "Covered by NoFrills",
     amountCoveredByNoFrills: "Amount covered by NoFrills Dental",
+    refundCredit: "Refund / credit",
+    refundToPatient: "Refund / credit to patient",
+    refundAmount: "Refund amount",
+    refundBadge: "Refund",
     selectedInstallmentPlan: "Selected Instalment Plan",
     months: "months",
     ifApplicable: "(if applicable)",
@@ -808,7 +817,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     remarks: "Catatan",
     howToReadCosts: "Cara membaca kos setiap rawatan",
     howToReadCostsText:
-      "Kuantiti ialah bilangan prosedur yang dirancang. Kuantiti tuntutan ialah bilangan yang dihantar untuk subsidi CHAS / Merdeka / Perintis. Tunai perlu dibayar dikira sebagai jumlah kecil rawatan (harga seunit x kuantiti) ditambah GST, ditolak subsidi dan potongan Medisave.",
+      "Kuantiti ialah bilangan prosedur yang dirancang. Kuantiti tuntutan ialah bilangan yang dihantar untuk subsidi CHAS / Merdeka / Perintis. Tunai perlu dibayar dikira sebagai jumlah kecil rawatan (harga seunit x kuantiti) ditambah GST, ditolak subsidi, Medisave dan sebarang bayaran balik / kredit kepada pesakit.",
     phaseCashTotal: "Jumlah Tunai Fasa",
     financialSummary: "Ringkasan Kewangan",
     treatmentSubtotal: "Jumlah Kecil Rawatan",
@@ -818,6 +827,10 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     discount: "Diskaun",
     coveredByNoFrills: "Ditanggung oleh NoFrills",
     amountCoveredByNoFrills: "Jumlah ditanggung oleh NoFrills Dental",
+    refundCredit: "Bayaran balik / kredit",
+    refundToPatient: "Bayaran balik / kredit kepada pesakit",
+    refundAmount: "Jumlah bayaran balik",
+    refundBadge: "Bayaran balik",
     selectedInstallmentPlan: "Pelan Ansuran Dipilih",
     months: "bulan",
     ifApplicable: "(jika berkenaan)",
@@ -944,7 +957,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     remarks: "备注",
     howToReadCosts: "如何阅读每项治疗费用",
     howToReadCostsText:
-      "数量是计划进行的程序次数。申报数量是提交用于 CHAS / 建国一代 / 乐龄一代补贴的数量。需付现金按治疗小计（单价 x 数量）加上消费税，再扣除补贴和保健储蓄后计算。",
+      "数量是计划进行的程序次数。申报数量是提交用于 CHAS / 建国一代 / 乐龄一代补贴的数量。需付现金按治疗小计（单价 x 数量）加上消费税，再扣除补贴、保健储蓄以及退还给患者的金额后计算。",
     phaseCashTotal: "阶段现金总额",
     financialSummary: "费用摘要",
     treatmentSubtotal: "治疗小计",
@@ -954,6 +967,10 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     discount: "折扣",
     coveredByNoFrills: "NoFrills 承担",
     amountCoveredByNoFrills: "NoFrills Dental 承担金额",
+    refundCredit: "退款 / 贷记",
+    refundToPatient: "退还给患者的金额",
+    refundAmount: "退款金额",
+    refundBadge: "退款",
     selectedInstallmentPlan: "已选择分期付款计划",
     months: "个月",
     ifApplicable: "（如适用）",
@@ -1072,7 +1089,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     remarks: "குறிப்புகள்",
     howToReadCosts: "ஒவ்வொரு சிகிச்சை செலவையும் படிப்பது எப்படி",
     howToReadCostsText:
-      "அளவு என்பது திட்டமிடப்பட்ட செயல்முறைகளின் எண்ணிக்கை. கோரிக்கை அளவு என்பது CHAS / Merdeka / Pioneer மானியத்திற்கு சமர்ப்பிக்கப்படும் எண்ணிக்கை. செலுத்த வேண்டிய ரொக்கம் சிகிச்சை இடைமொத்தம் (அலகு விலை x அளவு) மற்றும் GST சேர்த்து, மானியம் மற்றும் Medisave கழிவுகளை கழித்துப் கணக்கிடப்படுகிறது.",
+      "அளவு என்பது திட்டமிடப்பட்ட செயல்முறைகளின் எண்ணிக்கை. கோரிக்கை அளவு என்பது CHAS / Merdeka / Pioneer மானியத்திற்கு சமர்ப்பிக்கப்படும் எண்ணிக்கை. செலுத்த வேண்டிய ரொக்கம் சிகிச்சை இடைமொத்தம் (அலகு விலை x அளவு) மற்றும் GST சேர்த்து, மானியம், Medisave மற்றும் நோயாளிக்கு திருப்பிச் செலுத்தும் / கடன் தொகையை கழித்துப் கணக்கிடப்படுகிறது.",
     phaseCashTotal: "கட்ட ரொக்க மொத்தம்",
     financialSummary: "நிதி சுருக்கம்",
     treatmentSubtotal: "சிகிச்சை இடைமொத்தம்",
@@ -1082,6 +1099,10 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     discount: "தள்ளுபடி",
     coveredByNoFrills: "NoFrills ஏற்கும் தொகை",
     amountCoveredByNoFrills: "NoFrills Dental ஏற்கும் தொகை",
+    refundCredit: "திருப்பிச் செலுத்தல் / கடன்",
+    refundToPatient: "நோயாளிக்கு திருப்பிச் செலுத்தும் / கடன் தொகை",
+    refundAmount: "திருப்பிச் செலுத்தும் தொகை",
+    refundBadge: "திருப்பிச் செலுத்தல்",
     selectedInstallmentPlan: "தேர்ந்தெடுத்த தவணை திட்டம்",
     months: "மாதங்கள்",
     ifApplicable: "(பொருந்தினால்)",
@@ -1223,6 +1244,10 @@ const languageStringKeys = [
   "discount",
   "coveredByNoFrills",
   "amountCoveredByNoFrills",
+  "refundCredit",
+  "refundToPatient",
+  "refundAmount",
+  "refundBadge",
   "selectedInstallmentPlan",
   "months",
   "ifApplicable",
@@ -1932,6 +1957,16 @@ const availableTreatments: Treatment[] = [
   },
   {
     category: "Other Treatment",
+    name: "Goodwill Refund (prior procedure)",
+    duration: "",
+    fee: 0,
+    medisave: 0,
+    subsidies: noSubsidy,
+    isCustom: true,
+    isRefund: true,
+  },
+  {
+    category: "Other Treatment",
     name: "Temporary Denture (Interim) per full arch",
     duration: "",
     fee: 1000,
@@ -2225,7 +2260,7 @@ function createProcedure(
   clinicBranch: string,
 ): Procedure {
   const defaultClaimQty =
-    subsidyTier === "Private"
+    treatment.isRefund || subsidyTier === "Private"
       ? 0
       : treatment.category === "General Treatment"
         ? 1
@@ -2233,15 +2268,29 @@ function createProcedure(
 
   return {
     ...treatment,
-    name: treatment.isCustom ? "" : treatment.name,
+    name: treatment.isRefund
+      ? treatment.name
+      : treatment.isCustom
+        ? ""
+        : treatment.name,
     quantity: 1,
     subsidyClaimQty: defaultClaimQty,
-    subsidyAmount: getTreatmentSubsidyAmount(treatment, subsidyTier),
+    subsidyAmount: treatment.isRefund
+      ? 0
+      : getTreatmentSubsidyAmount(treatment, subsidyTier),
     discountPercent: 0,
-    medisaveClaim: treatment.medisave,
+    medisaveClaim: treatment.isRefund ? 0 : treatment.medisave,
     description: "",
-    gstApplicable: getDefaultGstApplicable(treatment, clinicBranch),
+    gstApplicable: treatment.isRefund
+      ? false
+      : getDefaultGstApplicable(treatment, clinicBranch),
   };
+}
+
+function isRefundProcedure(
+  procedure: Pick<Procedure, "isRefund"> | Pick<Treatment, "isRefund">,
+) {
+  return Boolean(procedure.isRefund);
 }
 
 function getDiscountPercent(procedure: Pick<Procedure, "discountPercent">) {
@@ -2252,24 +2301,46 @@ function getRowSubtotal(procedure: Pick<Procedure, "fee" | "quantity">) {
   return procedure.fee * procedure.quantity;
 }
 
-function getDiscountAmount(
-  procedure: Pick<Procedure, "fee" | "quantity" | "discountPercent">,
+function getRefundCreditAmount(
+  procedure: Pick<Procedure, "fee" | "quantity" | "isRefund">,
 ) {
+  if (!isRefundProcedure(procedure)) {
+    return 0;
+  }
+
+  return Math.abs(Number(procedure.fee) || 0) * Math.max(Number(procedure.quantity) || 0, 1);
+}
+
+function getDiscountAmount(
+  procedure: Pick<Procedure, "fee" | "quantity" | "discountPercent" | "isRefund">,
+) {
+  if (isRefundProcedure(procedure)) {
+    return 0;
+  }
+
   return getRowSubtotal(procedure) * (getDiscountPercent(procedure) / 100);
 }
 
 function getDiscountedSubtotal(
-  procedure: Pick<Procedure, "fee" | "quantity" | "discountPercent">,
+  procedure: Pick<Procedure, "fee" | "quantity" | "discountPercent" | "isRefund">,
 ) {
+  if (isRefundProcedure(procedure)) {
+    return 0;
+  }
+
   return Math.max(getRowSubtotal(procedure) - getDiscountAmount(procedure), 0);
 }
 
 function getNoFrillsCoveredAmount(
   procedure: Pick<
     Procedure,
-    "fee" | "quantity" | "discountPercent" | "gstApplicable"
+    "fee" | "quantity" | "discountPercent" | "gstApplicable" | "isRefund"
   >,
 ) {
+  if (isRefundProcedure(procedure)) {
+    return 0;
+  }
+
   const discountAmount = getDiscountAmount(procedure);
 
   if (discountAmount <= 0) {
@@ -2285,19 +2356,31 @@ function getNoFrillsCoveredAmount(
 function getProcedureGst(
   procedure: Pick<
     Procedure,
-    "fee" | "quantity" | "discountPercent" | "gstApplicable"
+    "fee" | "quantity" | "discountPercent" | "gstApplicable" | "isRefund"
   >,
 ) {
+  if (isRefundProcedure(procedure)) {
+    return 0;
+  }
+
   return procedure.gstApplicable ? getDiscountedSubtotal(procedure) * GST_RATE : 0;
 }
 
 function getProcedureSubsidyTotal(
-  procedure: Pick<Procedure, "subsidyAmount" | "subsidyClaimQty">,
+  procedure: Pick<Procedure, "subsidyAmount" | "subsidyClaimQty" | "isRefund">,
 ) {
+  if (isRefundProcedure(procedure)) {
+    return 0;
+  }
+
   return procedure.subsidyAmount * procedure.subsidyClaimQty;
 }
 
 function getProcedurePayable(procedure: Procedure) {
+  if (isRefundProcedure(procedure)) {
+    return -getRefundCreditAmount(procedure);
+  }
+
   return (
     getDiscountedSubtotal(procedure) +
     getProcedureGst(procedure) -
@@ -2359,9 +2442,15 @@ function calculateTotalsForPhases(phases: Phase[]) {
   let subsidy = 0;
   let medisave = 0;
   let noFrillsCovered = 0;
+  let refundCredit = 0;
 
   phases.forEach((phase) => {
     phase.procedures.forEach((procedure) => {
+      if (isRefundProcedure(procedure)) {
+        refundCredit += getRefundCreditAmount(procedure);
+        return;
+      }
+
       const rowSubtotal = getDiscountedSubtotal(procedure);
       const rowGst = getProcedureGst(procedure);
 
@@ -2379,7 +2468,8 @@ function calculateTotalsForPhases(phases: Phase[]) {
     subsidy,
     medisave,
     noFrillsCovered,
-    payable: subtotal + gst - subsidy - medisave,
+    refundCredit,
+    payable: subtotal + gst - subsidy - medisave - refundCredit,
   };
 }
 
@@ -2412,12 +2502,13 @@ function getDateInputValue(date: Date) {
 
 
 function formatCurrency(amount: number) {
-  return `$${amount.toFixed(2)}`;
+  const absolute = Math.abs(amount).toFixed(2);
+  return amount < 0 ? `-$${absolute}` : `$${absolute}`;
 }
 
 
 function formatDeduction(amount: number) {
-  return amount === 0 ? formatCurrency(0) : `-${formatCurrency(amount)}`;
+  return amount === 0 ? formatCurrency(0) : `-${formatCurrency(Math.abs(amount))}`;
 }
 
 
@@ -2465,8 +2556,12 @@ function isGeneralPermanentCrownTreatment(
 }
 
 function getPatientEducationTopics(
-  treatment: Pick<Treatment, "category" | "name">,
+  treatment: Pick<Treatment, "category" | "name" | "isRefund">,
 ) {
+  if (isRefundProcedure(treatment)) {
+    return [];
+  }
+
   const topics = patientEducationTopics.filter((topic) =>
     topic.matches(treatment),
   );
@@ -3346,6 +3441,7 @@ export default function Home() {
           const subsidy = getProcedureSubsidyTotal(procedure);
           const discountAmount = getDiscountAmount(procedure);
           const noFrillsCoveredAmount = getNoFrillsCoveredAmount(procedure);
+          const refundCreditAmount = getRefundCreditAmount(procedure);
 
           return {
             category: procedure.category,
@@ -3356,6 +3452,8 @@ export default function Home() {
             discountPercent: getDiscountPercent(procedure),
             discountAmount,
             noFrillsCoveredAmount,
+            isRefund: Boolean(procedure.isRefund),
+            refundCreditAmount,
             fee: procedure.fee,
             gstApplicable: procedure.gstApplicable,
             gst,
@@ -3376,6 +3474,7 @@ export default function Home() {
         const subsidy = getProcedureSubsidyTotal(procedure);
         const discountAmount = getDiscountAmount(procedure);
         const noFrillsCoveredAmount = getNoFrillsCoveredAmount(procedure);
+        const refundCreditAmount = getRefundCreditAmount(procedure);
 
         return {
           category: procedure.category,
@@ -3386,6 +3485,8 @@ export default function Home() {
           discountPercent: getDiscountPercent(procedure),
           discountAmount,
           noFrillsCoveredAmount,
+          isRefund: Boolean(procedure.isRefund),
+          refundCreditAmount,
           fee: procedure.fee,
           gstApplicable: procedure.gstApplicable,
           gst,
@@ -4900,10 +5001,17 @@ export default function Home() {
                               className="avoid-break rounded-xl border bg-gray-50 p-3"
                             >
                               <div>
-                                <h3 className="text-base font-bold">
-                                  {procedure.name ||
-                                    selectedLanguageCopy.customProcedure}
-                                </h3>
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <h3 className="text-base font-bold">
+                                    {procedure.name ||
+                                      selectedLanguageCopy.customProcedure}
+                                  </h3>
+                                  {isRefundProcedure(procedure) ? (
+                                    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">
+                                      {selectedLanguageCopy.refundBadge}
+                                    </span>
+                                  ) : null}
+                                </div>
                                 <p className="mt-0.5 text-xs text-gray-500">
                                   {translateCategory(
                                     procedure.category,
@@ -4927,16 +5035,24 @@ export default function Home() {
                                     {selectedLanguageCopy.claimQty}
                                   </dt>
                                   <dd className="text-right tabular-nums">
-                                    {procedure.subsidyClaimQty}
+                                    {isRefundProcedure(procedure)
+                                      ? "—"
+                                      : procedure.subsidyClaimQty}
                                   </dd>
                                 </div>
 
                                 <div>
                                   <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
-                                    {selectedLanguageCopy.unitPrice}
+                                    {isRefundProcedure(procedure)
+                                      ? selectedLanguageCopy.refundAmount
+                                      : selectedLanguageCopy.unitPrice}
                                   </dt>
                                   <dd className="text-right tabular-nums">
-                                    {formatCurrency(procedure.fee)}
+                                    {formatCurrency(
+                                      isRefundProcedure(procedure)
+                                        ? Math.abs(procedure.fee)
+                                        : procedure.fee,
+                                    )}
                                   </dd>
                                 </div>
 
@@ -5100,6 +5216,11 @@ export default function Home() {
                                     <div className="font-semibold">
                                       {procedure.name ||
                                         selectedLanguageCopy.customProcedure}
+                                      {isRefundProcedure(procedure) ? (
+                                        <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-bold text-amber-800">
+                                          {selectedLanguageCopy.refundBadge}
+                                        </span>
+                                      ) : null}
                                     </div>
                                     <div className="text-[10px] text-gray-500">
                                       {translateCategory(
@@ -5130,34 +5251,48 @@ export default function Home() {
                                     {procedure.quantity}
                                   </td>
                                   <td className="px-2 py-2 text-right tabular-nums">
-                                    {procedure.subsidyClaimQty}
+                                    {isRefundProcedure(procedure)
+                                      ? "—"
+                                      : procedure.subsidyClaimQty}
                                   </td>
                                   <td className="px-2 py-2 text-right tabular-nums">
-                                    {formatCurrency(procedure.fee)}
+                                    {formatCurrency(
+                                      isRefundProcedure(procedure)
+                                        ? Math.abs(procedure.fee)
+                                        : procedure.fee,
+                                    )}
                                   </td>
                                   <td className="px-2 py-2 text-right tabular-nums">
-                                    {procedure.gstApplicable
-                                      ? formatCurrency(gst)
-                                      : "N/A"}
+                                    {isRefundProcedure(procedure)
+                                      ? "N/A"
+                                      : procedure.gstApplicable
+                                        ? formatCurrency(gst)
+                                        : "N/A"}
                                   </td>
                                   {phaseHasDiscount ? (
                                     <td className="px-2 py-2 text-right tabular-nums">
-                                      {discountPercent > 0
-                                        ? `${discountPercent}% (${formatDeduction(
-                                            isGoodwillQuotation
-                                              ? getNoFrillsCoveredAmount(
-                                                  procedure,
-                                                )
-                                              : discountAmount,
-                                          )})`
-                                        : "—"}
+                                      {isRefundProcedure(procedure)
+                                        ? "—"
+                                        : discountPercent > 0
+                                          ? `${discountPercent}% (${formatDeduction(
+                                              isGoodwillQuotation
+                                                ? getNoFrillsCoveredAmount(
+                                                    procedure,
+                                                  )
+                                                : discountAmount,
+                                            )})`
+                                          : "—"}
                                     </td>
                                   ) : null}
                                   <td className="px-2 py-2 text-right tabular-nums">
-                                    {formatDeduction(subsidy)}
+                                    {isRefundProcedure(procedure)
+                                      ? "—"
+                                      : formatDeduction(subsidy)}
                                   </td>
                                   <td className="px-2 py-2 text-right tabular-nums">
-                                    {formatDeduction(procedure.medisaveClaim)}
+                                    {isRefundProcedure(procedure)
+                                      ? "—"
+                                      : formatDeduction(procedure.medisaveClaim)}
                                   </td>
                                   <td className="px-2 py-2 text-right font-bold tabular-nums">
                                     {formatCurrency(payable)}
@@ -5201,7 +5336,11 @@ export default function Home() {
                                       event.target.value,
                                     )
                                   }
-                                  placeholder="Type custom procedure name"
+                                  placeholder={
+                                    isRefundProcedure(procedure)
+                                      ? "Goodwill Refund – prior procedure name"
+                                      : "Type custom procedure name"
+                                  }
                                   className="w-full rounded-xl border bg-white px-4 py-3 text-lg font-bold sm:text-xl"
                                 />
                               ) : (
@@ -5211,6 +5350,11 @@ export default function Home() {
                               )}
                               <p className={compactClass(isFinalized, "mt-1 text-sm", "mt-0.5 text-xs")}>
                                 {procedure.category}
+                                {isRefundProcedure(procedure) ? (
+                                  <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">
+                                    Refund
+                                  </span>
+                                ) : null}
                               </p>
                             </div>
 
@@ -5264,11 +5408,16 @@ export default function Home() {
                                 type="number"
                                 min="0"
                                 value={
-                                  subsidyTier === "Private"
+                                  subsidyTier === "Private" ||
+                                  isRefundProcedure(procedure)
                                     ? 0
                                     : procedure.subsidyClaimQty
                                 }
-                                readOnly={isFinalized || subsidyTier === "Private"}
+                                readOnly={
+                                  isFinalized ||
+                                  subsidyTier === "Private" ||
+                                  isRefundProcedure(procedure)
+                                }
                                 onChange={(event) =>
                                   updateProcedure(
                                     phaseIndex,
@@ -5288,15 +5437,19 @@ export default function Home() {
 
                             <div>
                               <label className={costLabelClass(isFinalized)}>
-                                Unit Price
+                                {isRefundProcedure(procedure)
+                                  ? "Refund amount"
+                                  : "Unit Price"}
                               </label>
                               {isFinalized ? (
                                 <div className="mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums">
-                                  ${procedure.fee.toFixed(2)}
+                                  $
+                                  {Math.abs(procedure.fee).toFixed(2)}
                                 </div>
                               ) : (
                                 <input
                                   type="number"
+                                  min={isRefundProcedure(procedure) ? "0" : undefined}
                                   value={procedure.fee}
                                   onChange={(event) =>
                                     updateProcedure(
@@ -5324,7 +5477,12 @@ export default function Home() {
                                     type="number"
                                     min="0"
                                     max="100"
-                                    value={procedure.discountPercent}
+                                    value={
+                                      isRefundProcedure(procedure)
+                                        ? 0
+                                        : procedure.discountPercent
+                                    }
+                                    readOnly={isRefundProcedure(procedure)}
                                     onChange={(event) =>
                                       updateProcedure(
                                         phaseIndex,
@@ -5336,6 +5494,7 @@ export default function Home() {
                                     className="mt-2 w-full rounded-xl border px-4 py-3 text-right tabular-nums"
                                   />
                                   {isGoodwillQuotation &&
+                                  !isRefundProcedure(procedure) &&
                                   getDiscountPercent(procedure) > 0 ? (
                                     <p className="mt-1 text-xs text-gray-600">
                                       Covered (incl. GST):{" "}
@@ -5363,7 +5522,12 @@ export default function Home() {
                                 <label className="mt-2 flex items-center gap-2 rounded-xl border bg-white px-3 py-3 text-sm">
                                   <input
                                     type="checkbox"
-                                    checked={procedure.gstApplicable}
+                                    checked={
+                                      isRefundProcedure(procedure)
+                                        ? false
+                                        : procedure.gstApplicable
+                                    }
+                                    disabled={isRefundProcedure(procedure)}
                                     onChange={(event) =>
                                       updateProcedure(
                                         phaseIndex,
@@ -5398,13 +5562,20 @@ export default function Home() {
                               </label>
                               {isFinalized ? (
                                 <div className="mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums">
-                                  {formatDeduction(subsidy)}
+                                  {isRefundProcedure(procedure)
+                                    ? "—"
+                                    : formatDeduction(subsidy)}
                                 </div>
                               ) : (
                                 <input
                                   type="number"
                                   min="0"
-                                  value={procedure.subsidyAmount}
+                                  value={
+                                    isRefundProcedure(procedure)
+                                      ? 0
+                                      : procedure.subsidyAmount
+                                  }
+                                  readOnly={isRefundProcedure(procedure)}
                                   onChange={(event) =>
                                     updateProcedure(
                                       phaseIndex,
@@ -5416,7 +5587,7 @@ export default function Home() {
                                   className="mt-2 w-full rounded-xl border bg-white px-4 py-3 text-right tabular-nums"
                                 />
                               )}
-                              {!isFinalized ? (
+                              {!isFinalized && !isRefundProcedure(procedure) ? (
                                 <p className="mt-1 text-xs text-gray-500">
                                   Per claim unit. Total:{" "}
                                   {formatDeduction(
@@ -5434,12 +5605,19 @@ export default function Home() {
                               </label>
                               {isFinalized ? (
                                 <div className="mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums">
-                                  ${procedure.medisaveClaim.toFixed(2)}
+                                  {isRefundProcedure(procedure)
+                                    ? "—"
+                                    : `$${procedure.medisaveClaim.toFixed(2)}`}
                                 </div>
                               ) : (
                                 <input
                                   type="number"
-                                  value={procedure.medisaveClaim}
+                                  value={
+                                    isRefundProcedure(procedure)
+                                      ? 0
+                                      : procedure.medisaveClaim
+                                  }
+                                  readOnly={isRefundProcedure(procedure)}
                                   onChange={(event) =>
                                     updateProcedure(
                                       phaseIndex,
@@ -5456,7 +5634,9 @@ export default function Home() {
 
                             <div>
                               <label className={costLabelClass(isFinalized)}>
-                                Cash Payable
+                                {isRefundProcedure(procedure)
+                                  ? "Refund / credit"
+                                  : "Cash Payable"}
                               </label>
                               <div
                                 className={compactClass(
@@ -5465,7 +5645,7 @@ export default function Home() {
                                   "mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right font-bold tabular-nums",
                                 )}
                               >
-                                ${payable.toFixed(2)}
+                                {formatCurrency(payable)}
                               </div>
                             </div>
 
@@ -5576,6 +5756,16 @@ export default function Home() {
                             </p>
                           </div>
                         ) : null}
+                        {optionSummary.refundCredit > 0 ? (
+                          <div>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                              {selectedLanguageCopy.refundToPatient}
+                            </p>
+                            <p className="font-semibold tabular-nums">
+                              {formatDeduction(optionSummary.refundCredit)}
+                            </p>
+                          </div>
+                        ) : null}
                         <div>
                           <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
                             {selectedLanguageCopy.totalSubsidiesUsed}
@@ -5661,6 +5851,18 @@ export default function Home() {
                         </span>
                         <span className="money whitespace-nowrap text-right">
                           {formatDeduction(totals.noFrillsCovered)}
+                        </span>
+                      </div>
+                    ) : null}
+
+
+                    {totals.refundCredit > 0 ? (
+                      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                        <span className="min-w-0 break-words">
+                          Refund / credit to patient
+                        </span>
+                        <span className="money whitespace-nowrap text-right">
+                          {formatDeduction(totals.refundCredit)}
                         </span>
                       </div>
                     ) : null}
