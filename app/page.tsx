@@ -140,6 +140,9 @@ type LanguageCopy = {
   totalSubsidiesUsed: string;
   totalMedisaveUsed: string;
   cashPortion: string;
+  discount: string;
+  coveredByNoFrills: string;
+  amountCoveredByNoFrills: string;
   selectedInstallmentPlan: string;
   months: string;
   ifApplicable: string;
@@ -666,6 +669,9 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     totalSubsidiesUsed: "Total Subsidies USED",
     totalMedisaveUsed: "Total Medisave USED",
     cashPortion: "Cash Portion",
+    discount: "Discount",
+    coveredByNoFrills: "Covered by NoFrills",
+    amountCoveredByNoFrills: "Amount covered by NoFrills Dental",
     selectedInstallmentPlan: "Selected Instalment Plan",
     months: "months",
     ifApplicable: "(if applicable)",
@@ -786,6 +792,9 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     totalSubsidiesUsed: "Jumlah Subsidi Digunakan",
     totalMedisaveUsed: "Jumlah Medisave Digunakan",
     cashPortion: "Bahagian Tunai",
+    discount: "Diskaun",
+    coveredByNoFrills: "Ditanggung oleh NoFrills",
+    amountCoveredByNoFrills: "Jumlah ditanggung oleh NoFrills Dental",
     selectedInstallmentPlan: "Pelan Ansuran Dipilih",
     months: "bulan",
     ifApplicable: "(jika berkenaan)",
@@ -915,6 +924,9 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     totalSubsidiesUsed: "已使用补贴总额",
     totalMedisaveUsed: "已使用保健储蓄总额",
     cashPortion: "现金部分",
+    discount: "折扣",
+    coveredByNoFrills: "NoFrills 承担",
+    amountCoveredByNoFrills: "NoFrills Dental 承担金额",
     selectedInstallmentPlan: "已选择分期付款计划",
     months: "个月",
     ifApplicable: "（如适用）",
@@ -1037,6 +1049,9 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     totalSubsidiesUsed: "பயன்படுத்திய மானிய மொத்தம்",
     totalMedisaveUsed: "பயன்படுத்திய Medisave மொத்தம்",
     cashPortion: "ரொக்க பகுதி",
+    discount: "தள்ளுபடி",
+    coveredByNoFrills: "NoFrills ஏற்கும் தொகை",
+    amountCoveredByNoFrills: "NoFrills Dental ஏற்கும் தொகை",
     selectedInstallmentPlan: "தேர்ந்தெடுத்த தவணை திட்டம்",
     months: "மாதங்கள்",
     ifApplicable: "(பொருந்தினால்)",
@@ -1171,6 +1186,9 @@ const languageStringKeys = [
   "totalSubsidiesUsed",
   "totalMedisaveUsed",
   "cashPortion",
+  "discount",
+  "coveredByNoFrills",
+  "amountCoveredByNoFrills",
   "selectedInstallmentPlan",
   "months",
   "ifApplicable",
@@ -2210,6 +2228,24 @@ function getDiscountedSubtotal(
   return Math.max(getRowSubtotal(procedure) - getDiscountAmount(procedure), 0);
 }
 
+function getNoFrillsCoveredAmount(
+  procedure: Pick<
+    Procedure,
+    "fee" | "quantity" | "discountPercent" | "gstApplicable"
+  >,
+) {
+  const discountAmount = getDiscountAmount(procedure);
+
+  if (discountAmount <= 0) {
+    return 0;
+  }
+
+  // Include the GST that would have applied on the discounted portion.
+  return procedure.gstApplicable
+    ? discountAmount * (1 + GST_RATE)
+    : discountAmount;
+}
+
 function getProcedureGst(
   procedure: Pick<
     Procedure,
@@ -2286,6 +2322,7 @@ function calculateTotalsForPhases(phases: Phase[]) {
   let gst = 0;
   let subsidy = 0;
   let medisave = 0;
+  let noFrillsCovered = 0;
 
   phases.forEach((phase) => {
     phase.procedures.forEach((procedure) => {
@@ -2296,6 +2333,7 @@ function calculateTotalsForPhases(phases: Phase[]) {
       gst += rowGst;
       subsidy += getProcedureSubsidyTotal(procedure);
       medisave += procedure.medisaveClaim;
+      noFrillsCovered += getNoFrillsCoveredAmount(procedure);
     });
   });
 
@@ -2304,6 +2342,7 @@ function calculateTotalsForPhases(phases: Phase[]) {
     gst,
     subsidy,
     medisave,
+    noFrillsCovered,
     payable: subtotal + gst - subsidy - medisave,
   };
 }
@@ -2677,6 +2716,7 @@ export default function Home() {
   );
   const showFinancialSummary = financialSummaryDisplay !== "hidden";
   const showFullFinancialSummary = financialSummaryDisplay === "full";
+  const isGoodwillQuotation = quotationStatus === "estimated";
   const activeOption =
     treatmentOptions.find((option) => option.id === activeOptionId) ??
     treatmentOptions[0];
@@ -3262,6 +3302,7 @@ export default function Home() {
           const gst = getProcedureGst(procedure);
           const subsidy = getProcedureSubsidyTotal(procedure);
           const discountAmount = getDiscountAmount(procedure);
+          const noFrillsCoveredAmount = getNoFrillsCoveredAmount(procedure);
 
           return {
             category: procedure.category,
@@ -3271,6 +3312,7 @@ export default function Home() {
             subsidyAmount: procedure.subsidyAmount,
             discountPercent: getDiscountPercent(procedure),
             discountAmount,
+            noFrillsCoveredAmount,
             fee: procedure.fee,
             gstApplicable: procedure.gstApplicable,
             gst,
@@ -3290,6 +3332,7 @@ export default function Home() {
         const gst = getProcedureGst(procedure);
         const subsidy = getProcedureSubsidyTotal(procedure);
         const discountAmount = getDiscountAmount(procedure);
+        const noFrillsCoveredAmount = getNoFrillsCoveredAmount(procedure);
 
         return {
           category: procedure.category,
@@ -3299,6 +3342,7 @@ export default function Home() {
           subsidyAmount: procedure.subsidyAmount,
           discountPercent: getDiscountPercent(procedure),
           discountAmount,
+          noFrillsCoveredAmount,
           fee: procedure.fee,
           gstApplicable: procedure.gstApplicable,
           gst,
@@ -4862,11 +4906,18 @@ export default function Home() {
                                 {discountPercent > 0 ? (
                                   <div>
                                     <dt className="text-xs font-semibold uppercase tracking-wide text-gray-600">
-                                      Discount
+                                      {isGoodwillQuotation
+                                        ? selectedLanguageCopy.coveredByNoFrills
+                                        : selectedLanguageCopy.discount}
                                     </dt>
                                     <dd className="text-right tabular-nums">
                                       {discountPercent}% (
-                                      {formatDeduction(discountAmount)})
+                                      {formatDeduction(
+                                        isGoodwillQuotation
+                                          ? getNoFrillsCoveredAmount(procedure)
+                                          : discountAmount,
+                                      )}
+                                      )
                                     </dd>
                                   </div>
                                 ) : null}
@@ -4946,7 +4997,9 @@ export default function Home() {
                             </th>
                             {phaseHasDiscount ? (
                               <th className="w-[10%] px-2 py-2 text-right font-semibold tabular-nums">
-                                Discount
+                                {isGoodwillQuotation
+                                  ? selectedLanguageCopy.coveredByNoFrills
+                                  : selectedLanguageCopy.discount}
                               </th>
                             ) : null}
                             <th className="w-[12%] px-2 py-2 text-right font-semibold tabular-nums">
@@ -5042,7 +5095,13 @@ export default function Home() {
                                   {phaseHasDiscount ? (
                                     <td className="px-2 py-2 text-right tabular-nums">
                                       {discountPercent > 0
-                                        ? `${discountPercent}% (${formatDeduction(discountAmount)})`
+                                        ? `${discountPercent}% (${formatDeduction(
+                                            isGoodwillQuotation
+                                              ? getNoFrillsCoveredAmount(
+                                                  procedure,
+                                                )
+                                              : discountAmount,
+                                          )})`
                                         : "—"}
                                     </td>
                                   ) : null}
@@ -5207,24 +5266,37 @@ export default function Home() {
 
                             <div>
                               <label className={costLabelClass(isFinalized)}>
-                                Discount %
+                                {isGoodwillQuotation
+                                  ? "NoFrills covered %"
+                                  : "Discount %"}
                               </label>
                               {!isFinalized ? (
-                                <input
-                                  type="number"
-                                  min="0"
-                                  max="100"
-                                  value={procedure.discountPercent}
-                                  onChange={(event) =>
-                                    updateProcedure(
-                                      phaseIndex,
-                                      procedureIndex,
-                                      "discountPercent",
-                                      Number(event.target.value),
-                                    )
-                                  }
-                                  className="mt-2 w-full rounded-xl border px-4 py-3 text-right tabular-nums"
-                                />
+                                <>
+                                  <input
+                                    type="number"
+                                    min="0"
+                                    max="100"
+                                    value={procedure.discountPercent}
+                                    onChange={(event) =>
+                                      updateProcedure(
+                                        phaseIndex,
+                                        procedureIndex,
+                                        "discountPercent",
+                                        Number(event.target.value),
+                                      )
+                                    }
+                                    className="mt-2 w-full rounded-xl border px-4 py-3 text-right tabular-nums"
+                                  />
+                                  {isGoodwillQuotation &&
+                                  getDiscountPercent(procedure) > 0 ? (
+                                    <p className="mt-1 text-xs text-gray-600">
+                                      Covered (incl. GST):{" "}
+                                      {formatDeduction(
+                                        getNoFrillsCoveredAmount(procedure),
+                                      )}
+                                    </p>
+                                  ) : null}
+                                </>
                               ) : (
                                 <div className="mt-1 rounded-lg border border-transparent bg-transparent px-0 py-1 text-right tabular-nums">
                                   {getDiscountPercent(procedure) > 0
@@ -5422,7 +5494,13 @@ export default function Home() {
                     </div>
 
                     {showFullFinancialSummary ? (
-                      <div className="mt-4 grid gap-2 border-t pt-4 text-sm sm:grid-cols-2 lg:grid-cols-5">
+                      <div
+                        className={`mt-4 grid gap-2 border-t pt-4 text-sm sm:grid-cols-2 ${
+                          isGoodwillQuotation && optionSummary.noFrillsCovered > 0
+                            ? "lg:grid-cols-3"
+                            : "lg:grid-cols-5"
+                        }`}
+                      >
                         <div>
                           <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
                             {selectedLanguageCopy.treatmentSubtotal}
@@ -5439,6 +5517,17 @@ export default function Home() {
                             {formatCurrency(optionSummary.gst)}
                           </p>
                         </div>
+                        {isGoodwillQuotation &&
+                        optionSummary.noFrillsCovered > 0 ? (
+                          <div>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                              {selectedLanguageCopy.amountCoveredByNoFrills}
+                            </p>
+                            <p className="font-semibold tabular-nums">
+                              {formatDeduction(optionSummary.noFrillsCovered)}
+                            </p>
+                          </div>
+                        ) : null}
                         <div>
                           <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
                             {selectedLanguageCopy.totalSubsidiesUsed}
@@ -5515,6 +5604,18 @@ export default function Home() {
                         ${totals.gst.toFixed(2)}
                       </span>
                     </div>
+
+
+                    {isGoodwillQuotation && totals.noFrillsCovered > 0 ? (
+                      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                        <span className="min-w-0 break-words">
+                          Amount covered by NoFrills Dental
+                        </span>
+                        <span className="money whitespace-nowrap text-right">
+                          {formatDeduction(totals.noFrillsCovered)}
+                        </span>
+                      </div>
+                    ) : null}
 
 
                     <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
@@ -5604,6 +5705,11 @@ export default function Home() {
                         </th>
                         {showFullFinancialSummary ? (
                           <>
+                            {isGoodwillQuotation ? (
+                              <th className="w-[13%] px-3 py-2 text-right font-semibold">
+                                {selectedLanguageCopy.coveredByNoFrills}
+                              </th>
+                            ) : null}
                             <th className="w-[13%] px-3 py-2 text-right font-semibold">
                               {selectedLanguageCopy.totalSubsidiesUsed}
                             </th>
@@ -5646,6 +5752,13 @@ export default function Home() {
                           </td>
                           {showFullFinancialSummary ? (
                             <>
+                              {isGoodwillQuotation ? (
+                                <td className="px-3 py-2 text-right tabular-nums">
+                                  {formatDeduction(
+                                    option.totals.noFrillsCovered,
+                                  )}
+                                </td>
+                              ) : null}
                               <td className="px-3 py-2 text-right tabular-nums">
                                 {formatDeduction(option.totals.subsidy)}
                               </td>

@@ -29,6 +29,7 @@ export type SigningQuotationProcedure = {
   gstApplicable?: boolean;
   discountPercent?: number;
   discountAmount?: number;
+  noFrillsCoveredAmount?: number;
   gst?: number;
   subsidy?: number;
   medisaveClaim?: number;
@@ -71,6 +72,7 @@ export type SigningQuotationSnapshot = {
     gst?: number;
     subsidy?: number;
     medisave?: number;
+    noFrillsCovered?: number;
     payable?: number;
   };
   phases?: SigningQuotationPhase[];
