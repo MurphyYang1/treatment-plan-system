@@ -3039,10 +3039,17 @@ export default function Home() {
         ? (draft.printLanguageMode as PrintLanguageMode)
         : "english",
     );
+    const nextQuotationStatus =
+      typeof draft.quotationStatus === "string"
+        ? (draft.quotationStatus as QuotationStatus)
+        : "estimated";
+
     setSelectedInstallmentPlan(
-      typeof draft.selectedInstallmentPlan === "string"
-        ? (draft.selectedInstallmentPlan as InstallmentPlanId)
-        : "none",
+      nextQuotationStatus === "estimated"
+        ? "none"
+        : typeof draft.selectedInstallmentPlan === "string"
+          ? (draft.selectedInstallmentPlan as InstallmentPlanId)
+          : "none",
     );
     setSelectedCategory(
       typeof draft.selectedCategory === "string"
@@ -3066,11 +3073,6 @@ export default function Home() {
           : draft.treatmentOptions[0]?.id ?? 0,
       );
     }
-
-    const nextQuotationStatus =
-      typeof draft.quotationStatus === "string"
-        ? (draft.quotationStatus as QuotationStatus)
-        : "estimated";
 
     if (nextQuotationStatus === "estimated") {
       setPatientSelectedOptionId("");
@@ -4136,6 +4138,7 @@ export default function Home() {
                       );
                       if (nextStatus === "estimated") {
                         setPatientSelectedOptionId("");
+                        setSelectedInstallmentPlan("none");
                       }
                     }}
                     className="w-full rounded-xl border px-4 py-3"
@@ -4295,46 +4298,48 @@ export default function Home() {
 
             {!isFinalized ? (
               <>
-                <section className="avoid-break rounded-2xl border bg-gray-50 p-4 sm:p-6">
-                  <h2 className="mb-5 text-2xl font-bold">
-                    Interest-Free Instalments
-                  </h2>
+                {!isGoodwillQuotation ? (
+                  <section className="avoid-break rounded-2xl border bg-gray-50 p-4 sm:p-6">
+                    <h2 className="mb-5 text-2xl font-bold">
+                      Interest-Free Instalments
+                    </h2>
 
 
-                  <div className="space-y-4 text-sm">
-                    <div>
-                      <p className="font-semibold">Atome</p>
-                      <p>3 months interest-free</p>
+                    <div className="space-y-4 text-sm">
+                      <div>
+                        <p className="font-semibold">Atome</p>
+                        <p>3 months interest-free</p>
+                      </div>
+
+
+                      <div>
+                        <p className="font-semibold">GrabPay</p>
+                        <p>4 months interest-free</p>
+                      </div>
+
+
+                      <div>
+                        <p className="font-semibold">
+                          UOB / OCBC Credit Card 12 Mths
+                        </p>
+                        <p>12 months interest-free instalment</p>
+                      </div>
+
+
+                      <div>
+                        <p className="font-semibold">In-House Instalment</p>
+                        <ul className="mt-2 list-disc space-y-1 pl-5">
+                          <li>
+                            6/12 months interest-free - depending on treatment
+                          </li>
+                          <li>Applicant must be SG / PR</li>
+                          <li>1x guarantor required (SG / PR)</li>
+                          <li>Valid debit card required</li>
+                        </ul>
+                      </div>
                     </div>
-
-
-                    <div>
-                      <p className="font-semibold">GrabPay</p>
-                      <p>4 months interest-free</p>
-                    </div>
-
-
-                    <div>
-                      <p className="font-semibold">
-                        UOB / OCBC Credit Card 12 Mths
-                      </p>
-                      <p>12 months interest-free instalment</p>
-                    </div>
-
-
-                    <div>
-                      <p className="font-semibold">In-House Instalment</p>
-                      <ul className="mt-2 list-disc space-y-1 pl-5">
-                        <li>
-                          6/12 months interest-free - depending on treatment
-                        </li>
-                        <li>Applicant must be SG / PR</li>
-                        <li>1x guarantor required (SG / PR)</li>
-                        <li>Valid debit card required</li>
-                      </ul>
-                    </div>
-                  </div>
-                </section>
+                  </section>
+                ) : null}
 
 
                 <section className="avoid-break rounded-2xl border bg-white p-4 text-sm leading-relaxed text-gray-700 sm:p-6">
@@ -5792,7 +5797,7 @@ export default function Home() {
                         </div>
                       </div>
                     ) : null}
-                    {selectedInstallmentPlan !== "none"
+                    {!isGoodwillQuotation && selectedInstallmentPlan !== "none"
                       ? (() => {
                           const selectedPlan = installmentPlans.find(
                             (plan) => plan.id === selectedInstallmentPlan,
@@ -5898,31 +5903,35 @@ export default function Home() {
                 </div>
 
 
-                <div className="border-t pt-4">
-                  <label className="mb-2 block text-sm font-semibold text-gray-700">
-                    Optional Instalment Plan
-                  </label>
-                  <select
-                    value={selectedInstallmentPlan}
-                    onChange={(event) =>
-                      setSelectedInstallmentPlan(
-                        event.target.value as InstallmentPlanId,
-                      )
-                    }
-                    className="w-full rounded-xl border bg-white px-4 py-3"
-                  >
-                    <option value="none">No instalment plan selected</option>
-                    {installmentPlans.map((plan) => (
-                      <option key={plan.id} value={plan.id}>
-                        {plan.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                {!isGoodwillQuotation ? (
+                  <>
+                    <div className="border-t pt-4">
+                      <label className="mb-2 block text-sm font-semibold text-gray-700">
+                        Optional Instalment Plan
+                      </label>
+                      <select
+                        value={selectedInstallmentPlan}
+                        onChange={(event) =>
+                          setSelectedInstallmentPlan(
+                            event.target.value as InstallmentPlanId,
+                          )
+                        }
+                        className="w-full rounded-xl border bg-white px-4 py-3"
+                      >
+                        <option value="none">No instalment plan selected</option>
+                        {installmentPlans.map((plan) => (
+                          <option key={plan.id} value={plan.id}>
+                            {plan.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
 
-                {installmentBreakdown ? (
-                  renderInstallmentBreakdown(installmentBreakdown)
+                    {installmentBreakdown
+                      ? renderInstallmentBreakdown(installmentBreakdown)
+                      : null}
+                  </>
                 ) : null}
               </div>
             </section>
@@ -6128,42 +6137,50 @@ export default function Home() {
 
 
             {isFinalized ? (
-              <div className="grid gap-3 md:grid-cols-2 print:grid-cols-2">
-                <section className="avoid-break rounded-xl border bg-gray-50 p-4 text-xs print:p-3">
-                  <h2 className="mb-3 text-xl font-bold">
-                    {selectedLanguageCopy.interestFreeInstallments}
-                  </h2>
+              <div
+                className={
+                  isGoodwillQuotation
+                    ? "grid gap-3"
+                    : "grid gap-3 md:grid-cols-2 print:grid-cols-2"
+                }
+              >
+                {!isGoodwillQuotation ? (
+                  <section className="avoid-break rounded-xl border bg-gray-50 p-4 text-xs print:p-3">
+                    <h2 className="mb-3 text-xl font-bold">
+                      {selectedLanguageCopy.interestFreeInstallments}
+                    </h2>
 
 
-                  <div className="space-y-2">
-                    <div>
-                      <p>{selectedLanguageCopy.atomePlan}</p>
+                    <div className="space-y-2">
+                      <div>
+                        <p>{selectedLanguageCopy.atomePlan}</p>
+                      </div>
+
+
+                      <div>
+                        <p>{selectedLanguageCopy.grabPayPlan}</p>
+                      </div>
+
+
+                      <div>
+                        <p>{selectedLanguageCopy.cardPlan}</p>
+                      </div>
+
+
+                      <div>
+                        <p className="font-semibold">
+                          {selectedLanguageCopy.inHouseInstallment}
+                        </p>
+                        <ul className="mt-1 list-disc space-y-1 pl-4">
+                          <li>{selectedLanguageCopy.inHouseSixTwelve}</li>
+                          <li>{selectedLanguageCopy.applicantRequirement}</li>
+                          <li>{selectedLanguageCopy.guarantorRequirement}</li>
+                          <li>{selectedLanguageCopy.debitCardRequirement}</li>
+                        </ul>
+                      </div>
                     </div>
-
-
-                    <div>
-                      <p>{selectedLanguageCopy.grabPayPlan}</p>
-                    </div>
-
-
-                    <div>
-                      <p>{selectedLanguageCopy.cardPlan}</p>
-                    </div>
-
-
-                    <div>
-                      <p className="font-semibold">
-                        {selectedLanguageCopy.inHouseInstallment}
-                      </p>
-                      <ul className="mt-1 list-disc space-y-1 pl-4">
-                        <li>{selectedLanguageCopy.inHouseSixTwelve}</li>
-                        <li>{selectedLanguageCopy.applicantRequirement}</li>
-                        <li>{selectedLanguageCopy.guarantorRequirement}</li>
-                        <li>{selectedLanguageCopy.debitCardRequirement}</li>
-                      </ul>
-                    </div>
-                  </div>
-                </section>
+                  </section>
+                ) : null}
 
 
                 <section className="avoid-break rounded-xl border bg-white p-4 text-xs leading-relaxed text-gray-700 print:p-3">
