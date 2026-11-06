@@ -745,9 +745,9 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "Please indicate which treatment option the patient chooses.",
     needMoreTime: "I need more time to decide",
     goodwillPlanAcknowledgementHeading:
-      "Revised / Goodwill Plan Acknowledged",
+      "Goodwill Settlement Acknowledged",
     goodwillPlanAcknowledgementText:
-      "I acknowledge that this revised treatment plan and/or goodwill adjustment has been explained to me, including the updated treatment plan, fees, deductions, and any amount covered by NoFrills Dental.",
+      "I acknowledge that this goodwill / revised plan is a one-off settlement for my current dental concerns arising from previous treatment at this clinic, whether provided by the same or a different dentist. The proposed care, fees, deductions, any amount covered by NoFrills Dental, and the prosthesis warranty terms in the disclaimer have been explained to me.",
     smokingStatus: "Smoking Status",
     patientSmokes: "Patient is a smoker / smoking discussed",
     smokingHealingHeading: "Smoking and Healing",
@@ -771,10 +771,12 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "CHAS, Merdeka Generation, Pioneer Generation and Medisave claims remain subject to prevailing MOH regulations and patient eligibility.",
     ],
     goodwillDisclaimerItems: [
-      "Fees shown are based on this revised / goodwill plan and include prevailing 9% GST where GST applies.",
-      "This document reflects agreed adjustments for an existing patient and is not a new open treatment quotation.",
+      "Fees shown are based on this one-off goodwill / revised settlement plan and include prevailing 9% GST where GST applies.",
+      "This document is a one-off settlement for the patient's current issues arising from previous dental treatment at this clinic. It is not a new open treatment quotation.",
+      "This settlement applies whether the attending dentist is the same as or different from the dentist involved in the prior treatment.",
       "Any amount covered by NoFrills Dental or refunded to the patient applies only to the items listed in this document.",
-      "Further treatment beyond this revised plan may incur additional charges.",
+      "Dental prostheses issued under this plan carry the clinic's usual warranty of 3 months from the date the prosthesis is issued. Issues arising after the warranty period will be assessed case by case; any further treatment costs, if required, will be advised accordingly. Regular attendance for maintenance, recall and follow-up visits will be taken into account.",
+      "Further treatment beyond this settlement plan may incur additional charges.",
       "CHAS, Merdeka Generation, Pioneer Generation and Medisave claims remain subject to prevailing MOH regulations and patient eligibility.",
     ],
     signatureHeading: "Patient Acknowledgement & Signature",
@@ -792,13 +794,13 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     draftStatusMessage:
       "DRAFT / FOR DISCUSSION — This quotation is for discussion only and may change after clinical review, patient choices, eligibility checks, or changes in treatment plan.",
     estimatedStatusMessage:
-      "GOODWILL / REVISED PLAN — This quotation reflects a revised treatment plan and/or goodwill adjustment for an existing patient. It is prepared based on the current clinical situation, prior treatment history, and agreed adjustments.",
+      "GOODWILL / REVISED PLAN — This quotation is a one-off settlement for a patient who experienced issues with previous dental treatment at this clinic. It addresses the current clinical concerns only, and applies whether the attending dentist is the same as or different from the dentist involved in the prior treatment.",
     finalStatusMessage:
       "FINAL QUOTATION — This quotation is prepared for patient review and acknowledgement.",
     draftAcknowledgement:
       "I acknowledge that this draft treatment discussion has been explained to me and may be subject to change.",
     estimatedAcknowledgement:
-      "I acknowledge that this revised treatment plan and/or goodwill adjustment has been explained to me, including the updated treatment plan, fees, deductions, and any agreed adjustments.",
+      "I acknowledge that this goodwill / revised plan is a one-off settlement for my current dental concerns arising from previous treatment at this clinic, whether provided by the same or a different dentist, and that the fees, deductions, agreed adjustments and prosthesis warranty terms have been explained to me.",
     finalAcknowledgement:
       "I acknowledge that the proposed treatment, estimated fees, subsidies, Medisave claims, risks and alternative options have been explained clearly to me.",
     financialSummaryDisplay: "Cost Presentation",
@@ -889,9 +891,9 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "Sila nyatakan pilihan rawatan yang dipilih oleh pesakit.",
     needMoreTime: "Saya memerlukan lebih masa untuk membuat keputusan",
     goodwillPlanAcknowledgementHeading:
-      "Pelan Disemak / Goodwill Diakui",
+      "Penyelesaian Goodwill Diakui",
     goodwillPlanAcknowledgementText:
-      "Saya mengakui bahawa pelan rawatan yang disemak dan/atau pelarasan goodwill ini telah diterangkan kepada saya, termasuk pelan rawatan yang dikemas kini, yuran, potongan, dan sebarang jumlah yang ditanggung oleh NoFrills Dental.",
+      "Saya mengakui bahawa pelan goodwill / disemak ini adalah penyelesaian sekali sahaja bagi isu pergigian semasa saya yang timbul daripada rawatan terdahulu di klinik ini, sama ada oleh doktor gigi yang sama atau berbeza. Penjagaan yang dicadangkan, yuran, potongan, sebarang jumlah yang ditanggung oleh NoFrills Dental, serta terma waranti prostesis dalam penafian telah diterangkan kepada saya.",
     smokingStatus: "Status Merokok",
     patientSmokes: "Pesakit merokok / merokok telah dibincangkan",
     smokingHealingHeading: "Merokok dan Penyembuhan",
@@ -915,10 +917,12 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "Tuntutan CHAS, Generasi Merdeka, Generasi Perintis dan Medisave tertakluk kepada peraturan MOH semasa dan kelayakan pesakit.",
     ],
     goodwillDisclaimerItems: [
-      "Yuran yang ditunjukkan adalah berdasarkan pelan disemak / goodwill ini dan termasuk GST 9% semasa di mana GST dikenakan.",
-      "Dokumen ini mencerminkan pelarasan yang dipersetujui untuk pesakit sedia ada dan bukan sebut harga rawatan baharu yang terbuka.",
+      "Yuran yang ditunjukkan adalah berdasarkan pelan penyelesaian goodwill / disemak sekali sahaja ini dan termasuk GST 9% semasa di mana GST dikenakan.",
+      "Dokumen ini adalah penyelesaian sekali sahaja bagi isu semasa pesakit yang timbul daripada rawatan pergigian terdahulu di klinik ini. Ia bukan sebut harga rawatan baharu yang terbuka.",
+      "Penyelesaian ini terpakai sama ada doktor gigi yang merawat adalah sama atau berbeza daripada doktor gigi yang terlibat dalam rawatan terdahulu.",
       "Sebarang jumlah yang ditanggung oleh NoFrills Dental atau dibayar balik kepada pesakit hanya terpakai kepada item yang disenaraikan dalam dokumen ini.",
-      "Rawatan lanjut di luar pelan yang disemak ini mungkin dikenakan caj tambahan.",
+      "Prostesis pergigian yang dikeluarkan di bawah pelan ini membawa waranti biasa klinik selama 3 bulan dari tarikh prostesis dikeluarkan. Isu yang timbul selepas tempoh waranti akan dinilai mengikut kes; sebarang kos rawatan lanjut, jika diperlukan, akan dimaklumkan sewajarnya. Kehadiran berkala untuk penyelenggaraan, recall dan lawatan susulan akan diambil kira.",
+      "Rawatan lanjut di luar pelan penyelesaian ini mungkin dikenakan caj tambahan.",
       "Tuntutan CHAS, Generasi Merdeka, Generasi Perintis dan Medisave tertakluk kepada peraturan MOH semasa dan kelayakan pesakit.",
     ],
     signatureHeading: "Pengakuan & Tandatangan Pesakit",
@@ -936,13 +940,13 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     draftStatusMessage:
       "DRAF / UNTUK PERBINCANGAN — Sebut harga ini adalah untuk perbincangan sahaja dan mungkin berubah selepas semakan klinikal, pilihan pesakit, semakan kelayakan atau perubahan pelan rawatan.",
     estimatedStatusMessage:
-      "PELAN DISEMAK / GOODWILL — Sebut harga ini mencerminkan pelan rawatan yang disemak dan/atau pelarasan goodwill untuk pesakit sedia ada. Ia disediakan berdasarkan keadaan klinikal semasa, sejarah rawatan terdahulu dan pelarasan yang dipersetujui.",
+      "PELAN DISEMAK / GOODWILL — Sebut harga ini adalah penyelesaian sekali sahaja untuk pesakit yang mengalami isu dengan rawatan pergigian terdahulu di klinik ini. Ia hanya menangani kebimbangan klinikal semasa, dan terpakai sama ada doktor gigi yang merawat adalah sama atau berbeza daripada doktor gigi yang terlibat dalam rawatan terdahulu.",
     finalStatusMessage:
       "SEBUT HARGA MUKTAMAD — Sebut harga ini disediakan untuk semakan dan pengakuan pesakit.",
     draftAcknowledgement:
       "Saya mengakui bahawa perbincangan rawatan draf ini telah diterangkan kepada saya dan mungkin tertakluk kepada perubahan.",
     estimatedAcknowledgement:
-      "Saya mengakui bahawa pelan rawatan yang disemak dan/atau pelarasan goodwill ini telah diterangkan kepada saya, termasuk pelan rawatan yang dikemas kini, bayaran, potongan dan sebarang pelarasan yang dipersetujui.",
+      "Saya mengakui bahawa pelan goodwill / disemak ini adalah penyelesaian sekali sahaja bagi isu pergigian semasa saya yang timbul daripada rawatan terdahulu di klinik ini, sama ada oleh doktor gigi yang sama atau berbeza, dan bahawa yuran, potongan, pelarasan yang dipersetujui serta terma waranti prostesis telah diterangkan kepada saya.",
     finalAcknowledgement:
       "Saya mengakui bahawa rawatan yang dicadangkan, anggaran bayaran, subsidi, tuntutan Medisave, risiko dan pilihan rawatan lain telah diterangkan dengan jelas kepada saya.",
     financialSummaryDisplay: "Paparan Kos",
@@ -1037,9 +1041,9 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOption: "患者选择的选项",
     patientSelectedOptionIntro: "请注明患者选择的治疗选项。",
     needMoreTime: "我需要更多时间决定",
-    goodwillPlanAcknowledgementHeading: "已确认修订 / 善意调整方案",
+    goodwillPlanAcknowledgementHeading: "已确认善意结算方案",
     goodwillPlanAcknowledgementText:
-      "我确认已获说明此修订治疗方案及/或善意调整，包括更新后的治疗计划、费用、扣除项，以及由 NoFrills Dental 承担的任何金额。",
+      "我确认此善意 / 修订方案是针对我在本诊所先前治疗过程中出现的当前牙科问题所作的一次性结算，不论主诊牙医是否与先前治疗的牙医相同。所建议的治疗、费用、扣除项、由 NoFrills Dental 承担的任何金额，以及免责声明中的义齿保修条款，均已向我说明。",
     smokingStatus: "吸烟状态",
     patientSmokes: "患者吸烟 / 已讨论吸烟影响",
     smokingHealingHeading: "吸烟与愈合",
@@ -1062,10 +1066,12 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "CHAS、建国一代、乐龄一代及保健储蓄索赔须符合卫生部现行规定及患者资格。",
     ],
     goodwillDisclaimerItems: [
-      "所示费用基于本修订 / 善意调整方案，并在适用消费税的项目中包含现行9%消费税。",
-      "本文件反映针对现有患者的约定调整，并非全新开放式治疗报价。",
+      "所示费用基于本一次性善意 / 修订结算方案，并在适用消费税的项目中包含现行9%消费税。",
+      "本文件是针对患者在本诊所先前牙科治疗中出现的当前问题所作的一次性结算，并非全新开放式治疗报价。",
+      "不论主诊牙医是否与先前治疗的牙医相同，本结算均适用。",
       "由 NoFrills Dental 承担或退还给患者的任何金额，仅适用于本文件所列项目。",
-      "超出本修订方案的进一步治疗可能会产生额外费用。",
+      "本方案下发出的义齿适用诊所惯常的3个月保修期，自义齿发出之日起计算。保修期后出现的问题将按个案评估；如需进一步治疗费用，将另行告知。患者是否定期回诊进行维护、复查及随访，将作为评估考量。",
+      "超出本结算方案的进一步治疗可能会产生额外费用。",
       "CHAS、建国一代、乐龄一代及保健储蓄索赔须符合卫生部现行规定及患者资格。",
     ],
     signatureHeading: "患者确认与签名",
@@ -1082,12 +1088,12 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     draftStatusMessage:
       "草稿 / 讨论用 — 此报价仅供讨论，可能会因临床检查、患者选择、资格审核或治疗计划更改而改变。",
     estimatedStatusMessage:
-      "善意调整 / 修订方案 — 此报价反映现有患者的修订治疗方案和/或善意调整，并根据当前临床情况、既往治疗记录及双方同意的调整而制定。",
+      "善意调整 / 修订方案 — 此报价是针对在本诊所先前牙科治疗中遇到问题的患者所作的一次性结算，仅处理当前临床问题，不论主诊牙医是否与先前治疗的牙医相同。",
     finalStatusMessage: "最终报价 — 此报价供患者审阅和确认。",
     draftAcknowledgement:
       "我确认牙医已向我说明此治疗讨论草稿，并了解内容可能会更改。",
     estimatedAcknowledgement:
-      "我确认牙医已向我说明此修订治疗方案和/或善意调整，包括更新后的治疗方案、费用、扣除项目以及双方同意的任何调整。",
+      "我确认此善意 / 修订方案是针对我在本诊所先前治疗过程中出现的当前牙科问题所作的一次性结算，不论主诊牙医是否与先前治疗的牙医相同；费用、扣除项、双方同意的调整以及义齿保修条款均已向我说明。",
     finalAcknowledgement:
       "我确认牙医已向我清楚说明建议的治疗、预计费用、补贴、保健储蓄索赔、风险以及其他治疗选择。",
     financialSummaryDisplay: "费用显示方式",
@@ -1185,9 +1191,9 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "நோயாளர் தேர்ந்தெடுக்கும் சிகிச்சை விருப்பத்தை குறிப்பிடவும்.",
     needMoreTime: "முடிவு செய்ய எனக்கு மேலும் நேரம் தேவை",
     goodwillPlanAcknowledgementHeading:
-      "திருத்தப்பட்ட / Goodwill திட்டம் ஒப்புக்கொள்ளப்பட்டது",
+      "Goodwill தீர்வு ஒப்புக்கொள்ளப்பட்டது",
     goodwillPlanAcknowledgementText:
-      "இந்த திருத்தப்பட்ட சிகிச்சைத் திட்டம் மற்றும்/அல்லது goodwill சரிசெய்தல் எனக்கு விளக்கப்பட்டுள்ளதை, புதுப்பிக்கப்பட்ட சிகிச்சைத் திட்டம், கட்டணங்கள், கழிவுகள் மற்றும் NoFrills Dental ஏற்கும் எந்தத் தொகையும் உட்பட, நான் ஒப்புக்கொள்கிறேன்.",
+      "இந்த goodwill / திருத்தப்பட்ட திட்டம், இந்த கிளினிக்கில் முந்தைய சிகிச்சையால் எழுந்த எனது தற்போதைய பல் பிரச்சினைகளுக்கான ஒருமுறை தீர்வு என்பதையும், அது அதே அல்லது வேறு பல் மருத்துவரால் வழங்கப்பட்டதாக இருந்தாலும் பொருந்தும் என்பதையும் நான் ஒப்புக்கொள்கிறேன். பரிந்துரைக்கப்பட்ட பராமரிப்பு, கட்டணங்கள், கழிவுகள், NoFrills Dental ஏற்கும் எந்தத் தொகையும், மற்றும் பொறுப்புத்துறப்பில் உள்ள செயற்கைப் பல் உத்தரவாத விதிகளும் எனக்கு விளக்கப்பட்டுள்ளன.",
     smokingStatus: "புகைபிடிக்கும் நிலை",
     patientSmokes: "நோயாளர் புகைபிடிப்பவர் / புகைபிடித்தல் பற்றி பேசப்பட்டது",
     smokingHealingHeading: "புகைபிடித்தல் மற்றும் ஆறுதல்",
@@ -1211,10 +1217,12 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
       "CHAS, Merdeka Generation, Pioneer Generation மற்றும் Medisave கோரிக்கைகள் MOH விதிமுறைகள் மற்றும் நோயாளர் தகுதிக்கு உட்பட்டவை.",
     ],
     goodwillDisclaimerItems: [
-      "காட்டப்பட்டுள்ள கட்டணங்கள் இந்த திருத்தப்பட்ட / goodwill திட்டத்தை அடிப்படையாகக் கொண்டவை; GST பொருந்தும் இடங்களில் நடைமுறையில் உள்ள 9% GST சேர்க்கப்பட்டுள்ளது.",
-      "இந்த ஆவணம் ஏற்கனவே உள்ள நோயாளிக்கான ஒப்புக்கொள்ளப்பட்ட மாற்றங்களை பிரதிபலிக்கிறது; இது புதிய திறந்த சிகிச்சை மேற்கோள் அல்ல.",
+      "காட்டப்பட்டுள்ள கட்டணங்கள் இந்த ஒருமுறை goodwill / திருத்தப்பட்ட தீர்வுத் திட்டத்தை அடிப்படையாகக் கொண்டவை; GST பொருந்தும் இடங்களில் நடைமுறையில் உள்ள 9% GST சேர்க்கப்பட்டுள்ளது.",
+      "இந்த ஆவணம் இந்த கிளினிக்கில் முந்தைய பல் சிகிச்சையால் எழுந்த நோயாளியின் தற்போதைய பிரச்சினைகளுக்கான ஒருமுறை தீர்வு ஆகும்; இது புதிய திறந்த சிகிச்சை மேற்கோள் அல்ல.",
+      "முந்தைய சிகிச்சையில் ஈடுபட்ட பல் மருத்துவருடன் சிகிச்சை அளிக்கும் பல் மருத்துவர் அதே நபராக இருந்தாலும் வேறு நபராக இருந்தாலும் இந்த தீர்வு பொருந்தும்.",
       "NoFrills Dental ஏற்கும் அல்லது நோயாளிக்கு திருப்பிச் செலுத்தும் எந்தத் தொகையும் இந்த ஆவணத்தில் பட்டியலிடப்பட்ட உருப்படிகளுக்கு மட்டுமே பொருந்தும்.",
-      "இந்த திருத்தப்பட்ட திட்டத்திற்கு அப்பால் மேலும் சிகிச்சை தேவைப்பட்டால் கூடுதல் கட்டணம் விதிக்கப்படலாம்.",
+      "இந்த திட்டத்தின் கீழ் வழங்கப்படும் பல் செயற்கைப் பொருட்களுக்கு, செயற்கைப் பொருள் வழங்கப்பட்ட தேதியிலிருந்து கிளினிக்கின் வழக்கமான 3 மாத உத்தரவாதம் பொருந்தும். உத்தரவாத காலத்திற்குப் பிறகு எழும் பிரச்சினைகள் வழக்குக்கு வழக்கு மதிப்பிடப்படும்; மேலும் சிகிச்சை செலவு தேவைப்பட்டால் அது அதற்கேற்ப அறிவிக்கப்படும். பராமரிப்பு, recall மற்றும் பின்தொடர்வு வருகைகளுக்கான வழக்கமான வருகை கணக்கில் எடுக்கப்படும்.",
+      "இந்த தீர்வுத் திட்டத்திற்கு அப்பால் மேலும் சிகிச்சை தேவைப்பட்டால் கூடுதல் கட்டணம் விதிக்கப்படலாம்.",
       "CHAS, Merdeka Generation, Pioneer Generation மற்றும் Medisave கோரிக்கைகள் MOH விதிமுறைகள் மற்றும் நோயாளர் தகுதிக்கு உட்பட்டவை.",
     ],
     signatureHeading: "நோயாளர் ஒப்புதல் & கையொப்பம்",
@@ -1232,13 +1240,13 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     draftStatusMessage:
       "வரைவு / கலந்துரையாடலுக்காக — இந்த மேற்கோள் கலந்துரையாடலுக்காக மட்டுமே; மருத்துவ மதிப்பாய்வு, நோயாளர் தேர்வு, தகுதி சோதனை அல்லது சிகிச்சைத் திட்ட மாற்றங்களின் பின்னர் மாறலாம்.",
     estimatedStatusMessage:
-      "Goodwill / திருத்தப்பட்ட திட்டம் — இந்த மேற்கோள் ஏற்கனவே உள்ள நோயாளிக்கான திருத்தப்பட்ட சிகிச்சைத் திட்டம் மற்றும்/அல்லது goodwill சரிசெய்தலை பிரதிபலிக்கிறது. இது தற்போதைய மருத்துவ நிலை, முந்தைய சிகிச்சை வரலாறு மற்றும் ஒப்புக்கொள்ளப்பட்ட மாற்றங்களை அடிப்படையாகக் கொண்டு தயாரிக்கப்பட்டது.",
+      "Goodwill / திருத்தப்பட்ட திட்டம் — இந்த மேற்கோள் இந்த கிளினிக்கில் முந்தைய பல் சிகிச்சையில் பிரச்சினைகளை அனுபவித்த நோயாளிக்கான ஒருமுறை தீர்வு ஆகும். இது தற்போதைய மருத்துவ கவலைகளை மட்டுமே கையாள்கிறது, மேலும் முந்தைய சிகிச்சையில் ஈடுபட்ட பல் மருத்துவருடன் சிகிச்சை அளிக்கும் பல் மருத்துவர் அதே நபராக இருந்தாலும் வேறு நபராக இருந்தாலும் பொருந்தும்.",
     finalStatusMessage:
       "இறுதி மேற்கோள் — இந்த மேற்கோள் நோயாளர் மதிப்பாய்வு மற்றும் ஒப்புதலுக்காக தயாரிக்கப்பட்டுள்ளது.",
     draftAcknowledgement:
       "இந்த வரைவு சிகிச்சை கலந்துரையாடல் எனக்கு விளக்கப்பட்டுள்ளதையும் அது மாறக்கூடும் என்பதையும் நான் ஒப்புக்கொள்கிறேன்.",
     estimatedAcknowledgement:
-      "இந்த திருத்தப்பட்ட சிகிச்சைத் திட்டம் மற்றும்/அல்லது goodwill சரிசெய்தல் எனக்கு விளக்கப்பட்டுள்ளதை, புதுப்பிக்கப்பட்ட சிகிச்சைத் திட்டம், கட்டணங்கள், கழிவுகள் மற்றும் ஒப்புக்கொள்ளப்பட்ட மாற்றங்கள் உட்பட, நான் ஒப்புக்கொள்கிறேன்.",
+      "இந்த goodwill / திருத்தப்பட்ட திட்டம் இந்த கிளினிக்கில் முந்தைய சிகிச்சையால் எழுந்த எனது தற்போதைய பல் பிரச்சினைகளுக்கான ஒருமுறை தீர்வு என்பதையும், அது அதே அல்லது வேறு பல் மருத்துவரால் வழங்கப்பட்டதாக இருந்தாலும் பொருந்தும் என்பதையும், கட்டணங்கள், கழிவுகள், ஒப்புக்கொள்ளப்பட்ட மாற்றங்கள் மற்றும் செயற்கைப் பல் உத்தரவாத விதிகள் எனக்கு விளக்கப்பட்டுள்ளன என்பதையும் நான் ஒப்புக்கொள்கிறேன்.",
     finalAcknowledgement:
       "பரிந்துரைக்கப்பட்ட சிகிச்சை, மதிப்பிடப்பட்ட கட்டணங்கள், மானியங்கள், Medisave கோரிக்கைகள், அபாயங்கள் மற்றும் மாற்று சிகிச்சை விருப்பங்கள் எனக்கு தெளிவாக விளக்கப்பட்டுள்ளன என்பதை நான் ஒப்புக்கொள்கிறேன்.",
     financialSummaryDisplay: "செலவு காட்சி முறை",
