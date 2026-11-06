@@ -2873,7 +2873,7 @@ export default function Home() {
   const [hasSignedQuotation, setHasSignedQuotation] = useState(false);
   const [subsidyTier, setSubsidyTier] = useState<SubsidyTier>("Private");
   const [quotationStatus, setQuotationStatus] =
-    useState<QuotationStatus>("estimated");
+    useState<QuotationStatus>("final");
   const [financialSummaryDisplay, setFinancialSummaryDisplay] =
     useState<FinancialSummaryDisplayMode>("full");
   const [showPatientEducationAnnex, setShowPatientEducationAnnex] =
@@ -3079,7 +3079,7 @@ export default function Home() {
     setQuotationStatus(
       typeof draft.quotationStatus === "string"
         ? (draft.quotationStatus as QuotationStatus)
-        : "estimated",
+        : "final",
     );
     setFinancialSummaryDisplay(
       typeof draft.financialSummaryDisplay === "string"
@@ -3107,7 +3107,7 @@ export default function Home() {
     const nextQuotationStatus =
       typeof draft.quotationStatus === "string"
         ? (draft.quotationStatus as QuotationStatus)
-        : "estimated";
+        : "final";
 
     setSelectedInstallmentPlan(
       nextQuotationStatus === "estimated"
