@@ -501,6 +501,23 @@ const patientEducationTopics: PatientEducationTopic[] = [
     matches: ({ name }) => /temporary denture|interim denture/i.test(name),
   },
   {
+    id: "types-of-removable-dentures",
+    title: "Types of Removable Dentures",
+    descriptions: {
+      English:
+        "Compares acrylic, flexible (Valplast), and metal-framework removable dentures for comfort, durability, appearance, thickness and cost.",
+      Malay:
+        "Membandingkan gigi palsu boleh tanggal akrilik, fleksibel (Valplast) dan rangka logam dari segi keselesaan, ketahanan, rupa, ketebalan dan kos.",
+      "Simplified Chinese":
+        "比较亚克力、弹性（Valplast）和金属支架活动义齿在舒适度、耐用性、外观、厚度和费用方面的差异。",
+      Tamil:
+        "அக்ரிலிக், நெகிழ்வு (Valplast) மற்றும் உலோக சட்ட removable dentures ஆகியவற்றை வசதி, நீடித்த தன்மை, தோற்றம், தடிமன் மற்றும் செலவு அடிப்படையில் ஒப்பிடுகிறது.",
+    },
+    imageSrc: "/patient-education/types-of-removable-dentures.jpg",
+    matches: ({ category, name }) =>
+      /general treatment/i.test(category) && /denture/i.test(name),
+  },
+  {
     id: "socket-preservation",
     title: "Socket Preservation",
     descriptions: {
