@@ -165,7 +165,9 @@ type LanguageCopy = {
   estimatedCashPayable: string;
   patientCostExplanationHeading: string;
   patientCostExplanationText: string;
+  patientCreditExplanationText: string;
   patientPaysAfterDeductions: string;
+  noCashPayableNote: string;
   recommended: string;
   recommendedByDentist: string;
   recommendedOption: string;
@@ -721,7 +723,11 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientCostExplanationHeading: "What the patient pays",
     patientCostExplanationText:
       "Cash payable is the estimated amount after GST, subsidy, Medisave and any discount have been applied. Full subsidy and Medisave figures appear in the comparison after the detailed phases.",
+    patientCreditExplanationText:
+      "This plan results in a refund or credit to the patient after GST, subsidy, Medisave, discounts and any listed refund items have been applied.",
     patientPaysAfterDeductions: "Patient pays after deductions",
+    noCashPayableNote:
+      "No further cash is payable on this plan. This amount will be refunded / credited to you.",
     recommended: "Recommended",
     recommendedByDentist: "Recommended by dentist",
     recommendedOption: "Recommended Option",
@@ -860,7 +866,11 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientCostExplanationHeading: "Jumlah yang pesakit bayar",
     patientCostExplanationText:
       "Tunai perlu dibayar ialah anggaran jumlah selepas GST, subsidi, Medisave dan sebarang diskaun digunakan. Angka subsidi dan Medisave penuh dipaparkan dalam perbandingan selepas fasa terperinci.",
+    patientCreditExplanationText:
+      "Pelan ini menghasilkan bayaran balik atau kredit kepada pesakit selepas GST, subsidi, Medisave, diskaun dan sebarang item bayaran balik yang disenaraikan digunakan.",
     patientPaysAfterDeductions: "Pesakit bayar selepas potongan",
+    noCashPayableNote:
+      "Tiada tunai lanjut perlu dibayar untuk pelan ini. Jumlah ini akan dibayar balik / dikreditkan kepada anda.",
     recommended: "Disyorkan",
     recommendedByDentist: "Disyorkan oleh doktor gigi",
     recommendedOption: "Pilihan Disyorkan",
@@ -1005,7 +1015,11 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientCostExplanationHeading: "患者需支付金额",
     patientCostExplanationText:
       "需付现金是计入消费税，并扣除补贴、保健储蓄及任何折扣后的预计金额。完整的补贴与保健储蓄数字会在详细阶段后的比较表中显示。",
+    patientCreditExplanationText:
+      "此方案在计入消费税，并扣除补贴、保健储蓄、折扣及所列退款项后，将产生退还给患者的金额或贷记。",
     patientPaysAfterDeductions: "扣除后患者需付",
+    noCashPayableNote:
+      "此方案无需再支付现金。该金额将退还 / 贷记给您。",
     recommended: "推荐",
     recommendedByDentist: "牙医推荐",
     recommendedOption: "推荐选项",
@@ -1145,8 +1159,12 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientCostExplanationHeading: "நோயாளர் செலுத்த வேண்டிய தொகை",
     patientCostExplanationText:
       "செலுத்த வேண்டிய ரொக்கம் என்பது GST சேர்த்து, மானியம், Medisave மற்றும் ஏதேனும் தள்ளுபடி கழித்த பின் மதிப்பிடப்பட்ட தொகை. முழு மானியம் மற்றும் Medisave தொகைகள் விரிவான கட்டங்களுக்குப் பிறகுள்ள ஒப்பீட்டில் காட்டப்படும்.",
+    patientCreditExplanationText:
+      "GST, மானியம், Medisave, தள்ளுபடிகள் மற்றும் பட்டியலிடப்பட்ட திருப்பிச் செலுத்தல் உருப்படிகளுக்குப் பிறகு இந்த திட்டம் நோயாளிக்கு திருப்பிச் செலுத்தல் அல்லது கடனை ஏற்படுத்துகிறது.",
     patientPaysAfterDeductions:
       "கழிவுகளுக்குப் பிறகு நோயாளர் செலுத்துவது",
+    noCashPayableNote:
+      "இந்த திட்டத்திற்கு மேலும் ரொக்கம் செலுத்த வேண்டியதில்லை. இந்தத் தொகை உங்களுக்கு திருப்பிச் செலுத்தப்படும் / கிரெடிட் செய்யப்படும்.",
     recommended: "பரிந்துரைக்கப்பட்டது",
     recommendedByDentist: "பல் மருத்துவர் பரிந்துரை",
     recommendedOption: "பரிந்துரைக்கப்பட்ட விருப்பம்",
@@ -1294,7 +1312,9 @@ const languageStringKeys = [
   "estimatedCashPayable",
   "patientCostExplanationHeading",
   "patientCostExplanationText",
+  "patientCreditExplanationText",
   "patientPaysAfterDeductions",
+  "noCashPayableNote",
   "recommended",
   "recommendedByDentist",
   "recommendedOption",
@@ -2561,6 +2581,28 @@ function formatCurrency(amount: number) {
 
 function formatDeduction(amount: number) {
   return amount === 0 ? formatCurrency(0) : `-${formatCurrency(Math.abs(amount))}`;
+}
+
+function isPatientCredit(payable: number) {
+  return payable < 0;
+}
+
+function formatPatientOutcomeAmount(payable: number) {
+  return isPatientCredit(payable)
+    ? formatCurrency(Math.abs(payable))
+    : formatCurrency(payable);
+}
+
+function getPatientOutcomeLabel(payable: number, copy: LanguageCopy) {
+  return isPatientCredit(payable)
+    ? copy.refundToPatient
+    : copy.patientPaysAfterDeductions;
+}
+
+function getPatientOutcomeExplanation(payable: number, copy: LanguageCopy) {
+  return isPatientCredit(payable)
+    ? copy.patientCreditExplanationText
+    : copy.patientCostExplanationText;
 }
 
 
@@ -4697,7 +4739,7 @@ export default function Home() {
                           {selectedLanguageCopy.estimatedDuration}
                         </th>
                         <th className="px-3 py-2.5 text-right font-semibold">
-                          {selectedLanguageCopy.patientPaysAfterDeductions}
+                          {selectedLanguageCopy.estimatedCashPayable}
                         </th>
                         <th className="px-3 py-2.5 text-left font-semibold">
                           {" "}
@@ -4719,7 +4761,12 @@ export default function Home() {
                               : "—"}
                           </td>
                           <td className="money px-3 py-2.5 text-right text-base font-bold">
-                            {formatCurrency(option.totals.payable)}
+                            {formatPatientOutcomeAmount(option.totals.payable)}
+                            {isPatientCredit(option.totals.payable) ? (
+                              <div className="mt-1 text-[11px] font-semibold text-amber-800">
+                                {selectedLanguageCopy.refundBadge}
+                              </div>
+                            ) : null}
                           </td>
                           <td className="px-3 py-2.5">
                             <div className="flex flex-wrap gap-1.5">
@@ -4808,10 +4855,13 @@ export default function Home() {
                         {showFinancialSummary ? (
                           <div className="print-exact rounded-2xl border border-white/40 bg-white px-4 py-3 text-slate-950 shadow-sm sm:min-w-56 sm:text-right print:bg-white print:text-slate-950">
                             <p className="text-[11px] font-black uppercase tracking-wide text-slate-700">
-                              {selectedLanguageCopy.patientPaysAfterDeductions}
+                              {getPatientOutcomeLabel(
+                                optionSummary.payable,
+                                selectedLanguageCopy,
+                              )}
                             </p>
                             <p className="mt-1 text-3xl font-black tabular-nums">
-                              {formatCurrency(optionSummary.payable)}
+                              {formatPatientOutcomeAmount(optionSummary.payable)}
                             </p>
                           </div>
                         ) : null}
@@ -5750,15 +5800,26 @@ export default function Home() {
                           {displayValue(option.title)}
                         </h3>
                         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-600">
-                          {selectedLanguageCopy.patientCostExplanationText}
+                          {getPatientOutcomeExplanation(
+                            optionSummary.payable,
+                            selectedLanguageCopy,
+                          )}
                         </p>
+                        {isPatientCredit(optionSummary.payable) ? (
+                          <p className="mt-2 max-w-2xl text-sm font-medium leading-relaxed text-amber-900">
+                            {selectedLanguageCopy.noCashPayableNote}
+                          </p>
+                        ) : null}
                       </div>
                       <div className="text-left sm:text-right">
                         <p className="text-sm text-gray-500">
-                          {selectedLanguageCopy.patientPaysAfterDeductions}
+                          {getPatientOutcomeLabel(
+                            optionSummary.payable,
+                            selectedLanguageCopy,
+                          )}
                         </p>
                         <p className="text-2xl font-bold tabular-nums">
-                          {formatCurrency(optionSummary.payable)}
+                          {formatPatientOutcomeAmount(optionSummary.payable)}
                         </p>
                       </div>
                     </div>
@@ -5794,7 +5855,7 @@ export default function Home() {
                               {selectedLanguageCopy.amountCoveredByNoFrills}
                             </p>
                             <p className="font-semibold tabular-nums">
-                              {formatDeduction(optionSummary.noFrillsCovered)}
+                              {formatCurrency(optionSummary.noFrillsCovered)}
                             </p>
                           </div>
                         ) : null}
@@ -5824,14 +5885,16 @@ export default function Home() {
                             {formatDeduction(optionSummary.medisave)}
                           </p>
                         </div>
-                        <div>
-                          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                            {selectedLanguageCopy.cashPortion}
-                          </p>
-                          <p className="text-lg font-bold tabular-nums">
-                            {formatCurrency(optionSummary.payable)}
-                          </p>
-                        </div>
+                        {!isPatientCredit(optionSummary.payable) ? (
+                          <div>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                              {selectedLanguageCopy.cashPortion}
+                            </p>
+                            <p className="text-lg font-bold tabular-nums">
+                              {formatCurrency(optionSummary.payable)}
+                            </p>
+                          </div>
+                        ) : null}
                       </div>
                     ) : null}
                     {!isGoodwillQuotation && selectedInstallmentPlan !== "none"
@@ -5892,7 +5955,7 @@ export default function Home() {
                           Amount covered by NoFrills Dental
                         </span>
                         <span className="money whitespace-nowrap text-right">
-                          {formatDeduction(totals.noFrillsCovered)}
+                          {formatCurrency(totals.noFrillsCovered)}
                         </span>
                       </div>
                     ) : null}
@@ -5933,11 +5996,21 @@ export default function Home() {
 
 
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 border-t pt-3 text-xl font-bold">
-                  <span className="min-w-0 break-words">Cash Portion</span>
+                  <span className="min-w-0 break-words">
+                    {isPatientCredit(totals.payable)
+                      ? "Refund / credit to patient"
+                      : "Cash Portion"}
+                  </span>
                   <span className="money whitespace-nowrap text-right">
-                    ${totals.payable.toFixed(2)}
+                    {formatPatientOutcomeAmount(totals.payable)}
                   </span>
                 </div>
+                {isPatientCredit(totals.payable) ? (
+                  <p className="text-xs leading-relaxed text-amber-900">
+                    No further cash is payable on this plan. This amount will be
+                    refunded / credited to you.
+                  </p>
+                ) : null}
 
 
                 {!isGoodwillQuotation ? (
@@ -6051,7 +6124,7 @@ export default function Home() {
                             <>
                               {isGoodwillQuotation ? (
                                 <td className="px-3 py-2 text-right tabular-nums">
-                                  {formatDeduction(
+                                  {formatCurrency(
                                     option.totals.noFrillsCovered,
                                   )}
                                 </td>
@@ -6066,7 +6139,7 @@ export default function Home() {
                           ) : null}
                           {showFinancialSummary ? (
                             <td className="px-3 py-2 text-right font-bold tabular-nums">
-                              {formatCurrency(option.totals.payable)}
+                              {formatPatientOutcomeAmount(option.totals.payable)}
                             </td>
                           ) : null}
                         </tr>
