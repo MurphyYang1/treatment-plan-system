@@ -173,6 +173,8 @@ type LanguageCopy = {
   patientSelectedOption: string;
   patientSelectedOptionIntro: string;
   needMoreTime: string;
+  goodwillPlanAcknowledgementHeading: string;
+  goodwillPlanAcknowledgementText: string;
   smokingStatus: string;
   patientSmokes: string;
   smokingHealingHeading: string;
@@ -724,6 +726,10 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOptionIntro:
       "Please indicate which treatment option the patient chooses.",
     needMoreTime: "I need more time to decide",
+    goodwillPlanAcknowledgementHeading:
+      "Revised / Goodwill Plan Acknowledged",
+    goodwillPlanAcknowledgementText:
+      "I acknowledge that this revised treatment plan and/or goodwill adjustment has been explained to me, including the updated treatment plan, fees, deductions, and any amount covered by NoFrills Dental.",
     smokingStatus: "Smoking Status",
     patientSmokes: "Patient is a smoker / smoking discussed",
     smokingHealingHeading: "Smoking and Healing",
@@ -848,6 +854,10 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOptionIntro:
       "Sila nyatakan pilihan rawatan yang dipilih oleh pesakit.",
     needMoreTime: "Saya memerlukan lebih masa untuk membuat keputusan",
+    goodwillPlanAcknowledgementHeading:
+      "Pelan Disemak / Goodwill Diakui",
+    goodwillPlanAcknowledgementText:
+      "Saya mengakui bahawa pelan rawatan yang disemak dan/atau pelarasan goodwill ini telah diterangkan kepada saya, termasuk pelan rawatan yang dikemas kini, yuran, potongan, dan sebarang jumlah yang ditanggung oleh NoFrills Dental.",
     smokingStatus: "Status Merokok",
     patientSmokes: "Pesakit merokok / merokok telah dibincangkan",
     smokingHealingHeading: "Merokok dan Penyembuhan",
@@ -977,6 +987,9 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOption: "患者选择的选项",
     patientSelectedOptionIntro: "请注明患者选择的治疗选项。",
     needMoreTime: "我需要更多时间决定",
+    goodwillPlanAcknowledgementHeading: "已确认修订 / 善意调整方案",
+    goodwillPlanAcknowledgementText:
+      "我确认已获说明此修订治疗方案及/或善意调整，包括更新后的治疗计划、费用、扣除项，以及由 NoFrills Dental 承担的任何金额。",
     smokingStatus: "吸烟状态",
     patientSmokes: "患者吸烟 / 已讨论吸烟影响",
     smokingHealingHeading: "吸烟与愈合",
@@ -1105,6 +1118,10 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientSelectedOptionIntro:
       "நோயாளர் தேர்ந்தெடுக்கும் சிகிச்சை விருப்பத்தை குறிப்பிடவும்.",
     needMoreTime: "முடிவு செய்ய எனக்கு மேலும் நேரம் தேவை",
+    goodwillPlanAcknowledgementHeading:
+      "திருத்தப்பட்ட / Goodwill திட்டம் ஒப்புக்கொள்ளப்பட்டது",
+    goodwillPlanAcknowledgementText:
+      "இந்த திருத்தப்பட்ட சிகிச்சைத் திட்டம் மற்றும்/அல்லது goodwill சரிசெய்தல் எனக்கு விளக்கப்பட்டுள்ளதை, புதுப்பிக்கப்பட்ட சிகிச்சைத் திட்டம், கட்டணங்கள், கழிவுகள் மற்றும் NoFrills Dental ஏற்கும் எந்தத் தொகையும் உட்பட, நான் ஒப்புக்கொள்கிறேன்.",
     smokingStatus: "புகைபிடிக்கும் நிலை",
     patientSmokes: "நோயாளர் புகைபிடிப்பவர் / புகைபிடித்தல் பற்றி பேசப்பட்டது",
     smokingHealingHeading: "புகைபிடித்தல் மற்றும் ஆறுதல்",
@@ -1236,6 +1253,8 @@ const languageStringKeys = [
   "patientSelectedOption",
   "patientSelectedOptionIntro",
   "needMoreTime",
+  "goodwillPlanAcknowledgementHeading",
+  "goodwillPlanAcknowledgementText",
   "smokingStatus",
   "patientSmokes",
   "smokingHealingHeading",
@@ -2953,7 +2972,14 @@ export default function Home() {
       );
     }
 
-    if (
+    const nextQuotationStatus =
+      typeof draft.quotationStatus === "string"
+        ? (draft.quotationStatus as QuotationStatus)
+        : "estimated";
+
+    if (nextQuotationStatus === "estimated") {
+      setPatientSelectedOptionId("");
+    } else if (
       typeof draft.patientSelectedOptionId === "number" ||
       draft.patientSelectedOptionId === "discuss" ||
       draft.patientSelectedOptionId === ""
@@ -4007,6 +4033,9 @@ export default function Home() {
                       setFinancialSummaryDisplay(
                         getDefaultFinancialDisplayForStatus(nextStatus),
                       );
+                      if (nextStatus === "estimated") {
+                        setPatientSelectedOptionId("");
+                      }
                     }}
                     className="w-full rounded-xl border px-4 py-3"
                   >
@@ -4549,7 +4578,8 @@ export default function Home() {
                                   {selectedLanguageCopy.recommendedOption}
                                 </span>
                               ) : null}
-                              {patientSelectedOptionId === Number(option.id) ? (
+                              {!isGoodwillQuotation &&
+                              patientSelectedOptionId === Number(option.id) ? (
                                 <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[11px] font-bold text-blue-800">
                                   {selectedLanguageCopy.patientSelectedBadge}
                                 </span>
@@ -4616,7 +4646,8 @@ export default function Home() {
                                 {selectedLanguageCopy.recommendedOption}
                               </span>
                             ) : null}
-                            {patientSelectedOptionId === option.id ? (
+                            {!isGoodwillQuotation &&
+                            patientSelectedOptionId === option.id ? (
                               <span className="print-exact rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-800">
                                 {selectedLanguageCopy.patientSelectedBadge}
                               </span>
@@ -5755,7 +5786,8 @@ export default function Home() {
                                 {selectedLanguageCopy.recommendedOption}
                               </div>
                             ) : null}
-                            {patientSelectedOptionId === Number(option.id) ? (
+                            {!isGoodwillQuotation &&
+                            patientSelectedOptionId === Number(option.id) ? (
                               <div className="mt-1 inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-800">
                                 {selectedLanguageCopy.patientSelectedBadge}
                               </div>
@@ -5800,65 +5832,82 @@ export default function Home() {
 
             {isFinalized ? (
               <section className="avoid-break rounded-2xl border-2 border-gray-200 bg-white p-4 shadow-sm sm:p-6">
-                <h2 className="section-title text-xl font-bold tracking-tight">
-                  {selectedLanguageCopy.patientSelectedOption}
-                </h2>
-                <p className="helper-text mt-1 text-sm">
-                  {selectedLanguageCopy.patientSelectedOptionIntro}
-                </p>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {treatmentOptions.map((option) => (
-                    <label
-                      key={option.id}
-                      className={`flex items-start gap-3 rounded-xl border p-3 transition ${
-                        patientSelectedOptionId === option.id
-                          ? "border-blue-300 bg-blue-50"
-                          : "border-gray-200 bg-white"
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="patient-selected-option"
-                        checked={patientSelectedOptionId === option.id}
-                        onChange={() => setPatientSelectedOptionId(option.id)}
-                        className="mt-1"
-                      />
-                      <span>
+                {isGoodwillQuotation ? (
+                  <>
+                    <h2 className="section-title text-xl font-bold tracking-tight">
+                      {
+                        selectedLanguageCopy.goodwillPlanAcknowledgementHeading
+                      }
+                    </h2>
+                    <p className="mt-3 text-sm leading-relaxed text-gray-700">
+                      {selectedLanguageCopy.goodwillPlanAcknowledgementText}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h2 className="section-title text-xl font-bold tracking-tight">
+                      {selectedLanguageCopy.patientSelectedOption}
+                    </h2>
+                    <p className="helper-text mt-1 text-sm">
+                      {selectedLanguageCopy.patientSelectedOptionIntro}
+                    </p>
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                      {treatmentOptions.map((option) => (
+                        <label
+                          key={option.id}
+                          className={`flex items-start gap-3 rounded-xl border p-3 transition ${
+                            patientSelectedOptionId === option.id
+                              ? "border-blue-300 bg-blue-50"
+                              : "border-gray-200 bg-white"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="patient-selected-option"
+                            checked={patientSelectedOptionId === option.id}
+                            onChange={() =>
+                              setPatientSelectedOptionId(option.id)
+                            }
+                            className="mt-1"
+                          />
+                          <span>
+                            <span className="font-semibold">
+                              {displayValue(option.title)}
+                            </span>
+                            {option.id === recommendedOptionId ? (
+                              <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
+                                {selectedLanguageCopy.recommendedOption}
+                              </span>
+                            ) : null}
+                            {patientSelectedOptionId === option.id ? (
+                              <span className="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-700">
+                                {selectedLanguageCopy.patientSelectedBadge}
+                              </span>
+                            ) : null}
+                          </span>
+                        </label>
+                      ))}
+                      <label
+                        className={`flex items-start gap-3 rounded-xl border p-3 transition ${
+                          patientSelectedOptionId === "discuss"
+                            ? "border-blue-300 bg-blue-50"
+                            : "border-gray-200 bg-white"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="patient-selected-option"
+                          checked={patientSelectedOptionId === "discuss"}
+                          onChange={() => setPatientSelectedOptionId("discuss")}
+                          className="mt-1"
+                        />
                         <span className="font-semibold">
-                          {displayValue(option.title)}
+                          {selectedLanguageCopy.needMoreTime}
                         </span>
-                        {option.id === recommendedOptionId ? (
-                          <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
-                            {selectedLanguageCopy.recommendedOption}
-                          </span>
-                        ) : null}
-                        {patientSelectedOptionId === option.id ? (
-                          <span className="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-700">
-                            {selectedLanguageCopy.patientSelectedBadge}
-                          </span>
-                        ) : null}
-                      </span>
-                    </label>
-                  ))}
-                  <label
-                    className={`flex items-start gap-3 rounded-xl border p-3 transition ${
-                      patientSelectedOptionId === "discuss"
-                        ? "border-blue-300 bg-blue-50"
-                        : "border-gray-200 bg-white"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="patient-selected-option"
-                      checked={patientSelectedOptionId === "discuss"}
-                      onChange={() => setPatientSelectedOptionId("discuss")}
-                      className="mt-1"
-                    />
-                    <span className="font-semibold">
-                      {selectedLanguageCopy.needMoreTime}
-                    </span>
-                  </label>
-                </div>
+                      </label>
+                    </div>
+                  </>
+                )}
               </section>
             ) : null}
 
