@@ -76,6 +76,7 @@ export type SigningQuotationSnapshot = {
     medisave?: number;
     noFrillsCovered?: number;
     refundCredit?: number;
+    refundGst?: number;
     payable?: number;
   };
   phases?: SigningQuotationPhase[];
@@ -89,6 +90,9 @@ export type SigningQuotationSnapshot = {
       gst?: number;
       subsidy?: number;
       medisave?: number;
+      noFrillsCovered?: number;
+      refundCredit?: number;
+      refundGst?: number;
       payable?: number;
     };
     phases?: SigningQuotationPhase[];

@@ -147,6 +147,7 @@ type LanguageCopy = {
   refundCredit: string;
   refundToPatient: string;
   refundAmount: string;
+  refundGstIncluded: string;
   refundBadge: string;
   selectedInstallmentPlan: string;
   months: string;
@@ -165,7 +166,9 @@ type LanguageCopy = {
   estimatedCashPayable: string;
   patientCostExplanationHeading: string;
   patientCostExplanationText: string;
+  patientCreditExplanationText: string;
   patientPaysAfterDeductions: string;
+  noCashPayableNote: string;
   recommended: string;
   recommendedByDentist: string;
   recommendedOption: string;
@@ -700,6 +703,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     refundCredit: "Refund / credit",
     refundToPatient: "Refund / credit to patient",
     refundAmount: "Refund amount",
+    refundGstIncluded: "Includes GST (9%)",
     refundBadge: "Refund",
     selectedInstallmentPlan: "Selected Instalment Plan",
     months: "months",
@@ -721,7 +725,11 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientCostExplanationHeading: "What the patient pays",
     patientCostExplanationText:
       "Cash payable is the estimated amount after GST, subsidy, Medisave and any discount have been applied. Full subsidy and Medisave figures appear in the comparison after the detailed phases.",
+    patientCreditExplanationText:
+      "This plan results in a refund or credit to the patient after GST, subsidy, Medisave, discounts and any listed refund items have been applied.",
     patientPaysAfterDeductions: "Patient pays after deductions",
+    noCashPayableNote:
+      "No further cash is payable on this plan. This amount will be refunded / credited to you.",
     recommended: "Recommended",
     recommendedByDentist: "Recommended by dentist",
     recommendedOption: "Recommended Option",
@@ -838,6 +846,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     refundCredit: "Bayaran balik / kredit",
     refundToPatient: "Bayaran balik / kredit kepada pesakit",
     refundAmount: "Jumlah bayaran balik",
+    refundGstIncluded: "Termasuk GST (9%)",
     refundBadge: "Bayaran balik",
     selectedInstallmentPlan: "Pelan Ansuran Dipilih",
     months: "bulan",
@@ -860,7 +869,11 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientCostExplanationHeading: "Jumlah yang pesakit bayar",
     patientCostExplanationText:
       "Tunai perlu dibayar ialah anggaran jumlah selepas GST, subsidi, Medisave dan sebarang diskaun digunakan. Angka subsidi dan Medisave penuh dipaparkan dalam perbandingan selepas fasa terperinci.",
+    patientCreditExplanationText:
+      "Pelan ini menghasilkan bayaran balik atau kredit kepada pesakit selepas GST, subsidi, Medisave, diskaun dan sebarang item bayaran balik yang disenaraikan digunakan.",
     patientPaysAfterDeductions: "Pesakit bayar selepas potongan",
+    noCashPayableNote:
+      "Tiada tunai lanjut perlu dibayar untuk pelan ini. Jumlah ini akan dibayar balik / dikreditkan kepada anda.",
     recommended: "Disyorkan",
     recommendedByDentist: "Disyorkan oleh doktor gigi",
     recommendedOption: "Pilihan Disyorkan",
@@ -985,6 +998,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     refundCredit: "退款 / 贷记",
     refundToPatient: "退还给患者的金额",
     refundAmount: "退款金额",
+    refundGstIncluded: "包含消费税 (9%)",
     refundBadge: "退款",
     selectedInstallmentPlan: "已选择分期付款计划",
     months: "个月",
@@ -1005,7 +1019,11 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientCostExplanationHeading: "患者需支付金额",
     patientCostExplanationText:
       "需付现金是计入消费税，并扣除补贴、保健储蓄及任何折扣后的预计金额。完整的补贴与保健储蓄数字会在详细阶段后的比较表中显示。",
+    patientCreditExplanationText:
+      "此方案在计入消费税，并扣除补贴、保健储蓄、折扣及所列退款项后，将产生退还给患者的金额或贷记。",
     patientPaysAfterDeductions: "扣除后患者需付",
+    noCashPayableNote:
+      "此方案无需再支付现金。该金额将退还 / 贷记给您。",
     recommended: "推荐",
     recommendedByDentist: "牙医推荐",
     recommendedOption: "推荐选项",
@@ -1124,6 +1142,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     refundCredit: "திருப்பிச் செலுத்தல் / கடன்",
     refundToPatient: "நோயாளிக்கு திருப்பிச் செலுத்தும் / கடன் தொகை",
     refundAmount: "திருப்பிச் செலுத்தும் தொகை",
+    refundGstIncluded: "GST (9%) உட்பட",
     refundBadge: "திருப்பிச் செலுத்தல்",
     selectedInstallmentPlan: "தேர்ந்தெடுத்த தவணை திட்டம்",
     months: "மாதங்கள்",
@@ -1145,8 +1164,12 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     patientCostExplanationHeading: "நோயாளர் செலுத்த வேண்டிய தொகை",
     patientCostExplanationText:
       "செலுத்த வேண்டிய ரொக்கம் என்பது GST சேர்த்து, மானியம், Medisave மற்றும் ஏதேனும் தள்ளுபடி கழித்த பின் மதிப்பிடப்பட்ட தொகை. முழு மானியம் மற்றும் Medisave தொகைகள் விரிவான கட்டங்களுக்குப் பிறகுள்ள ஒப்பீட்டில் காட்டப்படும்.",
+    patientCreditExplanationText:
+      "GST, மானியம், Medisave, தள்ளுபடிகள் மற்றும் பட்டியலிடப்பட்ட திருப்பிச் செலுத்தல் உருப்படிகளுக்குப் பிறகு இந்த திட்டம் நோயாளிக்கு திருப்பிச் செலுத்தல் அல்லது கடனை ஏற்படுத்துகிறது.",
     patientPaysAfterDeductions:
       "கழிவுகளுக்குப் பிறகு நோயாளர் செலுத்துவது",
+    noCashPayableNote:
+      "இந்த திட்டத்திற்கு மேலும் ரொக்கம் செலுத்த வேண்டியதில்லை. இந்தத் தொகை உங்களுக்கு திருப்பிச் செலுத்தப்படும் / கிரெடிட் செய்யப்படும்.",
     recommended: "பரிந்துரைக்கப்பட்டது",
     recommendedByDentist: "பல் மருத்துவர் பரிந்துரை",
     recommendedOption: "பரிந்துரைக்கப்பட்ட விருப்பம்",
@@ -1276,6 +1299,7 @@ const languageStringKeys = [
   "refundCredit",
   "refundToPatient",
   "refundAmount",
+  "refundGstIncluded",
   "refundBadge",
   "selectedInstallmentPlan",
   "months",
@@ -1294,7 +1318,9 @@ const languageStringKeys = [
   "estimatedCashPayable",
   "patientCostExplanationHeading",
   "patientCostExplanationText",
+  "patientCreditExplanationText",
   "patientPaysAfterDeductions",
+  "noCashPayableNote",
   "recommended",
   "recommendedByDentist",
   "recommendedOption",
@@ -2401,6 +2427,19 @@ function getNoFrillsCoveredAmount(
     : discountAmount;
 }
 
+function getRefundGstAmount(
+  procedure: Pick<
+    Procedure,
+    "fee" | "quantity" | "isRefund" | "gstApplicable"
+  >,
+) {
+  if (!isRefundProcedure(procedure) || !procedure.gstApplicable) {
+    return 0;
+  }
+
+  return getRefundBaseAmount(procedure) * GST_RATE;
+}
+
 function getProcedureGst(
   procedure: Pick<
     Procedure,
@@ -2408,14 +2447,37 @@ function getProcedureGst(
   >,
 ) {
   if (isRefundProcedure(procedure)) {
-    if (!procedure.gstApplicable) {
-      return 0;
-    }
-
-    return getRefundBaseAmount(procedure) * GST_RATE;
+    return getRefundGstAmount(procedure);
   }
 
   return procedure.gstApplicable ? getDiscountedSubtotal(procedure) * GST_RATE : 0;
+}
+
+/**
+ * GST shown in print/edit tables. For goodwill-covered lines, patient-payable GST
+ * is often $0 after a 100% cover — still show the GST portion of the list price
+ * when GST is enabled so “Covered (incl. GST)” is transparent.
+ */
+function getProcedureGstDisplay(
+  procedure: Pick<
+    Procedure,
+    "fee" | "quantity" | "discountPercent" | "gstApplicable" | "isRefund"
+  >,
+  options?: { showCoveredGst?: boolean },
+) {
+  if (!procedure.gstApplicable) {
+    return 0;
+  }
+
+  if (isRefundProcedure(procedure)) {
+    return getRefundGstAmount(procedure);
+  }
+
+  if (options?.showCoveredGst && getDiscountPercent(procedure) > 0) {
+    return getRowSubtotal(procedure) * GST_RATE;
+  }
+
+  return getDiscountedSubtotal(procedure) * GST_RATE;
 }
 
 function getProcedureSubsidyTotal(
@@ -2495,11 +2557,13 @@ function calculateTotalsForPhases(phases: Phase[]) {
   let medisave = 0;
   let noFrillsCovered = 0;
   let refundCredit = 0;
+  let refundGst = 0;
 
   phases.forEach((phase) => {
     phase.procedures.forEach((procedure) => {
       if (isRefundProcedure(procedure)) {
         refundCredit += getRefundCreditAmount(procedure);
+        refundGst += getRefundGstAmount(procedure);
         return;
       }
 
@@ -2521,6 +2585,7 @@ function calculateTotalsForPhases(phases: Phase[]) {
     medisave,
     noFrillsCovered,
     refundCredit,
+    refundGst,
     payable: subtotal + gst - subsidy - medisave - refundCredit,
   };
 }
@@ -2561,6 +2626,28 @@ function formatCurrency(amount: number) {
 
 function formatDeduction(amount: number) {
   return amount === 0 ? formatCurrency(0) : `-${formatCurrency(Math.abs(amount))}`;
+}
+
+function isPatientCredit(payable: number) {
+  return payable < 0;
+}
+
+function formatPatientOutcomeAmount(payable: number) {
+  return isPatientCredit(payable)
+    ? formatCurrency(Math.abs(payable))
+    : formatCurrency(payable);
+}
+
+function getPatientOutcomeLabel(payable: number, copy: LanguageCopy) {
+  return isPatientCredit(payable)
+    ? copy.refundToPatient
+    : copy.patientPaysAfterDeductions;
+}
+
+function getPatientOutcomeExplanation(payable: number, copy: LanguageCopy) {
+  return isPatientCredit(payable)
+    ? copy.patientCreditExplanationText
+    : copy.patientCostExplanationText;
 }
 
 
@@ -4697,7 +4784,7 @@ export default function Home() {
                           {selectedLanguageCopy.estimatedDuration}
                         </th>
                         <th className="px-3 py-2.5 text-right font-semibold">
-                          {selectedLanguageCopy.patientPaysAfterDeductions}
+                          {selectedLanguageCopy.estimatedCashPayable}
                         </th>
                         <th className="px-3 py-2.5 text-left font-semibold">
                           {" "}
@@ -4719,7 +4806,12 @@ export default function Home() {
                               : "—"}
                           </td>
                           <td className="money px-3 py-2.5 text-right text-base font-bold">
-                            {formatCurrency(option.totals.payable)}
+                            {formatPatientOutcomeAmount(option.totals.payable)}
+                            {isPatientCredit(option.totals.payable) ? (
+                              <div className="mt-1 text-[11px] font-semibold text-amber-800">
+                                {selectedLanguageCopy.refundBadge}
+                              </div>
+                            ) : null}
                           </td>
                           <td className="px-3 py-2.5">
                             <div className="flex flex-wrap gap-1.5">
@@ -4808,10 +4900,13 @@ export default function Home() {
                         {showFinancialSummary ? (
                           <div className="print-exact rounded-2xl border border-white/40 bg-white px-4 py-3 text-slate-950 shadow-sm sm:min-w-56 sm:text-right print:bg-white print:text-slate-950">
                             <p className="text-[11px] font-black uppercase tracking-wide text-slate-700">
-                              {selectedLanguageCopy.patientPaysAfterDeductions}
+                              {getPatientOutcomeLabel(
+                                optionSummary.payable,
+                                selectedLanguageCopy,
+                              )}
                             </p>
                             <p className="mt-1 text-3xl font-black tabular-nums">
-                              {formatCurrency(optionSummary.payable)}
+                              {formatPatientOutcomeAmount(optionSummary.payable)}
                             </p>
                           </div>
                         ) : null}
@@ -5025,7 +5120,9 @@ export default function Home() {
                     <>
                       <div className="mt-3 space-y-3 lg:hidden print:hidden">
                         {phase.procedures.map((procedure, procedureIndex) => {
-                          const gst = getProcedureGst(procedure);
+                          const gst = getProcedureGstDisplay(procedure, {
+                            showCoveredGst: isGoodwillQuotation,
+                          });
                           const subsidy = getProcedureSubsidyTotal(procedure);
                           const payable = getProcedurePayable(procedure);
                           const discountPercent = getDiscountPercent(procedure);
@@ -5236,7 +5333,9 @@ export default function Home() {
 
                         <tbody>
                           {phase.procedures.map((procedure, procedureIndex) => {
-                            const gst = getProcedureGst(procedure);
+                            const gst = getProcedureGstDisplay(procedure, {
+                              showCoveredGst: isGoodwillQuotation,
+                            });
                             const subsidy = getProcedureSubsidyTotal(procedure);
                             const payable = getProcedurePayable(procedure);
                             const discountPercent = getDiscountPercent(procedure);
@@ -5354,7 +5453,9 @@ export default function Home() {
                   ) : (
                     <div className="mt-6 space-y-4">
                     {phase.procedures.map((procedure, procedureIndex) => {
-                      const gst = getProcedureGst(procedure);
+                      const gst = getProcedureGstDisplay(procedure, {
+                        showCoveredGst: isGoodwillQuotation,
+                      });
                       const subsidy = getProcedureSubsidyTotal(procedure);
                       const payable = getProcedurePayable(procedure);
                       const hasRemarks = procedure.description.trim().length > 0;
@@ -5566,22 +5667,33 @@ export default function Home() {
                                 GST (9%)
                               </label>
                               {!isFinalized ? (
-                                <label className="mt-2 flex items-center gap-2 rounded-xl border bg-white px-3 py-3 text-sm">
-                                  <input
-                                    type="checkbox"
-                                    checked={procedure.gstApplicable}
-                                    onChange={(event) =>
-                                      updateProcedure(
-                                        phaseIndex,
-                                        procedureIndex,
-                                        "gstApplicable",
-                                        event.target.checked,
-                                      )
-                                    }
-                                    className="h-4 w-4"
-                                  />
-                                  Apply GST
-                                </label>
+                                <div className="mt-2 rounded-xl border bg-white px-3 py-3 text-sm">
+                                  <label className="flex items-center gap-2">
+                                    <input
+                                      type="checkbox"
+                                      checked={procedure.gstApplicable}
+                                      onChange={(event) =>
+                                        updateProcedure(
+                                          phaseIndex,
+                                          procedureIndex,
+                                          "gstApplicable",
+                                          event.target.checked,
+                                        )
+                                      }
+                                      className="h-4 w-4"
+                                    />
+                                    Apply GST
+                                  </label>
+                                  {procedure.gstApplicable ? (
+                                    <p className="mt-2 text-right text-sm font-semibold tabular-nums text-gray-900">
+                                      {formatCurrency(gst)}
+                                    </p>
+                                  ) : (
+                                    <p className="mt-2 text-right text-sm text-gray-500">
+                                      N/A
+                                    </p>
+                                  )}
+                                </div>
                               ) : (
                               <div
                                 className={compactClass(
@@ -5750,15 +5862,26 @@ export default function Home() {
                           {displayValue(option.title)}
                         </h3>
                         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-600">
-                          {selectedLanguageCopy.patientCostExplanationText}
+                          {getPatientOutcomeExplanation(
+                            optionSummary.payable,
+                            selectedLanguageCopy,
+                          )}
                         </p>
+                        {isPatientCredit(optionSummary.payable) ? (
+                          <p className="mt-2 max-w-2xl text-sm font-medium leading-relaxed text-amber-900">
+                            {selectedLanguageCopy.noCashPayableNote}
+                          </p>
+                        ) : null}
                       </div>
                       <div className="text-left sm:text-right">
                         <p className="text-sm text-gray-500">
-                          {selectedLanguageCopy.patientPaysAfterDeductions}
+                          {getPatientOutcomeLabel(
+                            optionSummary.payable,
+                            selectedLanguageCopy,
+                          )}
                         </p>
                         <p className="text-2xl font-bold tabular-nums">
-                          {formatCurrency(optionSummary.payable)}
+                          {formatPatientOutcomeAmount(optionSummary.payable)}
                         </p>
                       </div>
                     </div>
@@ -5794,7 +5917,7 @@ export default function Home() {
                               {selectedLanguageCopy.amountCoveredByNoFrills}
                             </p>
                             <p className="font-semibold tabular-nums">
-                              {formatDeduction(optionSummary.noFrillsCovered)}
+                              {formatCurrency(optionSummary.noFrillsCovered)}
                             </p>
                           </div>
                         ) : null}
@@ -5806,6 +5929,14 @@ export default function Home() {
                             <p className="font-semibold tabular-nums">
                               {formatCurrency(optionSummary.refundCredit)}
                             </p>
+                            {optionSummary.refundGst > 0 ? (
+                              <p className="mt-1 text-xs text-gray-600">
+                                {selectedLanguageCopy.refundGstIncluded}:{" "}
+                                <span className="font-semibold tabular-nums">
+                                  {formatCurrency(optionSummary.refundGst)}
+                                </span>
+                              </p>
+                            ) : null}
                           </div>
                         ) : null}
                         <div>
@@ -5824,14 +5955,16 @@ export default function Home() {
                             {formatDeduction(optionSummary.medisave)}
                           </p>
                         </div>
-                        <div>
-                          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                            {selectedLanguageCopy.cashPortion}
-                          </p>
-                          <p className="text-lg font-bold tabular-nums">
-                            {formatCurrency(optionSummary.payable)}
-                          </p>
-                        </div>
+                        {!isPatientCredit(optionSummary.payable) ? (
+                          <div>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                              {selectedLanguageCopy.cashPortion}
+                            </p>
+                            <p className="text-lg font-bold tabular-nums">
+                              {formatCurrency(optionSummary.payable)}
+                            </p>
+                          </div>
+                        ) : null}
                       </div>
                     ) : null}
                     {!isGoodwillQuotation && selectedInstallmentPlan !== "none"
@@ -5892,21 +6025,33 @@ export default function Home() {
                           Amount covered by NoFrills Dental
                         </span>
                         <span className="money whitespace-nowrap text-right">
-                          {formatDeduction(totals.noFrillsCovered)}
+                          {formatCurrency(totals.noFrillsCovered)}
                         </span>
                       </div>
                     ) : null}
 
 
                     {totals.refundCredit > 0 ? (
-                      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                        <span className="min-w-0 break-words">
-                          Refund / credit to patient
-                        </span>
-                        <span className="money whitespace-nowrap text-right">
-                          {formatCurrency(totals.refundCredit)}
-                        </span>
-                      </div>
+                      <>
+                        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                          <span className="min-w-0 break-words">
+                            Refund / credit to patient
+                          </span>
+                          <span className="money whitespace-nowrap text-right">
+                            {formatCurrency(totals.refundCredit)}
+                          </span>
+                        </div>
+                        {totals.refundGst > 0 ? (
+                          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 pl-3 text-gray-600">
+                            <span className="min-w-0 break-words">
+                              {selectedLanguageCopy.refundGstIncluded}
+                            </span>
+                            <span className="money whitespace-nowrap text-right">
+                              {formatCurrency(totals.refundGst)}
+                            </span>
+                          </div>
+                        ) : null}
+                      </>
                     ) : null}
 
 
@@ -5933,11 +6078,21 @@ export default function Home() {
 
 
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 border-t pt-3 text-xl font-bold">
-                  <span className="min-w-0 break-words">Cash Portion</span>
+                  <span className="min-w-0 break-words">
+                    {isPatientCredit(totals.payable)
+                      ? "Refund / credit to patient"
+                      : "Cash Portion"}
+                  </span>
                   <span className="money whitespace-nowrap text-right">
-                    ${totals.payable.toFixed(2)}
+                    {formatPatientOutcomeAmount(totals.payable)}
                   </span>
                 </div>
+                {isPatientCredit(totals.payable) ? (
+                  <p className="text-xs leading-relaxed text-amber-900">
+                    No further cash is payable on this plan. This amount will be
+                    refunded / credited to you.
+                  </p>
+                ) : null}
 
 
                 {!isGoodwillQuotation ? (
@@ -6051,7 +6206,7 @@ export default function Home() {
                             <>
                               {isGoodwillQuotation ? (
                                 <td className="px-3 py-2 text-right tabular-nums">
-                                  {formatDeduction(
+                                  {formatCurrency(
                                     option.totals.noFrillsCovered,
                                   )}
                                 </td>
@@ -6066,7 +6221,7 @@ export default function Home() {
                           ) : null}
                           {showFinancialSummary ? (
                             <td className="px-3 py-2 text-right font-bold tabular-nums">
-                              {formatCurrency(option.totals.payable)}
+                              {formatPatientOutcomeAmount(option.totals.payable)}
                             </td>
                           ) : null}
                         </tr>
