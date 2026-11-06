@@ -147,6 +147,7 @@ type LanguageCopy = {
   refundCredit: string;
   refundToPatient: string;
   refundAmount: string;
+  refundGstIncluded: string;
   refundBadge: string;
   selectedInstallmentPlan: string;
   months: string;
@@ -702,6 +703,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     refundCredit: "Refund / credit",
     refundToPatient: "Refund / credit to patient",
     refundAmount: "Refund amount",
+    refundGstIncluded: "Includes GST (9%)",
     refundBadge: "Refund",
     selectedInstallmentPlan: "Selected Instalment Plan",
     months: "months",
@@ -844,6 +846,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     refundCredit: "Bayaran balik / kredit",
     refundToPatient: "Bayaran balik / kredit kepada pesakit",
     refundAmount: "Jumlah bayaran balik",
+    refundGstIncluded: "Termasuk GST (9%)",
     refundBadge: "Bayaran balik",
     selectedInstallmentPlan: "Pelan Ansuran Dipilih",
     months: "bulan",
@@ -995,6 +998,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     refundCredit: "退款 / 贷记",
     refundToPatient: "退还给患者的金额",
     refundAmount: "退款金额",
+    refundGstIncluded: "包含消费税 (9%)",
     refundBadge: "退款",
     selectedInstallmentPlan: "已选择分期付款计划",
     months: "个月",
@@ -1138,6 +1142,7 @@ const languageCopy: Record<PreferredLanguage, LanguageCopy> = {
     refundCredit: "திருப்பிச் செலுத்தல் / கடன்",
     refundToPatient: "நோயாளிக்கு திருப்பிச் செலுத்தும் / கடன் தொகை",
     refundAmount: "திருப்பிச் செலுத்தும் தொகை",
+    refundGstIncluded: "GST (9%) உட்பட",
     refundBadge: "திருப்பிச் செலுத்தல்",
     selectedInstallmentPlan: "தேர்ந்தெடுத்த தவணை திட்டம்",
     months: "மாதங்கள்",
@@ -1294,6 +1299,7 @@ const languageStringKeys = [
   "refundCredit",
   "refundToPatient",
   "refundAmount",
+  "refundGstIncluded",
   "refundBadge",
   "selectedInstallmentPlan",
   "months",
@@ -2421,6 +2427,19 @@ function getNoFrillsCoveredAmount(
     : discountAmount;
 }
 
+function getRefundGstAmount(
+  procedure: Pick<
+    Procedure,
+    "fee" | "quantity" | "isRefund" | "gstApplicable"
+  >,
+) {
+  if (!isRefundProcedure(procedure) || !procedure.gstApplicable) {
+    return 0;
+  }
+
+  return getRefundBaseAmount(procedure) * GST_RATE;
+}
+
 function getProcedureGst(
   procedure: Pick<
     Procedure,
@@ -2428,14 +2447,37 @@ function getProcedureGst(
   >,
 ) {
   if (isRefundProcedure(procedure)) {
-    if (!procedure.gstApplicable) {
-      return 0;
-    }
-
-    return getRefundBaseAmount(procedure) * GST_RATE;
+    return getRefundGstAmount(procedure);
   }
 
   return procedure.gstApplicable ? getDiscountedSubtotal(procedure) * GST_RATE : 0;
+}
+
+/**
+ * GST shown in print/edit tables. For goodwill-covered lines, patient-payable GST
+ * is often $0 after a 100% cover — still show the GST portion of the list price
+ * when GST is enabled so “Covered (incl. GST)” is transparent.
+ */
+function getProcedureGstDisplay(
+  procedure: Pick<
+    Procedure,
+    "fee" | "quantity" | "discountPercent" | "gstApplicable" | "isRefund"
+  >,
+  options?: { showCoveredGst?: boolean },
+) {
+  if (!procedure.gstApplicable) {
+    return 0;
+  }
+
+  if (isRefundProcedure(procedure)) {
+    return getRefundGstAmount(procedure);
+  }
+
+  if (options?.showCoveredGst && getDiscountPercent(procedure) > 0) {
+    return getRowSubtotal(procedure) * GST_RATE;
+  }
+
+  return getDiscountedSubtotal(procedure) * GST_RATE;
 }
 
 function getProcedureSubsidyTotal(
@@ -2515,11 +2557,13 @@ function calculateTotalsForPhases(phases: Phase[]) {
   let medisave = 0;
   let noFrillsCovered = 0;
   let refundCredit = 0;
+  let refundGst = 0;
 
   phases.forEach((phase) => {
     phase.procedures.forEach((procedure) => {
       if (isRefundProcedure(procedure)) {
         refundCredit += getRefundCreditAmount(procedure);
+        refundGst += getRefundGstAmount(procedure);
         return;
       }
 
@@ -2541,6 +2585,7 @@ function calculateTotalsForPhases(phases: Phase[]) {
     medisave,
     noFrillsCovered,
     refundCredit,
+    refundGst,
     payable: subtotal + gst - subsidy - medisave - refundCredit,
   };
 }
@@ -5075,7 +5120,9 @@ export default function Home() {
                     <>
                       <div className="mt-3 space-y-3 lg:hidden print:hidden">
                         {phase.procedures.map((procedure, procedureIndex) => {
-                          const gst = getProcedureGst(procedure);
+                          const gst = getProcedureGstDisplay(procedure, {
+                            showCoveredGst: isGoodwillQuotation,
+                          });
                           const subsidy = getProcedureSubsidyTotal(procedure);
                           const payable = getProcedurePayable(procedure);
                           const discountPercent = getDiscountPercent(procedure);
@@ -5286,7 +5333,9 @@ export default function Home() {
 
                         <tbody>
                           {phase.procedures.map((procedure, procedureIndex) => {
-                            const gst = getProcedureGst(procedure);
+                            const gst = getProcedureGstDisplay(procedure, {
+                              showCoveredGst: isGoodwillQuotation,
+                            });
                             const subsidy = getProcedureSubsidyTotal(procedure);
                             const payable = getProcedurePayable(procedure);
                             const discountPercent = getDiscountPercent(procedure);
@@ -5404,7 +5453,9 @@ export default function Home() {
                   ) : (
                     <div className="mt-6 space-y-4">
                     {phase.procedures.map((procedure, procedureIndex) => {
-                      const gst = getProcedureGst(procedure);
+                      const gst = getProcedureGstDisplay(procedure, {
+                        showCoveredGst: isGoodwillQuotation,
+                      });
                       const subsidy = getProcedureSubsidyTotal(procedure);
                       const payable = getProcedurePayable(procedure);
                       const hasRemarks = procedure.description.trim().length > 0;
@@ -5616,22 +5667,33 @@ export default function Home() {
                                 GST (9%)
                               </label>
                               {!isFinalized ? (
-                                <label className="mt-2 flex items-center gap-2 rounded-xl border bg-white px-3 py-3 text-sm">
-                                  <input
-                                    type="checkbox"
-                                    checked={procedure.gstApplicable}
-                                    onChange={(event) =>
-                                      updateProcedure(
-                                        phaseIndex,
-                                        procedureIndex,
-                                        "gstApplicable",
-                                        event.target.checked,
-                                      )
-                                    }
-                                    className="h-4 w-4"
-                                  />
-                                  Apply GST
-                                </label>
+                                <div className="mt-2 rounded-xl border bg-white px-3 py-3 text-sm">
+                                  <label className="flex items-center gap-2">
+                                    <input
+                                      type="checkbox"
+                                      checked={procedure.gstApplicable}
+                                      onChange={(event) =>
+                                        updateProcedure(
+                                          phaseIndex,
+                                          procedureIndex,
+                                          "gstApplicable",
+                                          event.target.checked,
+                                        )
+                                      }
+                                      className="h-4 w-4"
+                                    />
+                                    Apply GST
+                                  </label>
+                                  {procedure.gstApplicable ? (
+                                    <p className="mt-2 text-right text-sm font-semibold tabular-nums text-gray-900">
+                                      {formatCurrency(gst)}
+                                    </p>
+                                  ) : (
+                                    <p className="mt-2 text-right text-sm text-gray-500">
+                                      N/A
+                                    </p>
+                                  )}
+                                </div>
                               ) : (
                               <div
                                 className={compactClass(
@@ -5867,6 +5929,14 @@ export default function Home() {
                             <p className="font-semibold tabular-nums">
                               {formatCurrency(optionSummary.refundCredit)}
                             </p>
+                            {optionSummary.refundGst > 0 ? (
+                              <p className="mt-1 text-xs text-gray-600">
+                                {selectedLanguageCopy.refundGstIncluded}:{" "}
+                                <span className="font-semibold tabular-nums">
+                                  {formatCurrency(optionSummary.refundGst)}
+                                </span>
+                              </p>
+                            ) : null}
                           </div>
                         ) : null}
                         <div>
@@ -5962,14 +6032,26 @@ export default function Home() {
 
 
                     {totals.refundCredit > 0 ? (
-                      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
-                        <span className="min-w-0 break-words">
-                          Refund / credit to patient
-                        </span>
-                        <span className="money whitespace-nowrap text-right">
-                          {formatCurrency(totals.refundCredit)}
-                        </span>
-                      </div>
+                      <>
+                        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3">
+                          <span className="min-w-0 break-words">
+                            Refund / credit to patient
+                          </span>
+                          <span className="money whitespace-nowrap text-right">
+                            {formatCurrency(totals.refundCredit)}
+                          </span>
+                        </div>
+                        {totals.refundGst > 0 ? (
+                          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 pl-3 text-gray-600">
+                            <span className="min-w-0 break-words">
+                              {selectedLanguageCopy.refundGstIncluded}
+                            </span>
+                            <span className="money whitespace-nowrap text-right">
+                              {formatCurrency(totals.refundGst)}
+                            </span>
+                          </div>
+                        ) : null}
+                      </>
                     ) : null}
 
 
